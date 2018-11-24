@@ -3,7 +3,7 @@ package com.sap.cloud.lm.sl.cf.core.validators.parameters;
 import java.util.Locale;
 
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.NameUtil;
 import com.sap.cloud.lm.sl.common.SLException;
 import com.sap.cloud.lm.sl.mta.model.v1.Module;
@@ -41,8 +41,8 @@ public class HostValidator implements ParameterValidator {
     }
 
     @Override
-    public String getParameterName() {
-        return SupportedParameters.HOST;
+    public Parameter getParameter() {
+        return Parameter.HOST;
     }
 
     @Override

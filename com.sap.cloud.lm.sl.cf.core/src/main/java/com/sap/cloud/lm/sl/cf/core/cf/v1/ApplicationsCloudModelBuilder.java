@@ -23,6 +23,7 @@ import com.sap.cloud.lm.sl.cf.core.helpers.v1.PropertiesAccessor;
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMtaModule;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.cf.core.parser.MemoryParametersParser;
 import com.sap.cloud.lm.sl.cf.core.parser.ParametersParser;
@@ -111,8 +112,8 @@ public class ApplicationsCloudModelBuilder {
 
     private List<CloudApplicationExtended> resolveModules(Set<String> mtaModulesInArchive, Set<String> deployedModules) {
         return handler
-            .getModulesForDeployment(deploymentDescriptor, SupportedParameters.ENABLE_PARALLEL_DEPLOYMENTS,
-                SupportedParameters.DEPENDENCY_TYPE, DEPENDENCY_TYPE_HARD)
+            .getModulesForDeployment(deploymentDescriptor, Parameter.ENABLE_PARALLEL_DEPLOYMENTS.getName(),
+                Parameter.DEPENDENCY_TYPE.getName(), DEPENDENCY_TYPE_HARD)
             .stream()
             .filter(module -> shouldDeployModule(module, mtaModulesInArchive, deployedModules))
             .map(this::getApplication)
@@ -159,22 +160,22 @@ public class ApplicationsCloudModelBuilder {
         for (Module module : deploymentDescriptor.getModules1()) {
             String dependencyType = getDependencyType(module);
             Map<String, Object> moduleProperties = propertiesAccessor.getParameters(module);
-            moduleProperties.put(SupportedParameters.DEPENDENCY_TYPE, dependencyType);
+            moduleProperties.put(Parameter.DEPENDENCY_TYPE.getName(), dependencyType);
             propertiesAccessor.setParameters(module, moduleProperties);
         }
     }
 
     protected String getDependencyType(Module module) {
         return (String) propertiesAccessor.getParameters(module)
-            .getOrDefault(SupportedParameters.DEPENDENCY_TYPE, DEPENDENCY_TYPE_SOFT);
+            .getOrDefault(Parameter.DEPENDENCY_TYPE.getName(), DEPENDENCY_TYPE_SOFT);
     }
 
     protected CloudApplicationExtended getApplication(Module module) {
         List<Map<String, Object>> propertiesList = propertiesChainBuilder.buildModuleChain(module.getName());
         Staging staging = parseParameters(propertiesList, new StagingParametersParser());
-        int diskQuota = parseParameters(propertiesList, new MemoryParametersParser(SupportedParameters.DISK_QUOTA, "0"));
-        int memory = parseParameters(propertiesList, new MemoryParametersParser(SupportedParameters.MEMORY, "0"));
-        int instances = (Integer) getPropertyValue(propertiesList, SupportedParameters.INSTANCES, 0);
+        int diskQuota = parseParameters(propertiesList, new MemoryParametersParser(Parameter.DISK_QUOTA.getName(), "0"));
+        int memory = parseParameters(propertiesList, new MemoryParametersParser(Parameter.MEMORY.getName(), "0"));
+        int instances = (Integer) getPropertyValue(propertiesList, Parameter.INSTANCES.getName(), 0);
         DeployedMtaModule deployedModule = findDeployedModule(deployedMta, module);
         List<String> uris = urisCloudModelBuilder.getApplicationUris(module, propertiesList, deployedModule);
         List<String> idleUris = urisCloudModelBuilder.getIdleApplicationUris(module, propertiesList);
@@ -195,7 +196,7 @@ public class ApplicationsCloudModelBuilder {
 
     protected String getApplicationName(Module module) {
         return (String) propertiesAccessor.getParameters(module)
-            .get(SupportedParameters.APP_NAME);
+            .get(Parameter.APP_NAME.getName());
     }
 
     protected <R> R parseParameters(List<Map<String, Object>> parametersList, ParametersParser<R> parser) {
@@ -244,7 +245,7 @@ public class ApplicationsCloudModelBuilder {
 
     private boolean isSharedService(Resource resource) {
         return (boolean) propertiesAccessor.getParameters(resource)
-            .getOrDefault(SupportedParameters.SHARED, false);
+            .getOrDefault(Parameter.SHARED.getName(), false);
     }
 
     protected ResourceAndResourceType getApplicationService(String dependencyName) {
@@ -269,8 +270,8 @@ public class ApplicationsCloudModelBuilder {
         Resource resource = getResource(dependencyName);
         if (resource != null && CloudModelBuilderUtil.isServiceKey(resource, propertiesAccessor)) {
             Map<String, Object> resourceParameters = propertiesAccessor.getParameters(resource);
-            String serviceName = PropertiesUtil.getRequiredParameter(resourceParameters, SupportedParameters.SERVICE_NAME);
-            String serviceKeyName = (String) resourceParameters.getOrDefault(SupportedParameters.SERVICE_KEY_NAME, resource.getName());
+            String serviceName = PropertiesUtil.getRequiredParameter(resourceParameters, Parameter.SERVICE_NAME.getName());
+            String serviceKeyName = (String) resourceParameters.getOrDefault(Parameter.SERVICE_KEY_NAME.getName(), resource.getName());
             return new ServiceKeyToInject(serviceKeyName, serviceName, serviceKeyName);
         }
         return null;
@@ -281,7 +282,7 @@ public class ApplicationsCloudModelBuilder {
     }
 
     protected List<CloudTask> getTasks(List<Map<String, Object>> propertiesList) {
-        return parseParameters(propertiesList, new TaskParametersParser(SupportedParameters.TASKS, configuration.isPrettyPrinting()));
+        return parseParameters(propertiesList, new TaskParametersParser(Parameter.TASKS.getName(), configuration.isPrettyPrinting()));
     }
 
     protected static CloudApplicationExtended createCloudApplication(String name, String moduleName, Staging staging, int diskQuota,

@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.common.ContentException;;
 
 @RunWith(Parameterized.class)
@@ -28,7 +28,7 @@ public class MemoryParametersParserTest {
     private Class<? extends RuntimeException> expectedExceptionClass;
     private List<Map<String, Object>> parametersList = new ArrayList<>();
     private static final Integer DEFAULT_MEMORY = 100;
-    private final MemoryParametersParser parser = new MemoryParametersParser(SupportedParameters.MEMORY, "100");
+    private final MemoryParametersParser parser = new MemoryParametersParser(Parameter.MEMORY.getName(), "100");
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -90,7 +90,7 @@ public class MemoryParametersParserTest {
     @Before
     public void setUp() {
         Map<String, Object> memoryParameterMap = new HashMap<>();
-        memoryParameterMap.put(SupportedParameters.MEMORY, this.memoryString);
+        memoryParameterMap.put(Parameter.MEMORY.getName(), this.memoryString);
         parametersList.add(memoryParameterMap);
     }
 

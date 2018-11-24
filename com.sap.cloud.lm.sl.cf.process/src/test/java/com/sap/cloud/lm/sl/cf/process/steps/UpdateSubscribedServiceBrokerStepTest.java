@@ -19,7 +19,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.sap.cloud.lm.sl.cf.client.lib.domain.CloudApplicationExtended;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.process.Constants;
 import com.sap.cloud.lm.sl.common.ParsingException;
 import com.sap.cloud.lm.sl.common.SLException;
@@ -148,11 +148,11 @@ public class UpdateSubscribedServiceBrokerStepTest extends SyncFlowableStepTest<
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put(SupportedParameters.CREATE_SERVICE_BROKER, true);
-                    put(SupportedParameters.SERVICE_BROKER_NAME, brokerName);
-                    put(SupportedParameters.SERVICE_BROKER_URL, brokerUrl);
-                    put(SupportedParameters.SERVICE_BROKER_USERNAME, brokerUsername);
-                    put(SupportedParameters.SERVICE_BROKER_PASSWORD, brokerPassword);
+                    put(Parameter.CREATE_SERVICE_BROKER.getName(), true);
+                    put(Parameter.SERVICE_BROKER_NAME.getName(), brokerName);
+                    put(Parameter.SERVICE_BROKER_URL.getName(), brokerUrl);
+                    put(Parameter.SERVICE_BROKER_USERNAME.getName(), brokerUsername);
+                    put(Parameter.SERVICE_BROKER_PASSWORD.getName(), brokerPassword);
                 }
             };
         }

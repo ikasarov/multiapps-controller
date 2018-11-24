@@ -1,6 +1,6 @@
 package com.sap.cloud.lm.sl.cf.core.validators.parameters;
 
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.mta.model.v1.Module;
 
 public class PortValidator implements ParameterValidator {
@@ -22,8 +22,8 @@ public class PortValidator implements ParameterValidator {
     }
 
     @Override
-    public String getParameterName() {
-        return SupportedParameters.PORT;
+    public Parameter getParameter() {
+        return Parameter.PORT;
     }
 
 }

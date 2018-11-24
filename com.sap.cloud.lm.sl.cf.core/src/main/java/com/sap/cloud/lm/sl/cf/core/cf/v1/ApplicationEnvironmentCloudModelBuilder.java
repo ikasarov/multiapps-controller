@@ -4,10 +4,9 @@ import static com.sap.cloud.lm.sl.mta.util.PropertiesUtil.getPropertiesList;
 import static com.sap.cloud.lm.sl.mta.util.PropertiesUtil.mergeProperties;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -16,6 +15,7 @@ import com.sap.cloud.lm.sl.cf.core.cf.HandlerFactory;
 import com.sap.cloud.lm.sl.cf.core.helpers.MapToEnvironmentConverter;
 import com.sap.cloud.lm.sl.cf.core.helpers.XsPlaceholderResolver;
 import com.sap.cloud.lm.sl.cf.core.helpers.v1.PropertiesAccessor;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.cf.core.util.CloudModelBuilderUtil;
 import com.sap.cloud.lm.sl.common.util.MapUtil;
@@ -48,7 +48,7 @@ public class ApplicationEnvironmentCloudModelBuilder {
     }
 
     public Map<Object, Object> build(Module module, List<String> services, List<String> sharedServices) {
-        Set<String> specialModuleProperties = buildSpecialModulePropertiesSet();
+        Map<String, Parameter> specialModuleProperties = buildSpecialModulePropertiesMap();
         Map<String, Object> properties = propertiesAccessor.getProperties(module, specialModuleProperties);
         Map<String, Object> parameters = propertiesAccessor.getParameters(module, specialModuleProperties);
 
@@ -62,11 +62,11 @@ public class ApplicationEnvironmentCloudModelBuilder {
         return MapUtil.unmodifiable(new MapToEnvironmentConverter(configuration.isPrettyPrinting()).asEnv(env));
     }
 
-    private Set<String> buildSpecialModulePropertiesSet() {
-        Set<String> result = new HashSet<>();
-        result.addAll(SupportedParameters.APP_PROPS);
-        result.addAll(SupportedParameters.APP_ATTRIBUTES);
-        result.addAll(SupportedParameters.SPECIAL_MT_PROPS);
+    private Map<String, Parameter> buildSpecialModulePropertiesMap() {
+        Map<String, Parameter> result = new HashMap<>();
+        result.putAll(SupportedParameters.APP_PROPS);
+        result.putAll(SupportedParameters.APP_ATTRIBUTES);
+        result.putAll(SupportedParameters.SPECIAL_MT_PROPS);
         return result;
     }
 
@@ -113,25 +113,25 @@ public class ApplicationEnvironmentCloudModelBuilder {
     protected void addAttributes(Map<String, Object> env, Map<String, Object> properties) {
         Map<String, Object> attributes = new TreeMap<>(properties);
         attributes.keySet()
-            .retainAll(SupportedParameters.APP_ATTRIBUTES);
+            .retainAll(SupportedParameters.APP_ATTRIBUTES.keySet());
         resolveUrlsInAppAttributes(attributes);
         if (!attributes.isEmpty()) {
             env.put(Constants.ENV_DEPLOY_ATTRIBUTES, attributes);
         }
-        Boolean checkDeployId = (Boolean) attributes.get(SupportedParameters.CHECK_DEPLOY_ID);
+        Boolean checkDeployId = (Boolean) attributes.get(Parameter.CHECK_DEPLOY_ID.getName());
         if (checkDeployId != null && checkDeployId) {
             env.put(Constants.ENV_DEPLOY_ID, deployId);
         }
     }
 
     private void resolveUrlsInAppAttributes(Map<String, Object> properties) {
-        String serviceUrl = (String) properties.get(SupportedParameters.REGISTER_SERVICE_URL_SERVICE_URL);
-        String serviceBrokerUrl = (String) properties.get(SupportedParameters.SERVICE_BROKER_URL);
+        String serviceUrl = (String) properties.get(Parameter.REGISTER_SERVICE_URL_SERVICE_URL.getName());
+        String serviceBrokerUrl = (String) properties.get(Parameter.SERVICE_BROKER_URL.getName());
         if (serviceUrl != null) {
-            properties.put(SupportedParameters.REGISTER_SERVICE_URL_SERVICE_URL, xsPlaceholderResolver.resolve(serviceUrl));
+            properties.put(Parameter.REGISTER_SERVICE_URL_SERVICE_URL.getName(), xsPlaceholderResolver.resolve(serviceUrl));
         }
         if (serviceBrokerUrl != null) {
-            properties.put(SupportedParameters.SERVICE_BROKER_URL, xsPlaceholderResolver.resolve(serviceBrokerUrl));
+            properties.put(Parameter.SERVICE_BROKER_URL.getName(), xsPlaceholderResolver.resolve(serviceBrokerUrl));
         }
     }
 
@@ -177,19 +177,19 @@ public class ApplicationEnvironmentCloudModelBuilder {
 
     public Map<String, Object> removeSpecialApplicationProperties(Map<String, Object> properties) {
         properties.keySet()
-            .removeAll(SupportedParameters.APP_ATTRIBUTES);
+            .removeAll(SupportedParameters.APP_ATTRIBUTES.keySet());
         properties.keySet()
-            .removeAll(SupportedParameters.APP_PROPS);
+            .removeAll(SupportedParameters.APP_PROPS.keySet());
         properties.keySet()
-            .removeAll(SupportedParameters.SPECIAL_MT_PROPS);
+            .removeAll(SupportedParameters.SPECIAL_MT_PROPS.keySet());
         return properties;
     }
 
     public Map<String, Object> removeSpecialServiceProperties(Map<String, Object> properties) {
         properties.keySet()
-            .removeAll(SupportedParameters.SPECIAL_RT_PROPS);
+            .removeAll(SupportedParameters.SPECIAL_RT_PROPS.keySet());
         properties.keySet()
-            .removeAll(SupportedParameters.SERVICE_PROPS);
+            .removeAll(SupportedParameters.SERVICE_PROPS.keySet());
         return properties;
     }
 

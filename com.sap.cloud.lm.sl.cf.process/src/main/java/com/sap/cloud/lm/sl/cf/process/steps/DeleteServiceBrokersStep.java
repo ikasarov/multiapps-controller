@@ -5,9 +5,9 @@ import static com.sap.cloud.lm.sl.cf.process.steps.CreateOrUpdateServiceBrokersS
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.cloudfoundry.client.lib.CloudControllerClient;
 import org.cloudfoundry.client.lib.CloudControllerException;
 import org.cloudfoundry.client.lib.CloudOperationException;
-import org.cloudfoundry.client.lib.CloudControllerClient;
 import org.cloudfoundry.client.lib.CloudServiceBrokerException;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.cloudfoundry.client.lib.domain.CloudServiceBroker;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationAttributes;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.process.Constants;
 import com.sap.cloud.lm.sl.cf.process.message.Messages;
 import com.sap.cloud.lm.sl.common.SLException;
@@ -54,10 +54,10 @@ public class DeleteServiceBrokersStep extends SyncFlowableStep {
     private void deleteServiceBrokerIfNecessary(DelegateExecution context, CloudApplication app, List<String> serviceBrokersToCreate,
         CloudControllerClient client) {
         ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(app);
-        if (!appAttributes.get(SupportedParameters.CREATE_SERVICE_BROKER, Boolean.class, false)) {
+        if (!appAttributes.get(Parameter.CREATE_SERVICE_BROKER.getName(), Boolean.class, false)) {
             return;
         }
-        String name = appAttributes.get(SupportedParameters.SERVICE_BROKER_NAME, String.class, app.getName());
+        String name = appAttributes.get(Parameter.SERVICE_BROKER_NAME.getName(), String.class, app.getName());
 
         CloudServiceBroker serviceBroker = client.getServiceBroker(name, false);
         if (serviceBroker != null && !serviceBrokersToCreate.contains(name)) {

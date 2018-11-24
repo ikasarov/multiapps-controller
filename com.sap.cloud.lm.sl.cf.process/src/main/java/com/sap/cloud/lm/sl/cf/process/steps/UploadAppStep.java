@@ -26,7 +26,7 @@ import com.sap.cloud.lm.sl.cf.client.lib.domain.UploadStatusCallbackExtended;
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationAttributes;
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationEnvironmentUpdater;
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationFileDigestDetector;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.ApplicationConfiguration;
 import com.sap.cloud.lm.sl.cf.persistence.processors.DefaultFileDownloadProcessor;
 import com.sap.cloud.lm.sl.cf.persistence.processors.FileDownloadProcessor;
@@ -231,7 +231,7 @@ public class UploadAppStep extends TimeoutAsyncFlowableStep {
 
     private int extractUploadTimeoutFromAppAttributes(CloudApplication app, int defaultAppUploadTimeout) {
         ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(app);
-        Number uploadTimeout = appAttributes.get(SupportedParameters.UPLOAD_TIMEOUT, Number.class, defaultAppUploadTimeout);
+        Number uploadTimeout = appAttributes.get(Parameter.UPLOAD_TIMEOUT.getName(), Number.class, defaultAppUploadTimeout);
         return uploadTimeout.intValue();
     }
 

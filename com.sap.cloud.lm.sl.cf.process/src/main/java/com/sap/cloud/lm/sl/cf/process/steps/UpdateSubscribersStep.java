@@ -49,7 +49,7 @@ import com.sap.cloud.lm.sl.cf.core.model.ConfigurationEntry;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription.ModuleDto;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription.RequiredDependencyDto;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.security.serialization.SecureSerializationFacade;
 import com.sap.cloud.lm.sl.cf.core.util.ApplicationConfiguration;
 import com.sap.cloud.lm.sl.cf.process.message.Messages;
@@ -85,7 +85,7 @@ public class UpdateSubscribersStep extends SyncFlowableStep {
     // working...
     private static final int MAJOR_SCHEMA_VERSION = 2;
     private static final String SCHEMA_VERSION = "2.1.0";
-    
+
     private static final String DUMMY_VERSION = "1.0.0";
 
     private SecureSerializationFacade secureSerializer = new SecureSerializationFacade();
@@ -144,7 +144,7 @@ public class UpdateSubscribersStep extends SyncFlowableStep {
         List<CloudApplication> updatedServiceBrokerSubscribers, CloudApplication updatedApplication) {
         ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(updatedApplication);
 
-        if (appAttributes.get(SupportedParameters.CREATE_SERVICE_BROKER, Boolean.class, false)) {
+        if (appAttributes.get(Parameter.CREATE_SERVICE_BROKER.getName(), Boolean.class, false)) {
             updatedServiceBrokerSubscribers.add(updatedApplication);
         } else {
             updatedSubscribers.add(updatedApplication);

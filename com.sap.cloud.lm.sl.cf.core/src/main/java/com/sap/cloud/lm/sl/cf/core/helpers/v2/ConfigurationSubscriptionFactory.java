@@ -9,8 +9,8 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import com.sap.cloud.lm.sl.cf.core.dao.filters.ConfigurationFilter;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.model.ResolvedConfigurationReference;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.cf.core.resolvers.v2.PartialDescriptorReferenceResolver;
 import com.sap.cloud.lm.sl.mta.model.v2.Module;
 import com.sap.cloud.lm.sl.mta.model.v2.RequiredDependency;
@@ -52,7 +52,7 @@ public class ConfigurationSubscriptionFactory extends com.sap.cloud.lm.sl.cf.cor
         ResolvedConfigurationReference resolvedReference = resolvedResources.get(dependency.getName());
         ConfigurationFilter filter = resolvedReference.getReferenceFilter();
         String appName = (String) module.getParameters()
-            .get(SupportedParameters.APP_NAME);
+            .get(Parameter.APP_NAME.getName());
         com.sap.cloud.lm.sl.mta.model.v1.Resource resource = resolvedReference.getReference();
         Module adaptedModule = getContainingOneRequiresDependency(module, dependency);
 
@@ -78,7 +78,7 @@ public class ConfigurationSubscriptionFactory extends com.sap.cloud.lm.sl.cf.cor
 
     private boolean shouldCreateSubscription(RequiredDependency dependency) {
         return (boolean) dependency.getParameters()
-            .getOrDefault(SupportedParameters.MANAGED, false);
+            .getOrDefault(Parameter.MANAGED.getName(), false);
     }
 
 }

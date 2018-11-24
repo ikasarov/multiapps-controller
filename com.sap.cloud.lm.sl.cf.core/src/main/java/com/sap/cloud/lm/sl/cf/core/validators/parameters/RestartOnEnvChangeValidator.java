@@ -2,7 +2,7 @@ package com.sap.cloud.lm.sl.cf.core.validators.parameters;
 
 import java.util.Map;
 
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.common.util.CommonUtil;
 import com.sap.cloud.lm.sl.mta.model.v1.Module;
 
@@ -14,16 +14,16 @@ public class RestartOnEnvChangeValidator implements ParameterValidator {
             return false;
         }
         Map<String, Object> parameters = CommonUtil.cast(restartParameters);
-        if (parameters.containsKey(SupportedParameters.VCAP_APPLICATION_ENV)
-            && !isValidBooleanParameter(parameters.get(SupportedParameters.VCAP_APPLICATION_ENV))) {
+        if (parameters.containsKey(Parameter.VCAP_APPLICATION_ENV.getName())
+            && !isValidBooleanParameter(parameters.get(Parameter.VCAP_APPLICATION_ENV.getName()))) {
             return false;
         }
-        if (parameters.containsKey(SupportedParameters.VCAP_SERVICES_ENV)
-            && !isValidBooleanParameter(parameters.get(SupportedParameters.VCAP_SERVICES_ENV))) {
+        if (parameters.containsKey(Parameter.VCAP_SERVICES_ENV.getName())
+            && !isValidBooleanParameter(parameters.get(Parameter.VCAP_SERVICES_ENV.getName()))) {
             return false;
         }
-        if (parameters.containsKey(SupportedParameters.USER_PROVIDED_ENV)
-            && !isValidBooleanParameter(parameters.get(SupportedParameters.USER_PROVIDED_ENV))) {
+        if (parameters.containsKey(Parameter.USER_PROVIDED_ENV.getName())
+            && !isValidBooleanParameter(parameters.get(Parameter.USER_PROVIDED_ENV.getName()))) {
             return false;
         }
         return true;
@@ -39,8 +39,8 @@ public class RestartOnEnvChangeValidator implements ParameterValidator {
     }
 
     @Override
-    public String getParameterName() {
-        return SupportedParameters.RESTART_ON_ENV_CHANGE;
+    public Parameter getParameter() {
+        return Parameter.RESTART_ON_ENV_CHANGE;
     }
 
 }

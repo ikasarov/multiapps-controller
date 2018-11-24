@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.cloudfoundry.client.lib.domain.Staging;
 
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 
 public class StagingParametersParser implements ParametersParser<Staging> {
 
@@ -16,14 +16,14 @@ public class StagingParametersParser implements ParametersParser<Staging> {
 
     @Override
     public Staging parse(List<Map<String, Object>> parametersList) {
-        String command = (String) getPropertyValue(parametersList, SupportedParameters.COMMAND, null);
-        String buildpack = (String) getPropertyValue(parametersList, SupportedParameters.BUILDPACK, null);
-        String stack = (String) getPropertyValue(parametersList, SupportedParameters.STACK, null);
-        Integer healthCheckTimeout = (Integer) getPropertyValue(parametersList, SupportedParameters.HEALTH_CHECK_TIMEOUT, null);
-        String healthCheckType = (String) getPropertyValue(parametersList, SupportedParameters.HEALTH_CHECK_TYPE, null);
-        String healthCheckHttpEndpoint = (String) getPropertyValue(parametersList, SupportedParameters.HEALTH_CHECK_HTTP_ENDPOINT,
+        String command = (String) getPropertyValue(parametersList, Parameter.COMMAND.getName(), null);
+        String buildpack = (String) getPropertyValue(parametersList, Parameter.BUILDPACK.getName(), null);
+        String stack = (String) getPropertyValue(parametersList, Parameter.STACK.getName(), null);
+        Integer healthCheckTimeout = (Integer) getPropertyValue(parametersList, Parameter.HEALTH_CHECK_TIMEOUT.getName(), null);
+        String healthCheckType = (String) getPropertyValue(parametersList, Parameter.HEALTH_CHECK_TYPE.getName(), null);
+        String healthCheckHttpEndpoint = (String) getPropertyValue(parametersList, Parameter.HEALTH_CHECK_HTTP_ENDPOINT.getName(),
             getDefaultHealthCheckHttpEndpoint(healthCheckType));
-        Boolean isSshEnabled = (Boolean) getPropertyValue(parametersList, SupportedParameters.ENABLE_SSH, null);
+        Boolean isSshEnabled = (Boolean) getPropertyValue(parametersList, Parameter.ENABLE_SSH.getName(), null);
         return new Staging.StagingBuilder().command(command)
             .buildpackUrl(buildpack)
             .stack(stack)

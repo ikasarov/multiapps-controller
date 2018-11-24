@@ -19,7 +19,7 @@ import com.sap.cloud.lm.sl.cf.core.cf.v1.CloudModelConfiguration;
 import com.sap.cloud.lm.sl.cf.core.cf.v1.ResourceAndResourceType;
 import com.sap.cloud.lm.sl.cf.core.helpers.XsPlaceholderResolver;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.CloudModelBuilderUtil;
 import com.sap.cloud.lm.sl.cf.core.util.UserMessageLogger;
 import com.sap.cloud.lm.sl.mta.model.SystemParameters;
@@ -48,7 +48,7 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
     public DeploymentMode getDeploymentMode() {
         DeploymentDescriptor descriptorV3 = cast(deploymentDescriptor);
         boolean parallelDeploymentsEnabled = (Boolean) descriptorV3.getParameters()
-            .getOrDefault(SupportedParameters.ENABLE_PARALLEL_DEPLOYMENTS, false);
+            .getOrDefault(Parameter.ENABLE_PARALLEL_DEPLOYMENTS.getName(), false);
         return parallelDeploymentsEnabled ? DeploymentMode.PARALLEL : DeploymentMode.SEQUENTIAL;
     }
 
@@ -113,10 +113,10 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
         if (resource != null && CloudModelBuilderUtil.isServiceKey(resource, propertiesAccessor)
             && CloudModelBuilderUtil.isActive(resource)) {
             Map<String, Object> resourceParameters = propertiesAccessor.getParameters(resource);
-            String serviceName = PropertiesUtil.getRequiredParameter(resourceParameters, SupportedParameters.SERVICE_NAME);
-            String serviceKeyName = (String) resourceParameters.getOrDefault(SupportedParameters.SERVICE_KEY_NAME, resource.getName());
+            String serviceName = PropertiesUtil.getRequiredParameter(resourceParameters, Parameter.SERVICE_NAME.getName());
+            String serviceKeyName = (String) resourceParameters.getOrDefault(Parameter.SERVICE_KEY_NAME.getName(), resource.getName());
             String envVarName = (String) dependency.getParameters()
-                .getOrDefault(SupportedParameters.ENV_VAR_NAME, serviceKeyName);
+                .getOrDefault(Parameter.ENV_VAR_NAME.getName(), serviceKeyName);
             return new ServiceKeyToInject(envVarName, serviceName, serviceKeyName);
         }
         return null;

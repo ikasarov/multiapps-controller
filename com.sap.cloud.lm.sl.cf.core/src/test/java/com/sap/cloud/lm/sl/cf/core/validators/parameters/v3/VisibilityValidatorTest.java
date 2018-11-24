@@ -60,7 +60,7 @@ public class VisibilityValidatorTest {
 
     @Test
     public void testGetParameterName() {
-        assertEquals("visibility", validator.getParameterName());
+        assertEquals("visibility", validator.getParameter().getName());
     }
 
     @Test

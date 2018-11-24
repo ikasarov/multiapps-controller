@@ -14,7 +14,7 @@ import com.sap.cloud.lm.sl.cf.client.XsCloudControllerClient;
 import com.sap.cloud.lm.sl.cf.client.lib.domain.CloudApplicationExtended;
 import com.sap.cloud.lm.sl.cf.client.lib.domain.ServiceUrl;
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationAttributes;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.process.Constants;
 import com.sap.cloud.lm.sl.cf.process.message.Messages;
 import com.sap.cloud.lm.sl.common.SLException;
@@ -69,12 +69,12 @@ public class RegisterServiceUrlsStep extends SyncFlowableStep {
 
     private ServiceUrl getServiceUrlToRegister(CloudApplicationExtended app) {
         ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(app);
-        if (!appAttributes.get(SupportedParameters.REGISTER_SERVICE_URL, Boolean.class, false)) {
+        if (!appAttributes.get(Parameter.REGISTER_SERVICE_URL.getName(), Boolean.class, false)) {
             return null;
         }
 
-        String serviceName = appAttributes.get(SupportedParameters.REGISTER_SERVICE_URL_SERVICE_NAME, String.class, app.getName());
-        String url = appAttributes.get(SupportedParameters.REGISTER_SERVICE_URL_SERVICE_URL, String.class);
+        String serviceName = appAttributes.get(Parameter.REGISTER_SERVICE_URL_SERVICE_NAME.getName(), String.class, app.getName());
+        String url = appAttributes.get(Parameter.REGISTER_SERVICE_URL_SERVICE_URL.getName(), String.class);
 
         if (url == null) {
             throw new SLException(Messages.ERROR_NO_SERVICE_URL_SPECIFIED, serviceName, app.getName());

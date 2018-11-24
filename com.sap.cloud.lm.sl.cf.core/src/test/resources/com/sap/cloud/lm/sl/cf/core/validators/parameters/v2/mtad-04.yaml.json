@@ -3,7 +3,7 @@
   "resources2": [
     {
       "parameters": {
-        "test": "test"
+        "type": "test"
       },
       "name": "baz",
       "properties": {}

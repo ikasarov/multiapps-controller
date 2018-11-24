@@ -3,7 +3,7 @@ package com.sap.cloud.lm.sl.cf.core.cf.apps;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
 
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationAttributes;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 
 public class ApplicationStartupStateCalculator {
 
@@ -13,7 +13,7 @@ public class ApplicationStartupStateCalculator {
         }
 
         ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(app);
-        boolean shouldNotStartApp = appAttributes.get(SupportedParameters.NO_START, Boolean.class, shouldNotStartAnyApp);
+        boolean shouldNotStartApp = appAttributes.get(Parameter.NO_START.getName(), Boolean.class, shouldNotStartAnyApp);
         return (shouldNotStartApp) ? ApplicationStartupState.STOPPED : ApplicationStartupState.STARTED;
     }
 
@@ -32,7 +32,7 @@ public class ApplicationStartupStateCalculator {
 
     private boolean hasExecuteAppParameter(CloudApplication app) {
         ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(app);
-        return appAttributes.get(SupportedParameters.EXECUTE_APP, Boolean.class, false);
+        return appAttributes.get(Parameter.EXECUTE_APP.getName(), Boolean.class, false);
     }
 
     private org.cloudfoundry.client.lib.domain.CloudApplication.AppState getRequestedState(CloudApplication app) {

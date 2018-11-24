@@ -25,7 +25,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.sap.cloud.lm.sl.cf.core.Constants;
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.FileUtils;
 import com.sap.cloud.lm.sl.common.ContentException;
 import com.sap.cloud.lm.sl.common.SLException;
@@ -161,7 +161,7 @@ public class MtaArchiveBuilder {
     private void prepareResourceEntries(DeploymentDescriptor deploymentDescriptor) {
         for (Resource resource : deploymentDescriptor.getResources2()) {
             String resourceConfigPath = (String) resource.getParameters()
-                .get(SupportedParameters.SERVICE_CONFIG_PATH);
+                .get(Parameter.SERVICE_CONFIG_PATH.getName());
             if (resourceConfigPath != null) {
                 prepareFile(resourceConfigPath);
 
@@ -185,7 +185,7 @@ public class MtaArchiveBuilder {
     private void prepareModuleDependencies(Module module) {
         for (RequiredDependency requiredDependency : module.getRequiredDependencies2()) {
             String requiredDependencyConfigPath = (String) requiredDependency.getParameters()
-                .get(SupportedParameters.SERVICE_BINDING_CONFIG_PATH);
+                .get(Parameter.SERVICE_BINDING_CONFIG_PATH.getName());
             if (requiredDependencyConfigPath != null) {
                 prepareFile(requiredDependencyConfigPath);
 

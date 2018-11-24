@@ -20,7 +20,7 @@ class RestartOnEnvChangeValidatorTest {
 
     @Test
     void testGetParameterName() {
-        assertEquals("restart-on-env-change", validator.getParameterName());
+        assertEquals("restart-on-env-change", validator.getParameter().getName());
     }
 
     @Test

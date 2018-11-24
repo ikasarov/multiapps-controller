@@ -25,7 +25,7 @@ import com.sap.cloud.lm.sl.cf.core.cf.HandlerFactory;
 import com.sap.cloud.lm.sl.cf.core.helpers.XsPlaceholderResolver;
 import com.sap.cloud.lm.sl.cf.core.helpers.v1.DeployTargetFactory;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.NameUtil;
 import com.sap.cloud.lm.sl.common.util.Callable;
 import com.sap.cloud.lm.sl.common.util.JsonUtil;
@@ -139,7 +139,7 @@ public class CloudModelBuilderTest {
                 new String[] { "java-hello-world", }, // deployedApps
                 new Expectation(Expectation.Type.RESOURCE, "/mta/javahelloworld/services-patch1.json"),
                 new Expectation(Expectation.Type.EXCEPTION, "Unresolved MTA modules [java-hello-world-db, java-hello-world-backend]")
-            },
+            }, 
             // (07)
             { "/mta/shine/mtad.yaml", "/mta/shine/config1.mtaext", "/mta/platform-types.json", "/mta/targets.json", null,
                 false, false,
@@ -494,11 +494,11 @@ public class CloudModelBuilderTest {
 
     protected SystemParameters createSystemParameters(DeploymentDescriptor descriptor, String defaultDomain) {
         Map<String, Object> generalParameters = new HashMap<>();
-        generalParameters.put(SupportedParameters.DEFAULT_DOMAIN, defaultDomain);
+        generalParameters.put(Parameter.DEFAULT_DOMAIN.getName(), defaultDomain);
         Map<String, Map<String, Object>> moduleParameters = new HashMap<>();
         for (Module module : descriptor.getModules1()) {
             String moduleName = module.getName();
-            moduleParameters.put(moduleName, MapUtil.asMap(SupportedParameters.DEFAULT_HOST, moduleName));
+            moduleParameters.put(moduleName, MapUtil.asMap(Parameter.DEFAULT_HOST.getName(), moduleName));
         }
         return new SystemParameters(generalParameters, moduleParameters, Collections.emptyMap(), Collections.emptyMap());
     }
@@ -507,11 +507,11 @@ public class CloudModelBuilderTest {
         for (Module module : descriptor.getModules1()) {
             Map<String, Object> parameters = new TreeMap<>(getParameters(module));
             String appName = NameUtil.getApplicationName(module.getName(), descriptor.getId(), useNamespaces);
-            if (parameters.containsKey(SupportedParameters.APP_NAME)) {
-                appName = NameUtil.getApplicationName((String) parameters.get(SupportedParameters.APP_NAME), descriptor.getId(),
+            if (parameters.containsKey(Parameter.APP_NAME.getName())) {
+                appName = NameUtil.getApplicationName((String) parameters.get(Parameter.APP_NAME.getName()), descriptor.getId(),
                     useNamespaces);
             }
-            parameters.put(SupportedParameters.APP_NAME, appName);
+            parameters.put(Parameter.APP_NAME.getName(), appName);
             setParameters(module, parameters);
         }
     }

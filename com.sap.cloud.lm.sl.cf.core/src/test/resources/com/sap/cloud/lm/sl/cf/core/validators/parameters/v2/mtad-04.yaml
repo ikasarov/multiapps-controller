@@ -5,4 +5,4 @@ version: "1.0"
 resources:
   - name: baz
     parameters:
-      test: test-1
+      type: test-1

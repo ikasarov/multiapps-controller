@@ -1,10 +1,10 @@
 package com.sap.cloud.lm.sl.cf.core.helpers;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.sap.cloud.lm.sl.cf.core.cf.HandlerFactory;
 import com.sap.cloud.lm.sl.cf.core.helpers.v1.PropertiesAccessor;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.common.util.MapUtil;
 import com.sap.cloud.lm.sl.mta.helpers.SimplePropertyVisitor;
@@ -53,7 +53,7 @@ public class XsPlaceholderResolverInvoker extends Visitor implements SimplePrope
     }
 
     @SuppressWarnings("unchecked")
-    private void resolveParameters(PropertiesContainer propertiesContainer, Set<String> supportedParameters) {
+    private void resolveParameters(PropertiesContainer propertiesContainer, Map<String, Parameter> supportedParameters) {
         Map<String, Object> parameters = propertiesAccessor.getParameters(propertiesContainer, supportedParameters);
         Map<String, Object> properties = propertiesAccessor.getProperties(propertiesContainer);
         Map<String, Object> resolvedParameters = (Map<String, Object>) new VisitableObject(parameters).accept(this);

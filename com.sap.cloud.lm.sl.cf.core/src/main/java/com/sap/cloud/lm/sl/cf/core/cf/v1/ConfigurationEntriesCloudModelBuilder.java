@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import com.sap.cloud.lm.sl.cf.core.model.CloudTarget;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationEntry;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.CloudModelBuilderUtil;
 import com.sap.cloud.lm.sl.cf.core.util.ConfigurationEntriesUtil;
 import com.sap.cloud.lm.sl.common.util.CommonUtil;
@@ -92,7 +92,7 @@ public class ConfigurationEntriesCloudModelBuilder {
 
         for (Map<String, Object> visibleTarget : visibleTargets) {
             visibility.add(
-                new CloudTarget(getElement(visibleTarget, SupportedParameters.ORG), getElement(visibleTarget, SupportedParameters.SPACE)));
+                new CloudTarget(getElement(visibleTarget, Parameter.ORG.getName()), getElement(visibleTarget, Parameter.SPACE.getName())));
         }
         return new ArrayList<>(visibility);
     }
@@ -103,7 +103,7 @@ public class ConfigurationEntriesCloudModelBuilder {
         }
         ParametersContainer dependency = (ParametersContainer) providedDependency;
         return CommonUtil.cast(dependency.getParameters()
-            .get(SupportedParameters.VISIBILITY));
+            .get(Parameter.VISIBILITY.getName()));
     }
 
     private String getElement(Map<String, Object> map, String elementName) {

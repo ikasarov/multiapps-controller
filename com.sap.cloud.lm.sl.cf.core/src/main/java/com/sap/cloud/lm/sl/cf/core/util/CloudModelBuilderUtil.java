@@ -9,7 +9,7 @@ import com.sap.cloud.lm.sl.cf.core.cf.v1.ResourceType;
 import com.sap.cloud.lm.sl.cf.core.helpers.v1.PropertiesAccessor;
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMtaModule;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.parser.ParametersParser;
 import com.sap.cloud.lm.sl.common.ContentException;
 import com.sap.cloud.lm.sl.mta.handlers.v1.DescriptorHandler;
@@ -70,7 +70,7 @@ public class CloudModelBuilderUtil {
         ResourceType resourceType = getResourceType(resource, propertiesAccessor);
         return resourceTypes.contains(resourceType);
     }
-    
+
     public static boolean isActive(Resource resource) {
         com.sap.cloud.lm.sl.mta.model.v3.Resource resourceV3 = (com.sap.cloud.lm.sl.mta.model.v3.Resource) resource;
         return resourceV3.isActive();
@@ -88,13 +88,13 @@ public class CloudModelBuilderUtil {
     }
 
     public static ResourceType getResourceType(Map<String, Object> properties) {
-        String type = (String) properties.getOrDefault(SupportedParameters.TYPE, ResourceType.MANAGED_SERVICE.toString());
+        String type = (String) properties.getOrDefault(Parameter.TYPE.getName(), ResourceType.MANAGED_SERVICE.toString());
         return ResourceType.get(type);
     }
 
     private static ResourceType getResourceType(Resource resource, PropertiesAccessor propertiesAccessor) {
         Map<String, Object> resourceParameters = propertiesAccessor.getParameters(resource);
-        String type = (String) resourceParameters.get(SupportedParameters.TYPE);
+        String type = (String) resourceParameters.get(Parameter.TYPE.getName());
         return ResourceType.get(type);
     }
 

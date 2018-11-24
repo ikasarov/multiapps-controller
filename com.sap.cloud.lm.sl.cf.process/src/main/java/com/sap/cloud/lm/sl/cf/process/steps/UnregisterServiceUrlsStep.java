@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import com.sap.cloud.lm.sl.cf.client.XsCloudControllerClient;
 import com.sap.cloud.lm.sl.cf.client.lib.domain.ServiceUrl;
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationAttributes;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.process.Constants;
 import com.sap.cloud.lm.sl.cf.process.message.Messages;
 import com.sap.cloud.lm.sl.common.SLException;
@@ -60,10 +60,10 @@ public class UnregisterServiceUrlsStep extends SyncFlowableStep {
     private void unregisterServiceUrlIfNecessary(DelegateExecution context, CloudApplication app, List<String> serviceUrlsToRegister,
         XsCloudControllerClient xsClient) {
         ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(app);
-        if (!appAttributes.get(SupportedParameters.REGISTER_SERVICE_URL, Boolean.class, false)) {
+        if (!appAttributes.get(Parameter.REGISTER_SERVICE_URL.getName(), Boolean.class, false)) {
             return;
         }
-        String serviceName = appAttributes.get(SupportedParameters.REGISTER_SERVICE_URL_SERVICE_NAME, String.class);
+        String serviceName = appAttributes.get(Parameter.REGISTER_SERVICE_URL_SERVICE_NAME.getName(), String.class);
         if (serviceName != null && !serviceUrlsToRegister.contains(serviceName)) {
             try {
                 getStepLogger().info(Messages.UNREGISTERING_SERVICE_URL, serviceName, app.getName());

@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.validators.parameters.DomainValidator;
 import com.sap.cloud.lm.sl.cf.core.validators.parameters.HostValidator;
 import com.sap.cloud.lm.sl.cf.core.validators.parameters.ParameterValidator;
@@ -97,8 +98,8 @@ public class DescriptorParametersValidatorTest {
         }
 
         @Override
-        public String getParameterName() {
-            return "test";
+        public Parameter getParameter() {
+            return Parameter.TYPE;
         }
 
         @Override

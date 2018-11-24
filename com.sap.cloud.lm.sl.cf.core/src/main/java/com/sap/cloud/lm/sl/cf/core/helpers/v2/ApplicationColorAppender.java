@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.sap.cloud.lm.sl.cf.core.model.ApplicationColor;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.mta.model.ElementContext;
 import com.sap.cloud.lm.sl.mta.model.v2.Module;
 import com.sap.cloud.lm.sl.mta.model.v2.RequiredDependency;
@@ -23,7 +23,7 @@ public class ApplicationColorAppender extends com.sap.cloud.lm.sl.cf.core.helper
 
     private void visit(ElementContext context, Module module) {
         Map<String, Object> parameters = new TreeMap<>(module.getParameters());
-        parameters.put(SupportedParameters.APP_NAME, computeAppName(module));
+        parameters.put(Parameter.APP_NAME.getName(), computeAppName(module));
         module.setParameters(parameters);
     }
 

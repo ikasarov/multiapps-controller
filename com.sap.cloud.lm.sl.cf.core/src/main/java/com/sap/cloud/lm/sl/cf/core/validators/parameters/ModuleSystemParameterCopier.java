@@ -2,17 +2,18 @@ package com.sap.cloud.lm.sl.cf.core.validators.parameters;
 
 import java.util.Collections;
 
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.mta.model.SystemParameters;
 import com.sap.cloud.lm.sl.mta.model.v1.Module;
 
 public class ModuleSystemParameterCopier implements ParameterValidator {
 
+    private Parameter parameter;
     private SystemParameters systemParameters;
-    private String parameterName;
 
-    public ModuleSystemParameterCopier(String parameterName, SystemParameters systemParameters) {
+    public ModuleSystemParameterCopier(Parameter parameter, SystemParameters systemParameters) {
+        this.parameter = parameter;
         this.systemParameters = systemParameters;
-        this.parameterName = parameterName;
     }
 
     @Override
@@ -26,8 +27,8 @@ public class ModuleSystemParameterCopier implements ParameterValidator {
     }
 
     @Override
-    public String getParameterName() {
-        return parameterName;
+    public Parameter getParameter() {
+        return parameter;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class ModuleSystemParameterCopier implements ParameterValidator {
     private <T> T getModuleSystemParameter(String moduleName) {
         return (T) systemParameters.getModuleParameters()
             .getOrDefault(moduleName, Collections.emptyMap())
-            .get(parameterName);
+            .get(parameter.getName());
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.common.ContentException;
 import com.sap.cloud.lm.sl.common.util.MapUtil;
 import com.sap.cloud.lm.sl.mta.util.ValidatorUtil;
@@ -40,7 +40,8 @@ public class ParametersValidatorHelper {
 
     private Map<String, Object> correctInvalidSingleParameters(String prefix, Object container, ParameterValidator validator,
         Map<String, Object> parameters, Map<String, Object> correctedParameters) {
-        String parameterName = validator.getParameterName();
+        String parameterName = validator.getParameter()
+            .getName();
 
         Object initialParameterValue = parameters.get(parameterName);
         Object correctParameterValue = validateAndCorrect(container, ValidatorUtil.getPrefixedName(prefix, parameterName),
@@ -54,23 +55,23 @@ public class ParametersValidatorHelper {
 
     private Map<String, Object> correctInvalidPluralParameters(String prefix, Object container, ParameterValidator validator,
         Map<String, Object> parameters, Map<String, Object> correctedParameters) {
-        String parameterPluralName = SupportedParameters.SINGULAR_PLURAL_MAPPING.get(validator.getParameterName());
+        Parameter parameterPlural = validator.getParameter().getPlural();
 
-        if (parameterPluralName == null || !parameters.containsKey(parameterPluralName)) {
+        if (parameterPlural == null || !parameters.containsKey(parameterPlural.getName())) {
             return correctedParameters;
         }
 
         @SuppressWarnings("unchecked")
-        List<Object> initialParameterValues = (List<Object>) parameters.get(parameterPluralName);
+        List<Object> initialParameterValues = (List<Object>) parameters.get(parameterPlural.getName());
         if (initialParameterValues == null || initialParameterValues.isEmpty()) {
             return correctedParameters;
         }
 
         List<Object> correctedParameterValues = initialParameterValues.stream()
-            .map(parameter -> validateAndCorrect(container, ValidatorUtil.getPrefixedName(prefix, validator.getParameterName()), parameter,
-                validator))
+            .map(parameter -> validateAndCorrect(container, ValidatorUtil.getPrefixedName(prefix, validator.getParameter()
+                .getName()), parameter, validator))
             .collect(Collectors.toList());
-        correctedParameters.put(parameterPluralName, correctedParameterValues);
+        correctedParameters.put(parameterPlural.getName(), correctedParameterValues);
 
         return correctedParameters;
     }

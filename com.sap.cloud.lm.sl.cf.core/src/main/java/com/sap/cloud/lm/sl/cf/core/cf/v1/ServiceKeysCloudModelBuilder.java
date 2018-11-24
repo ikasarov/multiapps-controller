@@ -13,7 +13,7 @@ import org.cloudfoundry.client.lib.domain.ServiceKey;
 
 import com.sap.cloud.lm.sl.cf.client.lib.domain.CloudServiceExtended;
 import com.sap.cloud.lm.sl.cf.core.helpers.v1.PropertiesAccessor;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.common.ContentException;
 import com.sap.cloud.lm.sl.mta.model.v1.DeploymentDescriptor;
 import com.sap.cloud.lm.sl.mta.model.v1.Resource;
@@ -48,8 +48,8 @@ public class ServiceKeysCloudModelBuilder {
 
     @SuppressWarnings("unchecked")
     protected ServiceKey getServiceKey(Resource resource, Map<String, Object> serviceKeyMap) {
-        String serviceKeyName = (String) serviceKeyMap.get(SupportedParameters.NAME);
-        Map<String, Object> parameters = (Map<String, Object>) serviceKeyMap.get(SupportedParameters.SERVICE_KEY_CONFIG);
+        String serviceKeyName = (String) serviceKeyMap.get(Parameter.NAME.getName());
+        Map<String, Object> parameters = (Map<String, Object>) serviceKeyMap.get(Parameter.SERVICE_KEY_CONFIG.getName());
         if (parameters == null) {
             parameters = Collections.emptyMap();
         }
@@ -59,7 +59,7 @@ public class ServiceKeysCloudModelBuilder {
     @SuppressWarnings("unchecked")
     protected List<Map<String, Object>> getServiceKeysMaps(Resource resource) {
         Object serviceKeys = propertiesAccessor.getParameters(resource)
-            .get(SupportedParameters.SERVICE_KEYS);
+            .get(Parameter.SERVICE_KEYS.getName());
         if (serviceKeys == null) {
             return Collections.emptyList();
         }
@@ -71,7 +71,7 @@ public class ServiceKeysCloudModelBuilder {
 
     protected String getInvalidServiceKeysErrorMessage(String serviceName, Object serviceConfig) {
         return MessageFormat.format(com.sap.cloud.lm.sl.mta.message.Messages.INVALID_TYPE_FOR_KEY,
-            ValidatorUtil.getPrefixedName(serviceName, SupportedParameters.SERVICE_KEYS), Map.class.getSimpleName(),
+            ValidatorUtil.getPrefixedName(serviceName, Parameter.SERVICE_KEYS.getName()), Map.class.getSimpleName(),
             serviceConfig.getClass()
                 .getSimpleName());
     }

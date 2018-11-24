@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.sap.cloud.lm.sl.cf.core.model.ApplicationColor;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.mta.model.ElementContext;
 import com.sap.cloud.lm.sl.mta.model.Visitor;
 import com.sap.cloud.lm.sl.mta.model.v1.Module;
@@ -25,7 +25,7 @@ public class ApplicationColorAppender extends Visitor {
     @Override
     public void visit(ElementContext context, Module module) {
         Map<String, Object> properties = new TreeMap<>(module.getProperties());
-        properties.put(SupportedParameters.APP_NAME, computeAppName(module));
+        properties.put(Parameter.APP_NAME.getName(), computeAppName(module));
         module.setProperties(properties);
     }
 
@@ -36,7 +36,7 @@ public class ApplicationColorAppender extends Visitor {
     }
 
     protected String getAppName(Map<String, Object> moduleProperties, String moduleName) {
-        return (String) moduleProperties.getOrDefault(SupportedParameters.APP_NAME, moduleName) + applicationColor.asSuffix();
+        return (String) moduleProperties.getOrDefault(Parameter.APP_NAME.getName(), moduleName) + applicationColor.asSuffix();
     }
 
     protected Resource buildResource(String resourceName, String resourceType) {

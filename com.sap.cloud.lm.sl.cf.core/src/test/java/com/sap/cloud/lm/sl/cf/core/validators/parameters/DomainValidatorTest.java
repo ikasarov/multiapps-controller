@@ -66,7 +66,7 @@ public class DomainValidatorTest {
 
     @Test
     public void testGetParameterName() {
-        assertEquals("domain", validator.getParameterName());
+        assertEquals("domain", validator.getParameter().getName());
     }
 
     @Test

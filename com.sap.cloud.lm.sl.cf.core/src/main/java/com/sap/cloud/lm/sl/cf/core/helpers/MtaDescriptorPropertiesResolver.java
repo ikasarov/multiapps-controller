@@ -16,8 +16,8 @@ import com.sap.cloud.lm.sl.cf.core.helpers.v1.ConfigurationReferencesResolver;
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.CloudTarget;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.model.ResolvedConfigurationReference;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.cf.core.security.serialization.SecureSerializationFacade;
 import com.sap.cloud.lm.sl.cf.core.util.ApplicationConfiguration;
 import com.sap.cloud.lm.sl.cf.core.validators.parameters.DomainValidator;
@@ -68,7 +68,7 @@ public class MtaDescriptorPropertiesResolver {
 
     public List<ParameterValidator> getValidatorsList() {
         return Arrays.asList(new PortValidator(), new HostValidator(), new DomainValidator(), new RouteValidator(),
-            new ModuleSystemParameterCopier(SupportedParameters.APP_NAME, systemParameters), new TasksValidator(),
+            new ModuleSystemParameterCopier(Parameter.APP_NAME, systemParameters), new TasksValidator(),
             new VisibilityValidator(), new RestartOnEnvChangeValidator());
     }
 

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.sap.cloud.lm.sl.cf.core.cf.apps.ApplicationStateAction;
 import com.sap.cloud.lm.sl.cf.core.cf.clients.RecentLogsRetriever;
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationAttributes;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.persistence.services.ProcessLoggerProvider;
 import com.sap.cloud.lm.sl.cf.process.Constants;
 import com.sap.cloud.lm.sl.cf.process.message.Messages;
@@ -56,7 +56,8 @@ public class PollExecuteAppStatusExecution implements AsyncExecution {
             CloudControllerClient client = execution.getControllerClient();
             ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(app);
             Pair<AppExecutionStatus, String> status = getAppExecutionStatus(execution.getContext(), client, appAttributes, app);
-            ProcessLoggerProvider processLoggerProvider = execution.getStepLogger().getProcessLoggerProvider();
+            ProcessLoggerProvider processLoggerProvider = execution.getStepLogger()
+                .getProcessLoggerProvider();
             StepsUtil.saveAppLogs(execution.getContext(), client, recentLogsRetriever, app, LOGGER, processLoggerProvider);
             return checkAppExecutionStatus(execution, client, app, appAttributes, status);
         } catch (CloudOperationException coe) {
@@ -79,9 +80,9 @@ public class PollExecuteAppStatusExecution implements AsyncExecution {
         ApplicationAttributes appAttributes, CloudApplication app) {
         Pair<AppExecutionStatus, String> status = new Pair<>(AppExecutionStatus.EXECUTING, null);
         long startTime = (Long) context.getVariable(Constants.VAR_START_TIME);
-        Pair<MessageType, String> sm = getMarker(appAttributes, SupportedParameters.SUCCESS_MARKER, DEFAULT_SUCCESS_MARKER);
-        Pair<MessageType, String> fm = getMarker(appAttributes, SupportedParameters.FAILURE_MARKER, DEFAULT_FAILURE_MARKER);
-        boolean checkDeployId = appAttributes.get(SupportedParameters.CHECK_DEPLOY_ID, Boolean.class, false);
+        Pair<MessageType, String> sm = getMarker(appAttributes, Parameter.SUCCESS_MARKER.getName(), DEFAULT_SUCCESS_MARKER);
+        Pair<MessageType, String> fm = getMarker(appAttributes, Parameter.FAILURE_MARKER.getName(), DEFAULT_FAILURE_MARKER);
+        boolean checkDeployId = appAttributes.get(Parameter.CHECK_DEPLOY_ID.getName(), Boolean.class, false);
         String deployId = checkDeployId ? (StepsUtil.DEPLOY_ID_PREFIX + StepsUtil.getCorrelationId(context)) : null;
 
         List<ApplicationLog> recentLogs = recentLogsRetriever.getRecentLogs(client, app.getName());
@@ -139,7 +140,7 @@ public class PollExecuteAppStatusExecution implements AsyncExecution {
 
     private void stopApplicationIfSpecified(ExecutionWrapper execution, CloudControllerClient client, CloudApplication app,
         ApplicationAttributes appAttributes) {
-        boolean stopApp = appAttributes.get(SupportedParameters.STOP_APP, Boolean.class, false);
+        boolean stopApp = appAttributes.get(Parameter.STOP_APP.getName(), Boolean.class, false);
         if (!stopApp) {
             return;
         }

@@ -52,6 +52,7 @@ import com.sap.cloud.lm.sl.cf.core.model.ConfigurationEntry;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
 import com.sap.cloud.lm.sl.cf.core.model.ErrorType;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.cf.persistence.services.ProcessLoggerProvider;
 import com.sap.cloud.lm.sl.cf.process.Constants;
@@ -997,7 +998,7 @@ public class StepsUtil {
         XsPlaceholderResolver xsPlaceholderResolver = StepsUtil.getXsPlaceholderResolver(context);
 
         String defaultDomain = (String) systemParameters.getGeneralParameters()
-            .getOrDefault(SupportedParameters.DEFAULT_DOMAIN, null);
+            .getOrDefault(Parameter.DEFAULT_DOMAIN.getName(), null);
 
         for (CloudApplicationExtended app : apps) {
             if (app.getDomains() != null) {

@@ -1,5 +1,7 @@
 package com.sap.cloud.lm.sl.cf.core.validators.parameters;
 
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
+
 public interface ParameterValidator {
 
     default boolean isValid(Object container, Object parameter) {
@@ -27,6 +29,6 @@ public interface ParameterValidator {
 
     Class<?> getContainerType();
 
-    String getParameterName();
+    Parameter getParameter();
 
 }

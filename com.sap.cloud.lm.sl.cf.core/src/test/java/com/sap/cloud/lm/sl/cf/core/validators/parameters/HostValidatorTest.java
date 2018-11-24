@@ -64,7 +64,7 @@ public class HostValidatorTest {
 
     @Test
     public void testGetParameterName() {
-        assertEquals("host", validator.getParameterName());
+        assertEquals("host", validator.getParameter().getName());
     }
 
     @Test

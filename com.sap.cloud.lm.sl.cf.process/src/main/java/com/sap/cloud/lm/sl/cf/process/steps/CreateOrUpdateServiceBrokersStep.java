@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.cloudfoundry.client.lib.CloudControllerClient;
 import org.cloudfoundry.client.lib.CloudControllerException;
 import org.cloudfoundry.client.lib.CloudOperationException;
-import org.cloudfoundry.client.lib.CloudControllerClient;
 import org.cloudfoundry.client.lib.CloudServiceBrokerException;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.cloudfoundry.client.lib.domain.CloudServiceBroker;
@@ -23,7 +23,7 @@ import com.sap.cloud.lm.sl.cf.core.cf.PlatformType;
 import com.sap.cloud.lm.sl.cf.core.cf.clients.ServiceBrokerCreator;
 import com.sap.cloud.lm.sl.cf.core.cf.clients.ServiceBrokersGetter;
 import com.sap.cloud.lm.sl.cf.core.helpers.ApplicationAttributes;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.security.serialization.SecureSerializationFacade;
 import com.sap.cloud.lm.sl.cf.core.util.ApplicationConfiguration;
 import com.sap.cloud.lm.sl.cf.process.Constants;
@@ -77,8 +77,7 @@ public class CreateOrUpdateServiceBrokersStep extends SyncFlowableStep {
         }
     }
 
-    private List<CloudApplication> mapApplicationsFromContextToCloudApplications(ExecutionWrapper execution,
-        CloudControllerClient client) {
+    private List<CloudApplication> mapApplicationsFromContextToCloudApplications(ExecutionWrapper execution, CloudControllerClient client) {
         return StepsUtil.getAppsToDeploy(execution.getContext())
             .stream()
             .map(app -> client.getApplication(app.getName()))
@@ -122,14 +121,14 @@ public class CreateOrUpdateServiceBrokersStep extends SyncFlowableStep {
 
     protected CloudServiceBrokerExtended getServiceBrokerFromApp(CloudApplication app, DelegateExecution context) {
         ApplicationAttributes appAttributes = ApplicationAttributes.fromApplication(app);
-        if (!appAttributes.get(SupportedParameters.CREATE_SERVICE_BROKER, Boolean.class, false)) {
+        if (!appAttributes.get(Parameter.CREATE_SERVICE_BROKER.getName(), Boolean.class, false)) {
             return null;
         }
 
-        String serviceBrokerName = appAttributes.get(SupportedParameters.SERVICE_BROKER_NAME, String.class, app.getName());
-        String serviceBrokerUsername = appAttributes.get(SupportedParameters.SERVICE_BROKER_USERNAME, String.class);
-        String serviceBrokerPassword = appAttributes.get(SupportedParameters.SERVICE_BROKER_PASSWORD, String.class);
-        String serviceBrokerUrl = appAttributes.get(SupportedParameters.SERVICE_BROKER_URL, String.class);
+        String serviceBrokerName = appAttributes.get(Parameter.SERVICE_BROKER_NAME.getName(), String.class, app.getName());
+        String serviceBrokerUsername = appAttributes.get(Parameter.SERVICE_BROKER_USERNAME.getName(), String.class);
+        String serviceBrokerPassword = appAttributes.get(Parameter.SERVICE_BROKER_PASSWORD.getName(), String.class);
+        String serviceBrokerUrl = appAttributes.get(Parameter.SERVICE_BROKER_URL.getName(), String.class);
         String serviceBrokerSpaceGuid = getServiceBrokerSpaceGuid(context, serviceBrokerName, appAttributes);
 
         if (serviceBrokerName == null) {
@@ -151,7 +150,7 @@ public class CreateOrUpdateServiceBrokersStep extends SyncFlowableStep {
 
     private String getServiceBrokerSpaceGuid(DelegateExecution context, String serviceBrokerName, ApplicationAttributes appAttributes) {
         PlatformType platformType = configuration.getPlatformType();
-        boolean isSpaceScoped = appAttributes.get(SupportedParameters.SERVICE_BROKER_SPACE_SCOPED, Boolean.class, false);
+        boolean isSpaceScoped = appAttributes.get(Parameter.SERVICE_BROKER_SPACE_SCOPED.getName(), Boolean.class, false);
         if (platformType == PlatformType.XS2 && isSpaceScoped) {
             getStepLogger()
                 .warn(MessageFormat.format(Messages.CANNOT_CREATE_SPACE_SCOPED_SERVICE_BROKER_ON_THIS_PLATFORM, serviceBrokerName));

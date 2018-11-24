@@ -7,7 +7,7 @@ import java.util.Map;
 import org.cloudfoundry.client.lib.domain.CloudRoute;
 
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.validators.parameters.PortValidator;
 import com.sap.cloud.lm.sl.common.NotFoundException;
 import com.sap.cloud.lm.sl.common.util.CommonUtil;
@@ -39,25 +39,25 @@ public class UriUtil {
         int portIndex = uri.lastIndexOf(DEFAULT_PORT_SEPARATOR);
         if (portIndex > 0) {
             pathIndex = getPathIndexAfter(uri, portIndex);
-            splitUri.put(SupportedParameters.DOMAIN, uri.substring(0, portIndex));
+            splitUri.put(Parameter.DOMAIN.getName(), uri.substring(0, portIndex));
             String portString = uri.substring(portIndex + 1, pathIndex);
             Integer port = null;
             try {
                 port = Integer.parseInt(portString);
-                splitUri.put(SupportedParameters.PORT, port);
+                splitUri.put(Parameter.PORT.getName(), port);
             } catch (NumberFormatException e) {
-                splitUri.put(SupportedParameters.PORT, PORT_VALIDATOR.MIN_PORT_VALUE - 1);
+                splitUri.put(Parameter.PORT.getName(), PORT_VALIDATOR.MIN_PORT_VALUE - 1);
             }
         } else {
             // Host-based route, return (host, domain):
             int domainIndex = uri.indexOf(DEFAULT_HOST_DOMAIN_SEPARATOR);
             pathIndex = getPathIndexAfter(uri, domainIndex);
             if (domainIndex > 0) {
-                splitUri.put(SupportedParameters.HOST, uri.substring(0, domainIndex));
-                splitUri.put(SupportedParameters.DOMAIN, uri.substring(domainIndex + 1, pathIndex));
+                splitUri.put(Parameter.HOST.getName(), uri.substring(0, domainIndex));
+                splitUri.put(Parameter.DOMAIN.getName(), uri.substring(domainIndex + 1, pathIndex));
             } else {
-                splitUri.put(SupportedParameters.HOST, "");
-                splitUri.put(SupportedParameters.DOMAIN, uri.substring(0, pathIndex));
+                splitUri.put(Parameter.HOST.getName(), "");
+                splitUri.put(Parameter.DOMAIN.getName(), uri.substring(0, pathIndex));
             }
         }
 
@@ -122,7 +122,7 @@ public class UriUtil {
 
     public static String getDomain(String uri) {
         try {
-            String domain = (String) splitUri(uri).get(SupportedParameters.DOMAIN);
+            String domain = (String) splitUri(uri).get(Parameter.DOMAIN.getName());
             if (!CommonUtil.isNullOrEmpty(domain)) {
                 return domain;
             }

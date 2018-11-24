@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.sap.cloud.lm.sl.cf.core.dao.filters.ConfigurationFilter;
 import com.sap.cloud.lm.sl.cf.core.model.CloudTarget;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.ConfigurationEntriesUtil;
 import com.sap.cloud.lm.sl.common.util.Pair;
 import com.sap.cloud.lm.sl.mta.builders.v1.PropertiesChainBuilder;
@@ -45,26 +45,26 @@ public class ConfigurationFilterParser {
 
     private String getType(Resource resource) {
         Map<String, Object> mergedParameters = mergeProperties(chainBuilder.buildResourceChain(resource.getName()));
-        return (String) mergedParameters.get(SupportedParameters.TYPE);
+        return (String) mergedParameters.get(Parameter.TYPE.getName());
     }
 
     private ConfigurationFilter parseOldSyntaxFilter(Resource resource) {
         Map<String, Object> parameters = getParameters(resource);
-        String mtaId = getRequiredParameter(parameters, SupportedParameters.MTA_ID);
+        String mtaId = getRequiredParameter(parameters, Parameter.MTA_ID.getName());
         CloudTarget cloudTarget = getCurrentOrgAndSpace();
-        String mtaProvidesDependency = getRequiredParameter(parameters, SupportedParameters.MTA_PROVIDES_DEPENDENCY);
-        String mtaVersion = getRequiredParameter(parameters, SupportedParameters.MTA_VERSION);
+        String mtaProvidesDependency = getRequiredParameter(parameters, Parameter.MTA_PROVIDES_DEPENDENCY.getName());
+        String mtaVersion = getRequiredParameter(parameters, Parameter.MTA_VERSION.getName());
         String providerId = ConfigurationEntriesUtil.computeProviderId(mtaId, mtaProvidesDependency);
         return new ConfigurationFilter(PROVIDER_NID, providerId, mtaVersion, cloudTarget, null);
     }
 
     private ConfigurationFilter parseNewSyntaxFilter(Resource resource) {
         Map<String, Object> parameters = getParameters(resource);
-        String version = getOptionalParameter(parameters, SupportedParameters.VERSION);
-        String namespaceId = getOptionalParameter(parameters, SupportedParameters.PROVIDER_NID);
-        String pid = getOptionalParameter(parameters, SupportedParameters.PROVIDER_ID);
-        Map<String, Object> filter = getOptionalParameter(parameters, SupportedParameters.FILTER);
-        Map<String, Object> target = getOptionalParameter(parameters, SupportedParameters.TARGET);
+        String version = getOptionalParameter(parameters, Parameter.VERSION.getName());
+        String namespaceId = getOptionalParameter(parameters, Parameter.PROVIDER_NID.getName());
+        String pid = getOptionalParameter(parameters, Parameter.PROVIDER_ID.getName());
+        Map<String, Object> filter = getOptionalParameter(parameters, Parameter.FILTER.getName());
+        Map<String, Object> target = getOptionalParameter(parameters, Parameter.TARGET.getName());
         boolean hasExplicitTarget = target != null;
         CloudTarget cloudTarget = hasExplicitTarget ? parseSpaceTarget(target) : getCurrentOrgAndSpace();
         return new ConfigurationFilter(namespaceId, pid, version, cloudTarget, filter, hasExplicitTarget);
@@ -72,8 +72,8 @@ public class ConfigurationFilterParser {
     }
 
     private CloudTarget parseSpaceTarget(Map<String, Object> target) {
-        String org = getRequiredParameter(target, SupportedParameters.ORG);
-        String space = getRequiredParameter(target, SupportedParameters.SPACE);
+        String org = getRequiredParameter(target, Parameter.ORG.getName());
+        String space = getRequiredParameter(target, Parameter.SPACE.getName());
         return new CloudTarget(org, space);
     }
 

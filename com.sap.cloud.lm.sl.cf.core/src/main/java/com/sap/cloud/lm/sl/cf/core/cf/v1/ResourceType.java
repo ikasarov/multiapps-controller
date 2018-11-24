@@ -1,23 +1,21 @@
 package com.sap.cloud.lm.sl.cf.core.cf.v1;
 
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 
 public enum ResourceType {
-    MANAGED_SERVICE("managed-service", SupportedParameters.SERVICE, SupportedParameters.SERVICE_PLAN), USER_PROVIDED_SERVICE(
-        "user-provided-service", SupportedParameters.SERVICE_CONFIG), EXISTING_SERVICE("existing-service"), EXISTING_SERVICE_KEY("existing-service-key");
+    MANAGED_SERVICE("managed-service", Parameter.SERVICE, Parameter.SERVICE_PLAN), USER_PROVIDED_SERVICE(
+        "user-provided-service", Parameter.SERVICE_CONFIG), EXISTING_SERVICE("existing-service"), EXISTING_SERVICE_KEY("existing-service-key");
 
     private String name;
-    private final Set<String> requiredParameters = new HashSet<>();
+    private final Map<String, Parameter> requiredParameters;
 
-    private ResourceType(String value, String... requiredParameters) {
+    private ResourceType(String value, Parameter... requiredParameters) {
         this.name = value;
-        for (String requiredParameter : requiredParameters) {
-            this.requiredParameters.add(requiredParameter);
-        }
+        this.requiredParameters = Parameter.nameIndexOf(requiredParameters);
     }
 
     @Override
@@ -37,8 +35,8 @@ public enum ResourceType {
         return EnumSet.of(MANAGED_SERVICE, USER_PROVIDED_SERVICE, EXISTING_SERVICE);
     }
 
-    public Set<String> getRequiredParameters() {
-        return requiredParameters;
+    public Set<String> getRequiredParameterNames() {
+        return requiredParameters.keySet();
     }
     
 }

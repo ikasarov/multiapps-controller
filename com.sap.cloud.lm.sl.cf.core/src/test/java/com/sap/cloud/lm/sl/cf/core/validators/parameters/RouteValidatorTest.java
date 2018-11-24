@@ -84,7 +84,7 @@ public class RouteValidatorTest {
 
     @Test
     public void testGetParameterName() {
-        assertEquals("route", validator.getParameterName());
+        assertEquals("route", validator.getParameter().getName());
     }
 
     @Test

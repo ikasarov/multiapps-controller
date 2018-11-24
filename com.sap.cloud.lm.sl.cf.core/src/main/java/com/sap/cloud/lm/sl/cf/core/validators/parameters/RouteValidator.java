@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.UriUtil;
 import com.sap.cloud.lm.sl.common.SLException;
 import com.sap.cloud.lm.sl.mta.model.v1.Module;
@@ -37,8 +37,8 @@ public class RouteValidator implements ParameterValidator {
         String scheme = UriUtil.getScheme(routeString);
         String path = UriUtil.getPath(routeString);
 
-        String correctedRoute = UriUtil.buildUri(scheme, (String) uriParts.get(SupportedParameters.HOST),
-            (String) uriParts.get(SupportedParameters.DOMAIN), (Integer) uriParts.get(SupportedParameters.PORT), path);
+        String correctedRoute = UriUtil.buildUri(scheme, (String) uriParts.get(Parameter.HOST.getName()),
+            (String) uriParts.get(Parameter.DOMAIN.getName()), (Integer) uriParts.get(Parameter.PORT.getName()), path);
 
         if (!isValid(correctedRoute)) {
             throw new SLException(Messages.COULD_NOT_CREATE_VALID_ROUTE, route);
@@ -48,7 +48,8 @@ public class RouteValidator implements ParameterValidator {
     }
 
     protected void correctUriPartIfPresent(Map<String, Object> uriParts, ParameterValidator partValidator) {
-        String uriPartName = partValidator.getParameterName();
+        String uriPartName = partValidator.getParameter()
+            .getName();
         if (!uriParts.containsKey(uriPartName)) {
             return;
         }
@@ -74,18 +75,21 @@ public class RouteValidator implements ParameterValidator {
         boolean partsAreValid = validators.stream()
             .allMatch(validator -> partIsValid(validator, uriParts));
 
-        boolean hostOrPortPresent = uriParts.containsKey(SupportedParameters.HOST) || uriParts.containsKey(SupportedParameters.PORT);
+        boolean hostOrPortPresent = uriParts.containsKey(Parameter.HOST.getName()) || uriParts.containsKey(Parameter.PORT.getName());
 
         return hostOrPortPresent && partsAreValid;
     }
 
     protected boolean partIsValid(ParameterValidator validator, Map<String, Object> uriParts) {
-        return !uriParts.containsKey(validator.getParameterName()) || validator.isValid(uriParts.get(validator.getParameterName()));
+        return !uriParts.containsKey(validator.getParameter()
+            .getName()) || validator.isValid(uriParts.get(
+                validator.getParameter()
+                    .getName()));
     }
 
     @Override
-    public String getParameterName() {
-        return SupportedParameters.ROUTE;
+    public Parameter getParameter() {
+        return Parameter.ROUTE;
     }
 
     @Override

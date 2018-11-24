@@ -37,7 +37,7 @@ public class PortValidatorTest {
 
     @Test
     public void testGetParameterName() {
-        assertEquals("port", validator.getParameterName());
+        assertEquals("port", validator.getParameter().getName());
     }
 
     @Test

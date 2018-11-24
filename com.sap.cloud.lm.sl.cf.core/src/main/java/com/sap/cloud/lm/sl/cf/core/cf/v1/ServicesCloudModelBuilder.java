@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.sap.cloud.lm.sl.cf.client.lib.domain.CloudServiceExtended;
 import com.sap.cloud.lm.sl.cf.core.helpers.v1.PropertiesAccessor;
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.util.SpecialResourceTypesRequiredParametersUtil;
 import com.sap.cloud.lm.sl.cf.core.util.UserMessageLogger;
 import com.sap.cloud.lm.sl.common.ContentException;
@@ -61,7 +61,7 @@ public class ServicesCloudModelBuilder {
         Map<String, Object> parameters = propertiesAccessor.getParameters(resource);
         ResourceType serviceType = getResourceType(parameters);
         boolean isOptional = isOptional(resource);
-        boolean shouldIgnoreUpdateErrors = (boolean) parameters.getOrDefault(SupportedParameters.IGNORE_UPDATE_ERRORS, false);
+        boolean shouldIgnoreUpdateErrors = (boolean) parameters.getOrDefault(Parameter.IGNORE_UPDATE_ERRORS.getName(), false);
         CloudServiceExtended service = createService(cloudServiceNameMapper.mapServiceName(resource, serviceType), serviceType, isOptional,
             shouldIgnoreUpdateErrors, parameters);
         if (service != null) {
@@ -90,14 +90,14 @@ public class ServicesCloudModelBuilder {
     protected CloudServiceExtended createManagedService(String serviceName, boolean isOptional, boolean shouldIgnoreUpdateErrors,
         Map<String, Object> parameters) {
         SpecialResourceTypesRequiredParametersUtil.checkRequiredParameters(serviceName, ResourceType.MANAGED_SERVICE, parameters);
-        String label = (String) parameters.get(SupportedParameters.SERVICE);
-        List<String> alternativeLabels = (List<String>) parameters.getOrDefault(SupportedParameters.SERVICE_ALTERNATIVES,
+        String label = (String) parameters.get(Parameter.SERVICE.getName());
+        List<String> alternativeLabels = (List<String>) parameters.getOrDefault(Parameter.SERVICE_ALTERNATIVES.getName(),
             Collections.emptyList());
-        boolean isShared = (boolean) parameters.getOrDefault(SupportedParameters.SHARED, false);
-        String plan = (String) parameters.get(SupportedParameters.SERVICE_PLAN);
-        String provider = (String) parameters.get(SupportedParameters.SERVICE_PROVIDER);
-        String version = (String) parameters.get(SupportedParameters.SERVICE_VERSION);
-        List<String> serviceTags = (List<String>) parameters.getOrDefault(SupportedParameters.SERVICE_TAGS, Collections.emptyList());
+        boolean isShared = (boolean) parameters.getOrDefault(Parameter.SHARED.getName(), false);
+        String plan = (String) parameters.get(Parameter.SERVICE_PLAN.getName());
+        String provider = (String) parameters.get(Parameter.SERVICE_PROVIDER.getName());
+        String version = (String) parameters.get(Parameter.SERVICE_VERSION.getName());
+        List<String> serviceTags = (List<String>) parameters.getOrDefault(Parameter.SERVICE_TAGS.getName(), Collections.emptyList());
         Map<String, Object> credentials = getServiceParameters(serviceName, parameters);
 
         return createCloudService(serviceName, label, plan, provider, version, alternativeLabels, credentials, serviceTags, isOptional,
@@ -108,8 +108,8 @@ public class ServicesCloudModelBuilder {
         Map<String, Object> parameters) {
         SpecialResourceTypesRequiredParametersUtil.checkRequiredParameters(serviceName, ResourceType.USER_PROVIDED_SERVICE, parameters);
         Map<String, Object> credentials = getServiceParameters(serviceName, parameters);
-        boolean isShared = (boolean) parameters.getOrDefault(SupportedParameters.SHARED, false);
-        String label = (String) parameters.get(SupportedParameters.SERVICE);
+        boolean isShared = (boolean) parameters.getOrDefault(Parameter.SHARED.getName(), false);
+        String label = (String) parameters.get(Parameter.SERVICE.getName());
         if (label != null) {
             LOGGER.warn(MessageFormat.format(Messages.IGNORING_LABEL_FOR_USER_PROVIDED_SERVICE, label, serviceName));
         }
@@ -124,7 +124,7 @@ public class ServicesCloudModelBuilder {
 
     @SuppressWarnings("unchecked")
     protected Map<String, Object> getServiceParameters(String serviceName, Map<String, Object> parameters) {
-        Object serviceParameters = parameters.get(SupportedParameters.SERVICE_CONFIG);
+        Object serviceParameters = parameters.get(Parameter.SERVICE_CONFIG.getName());
         if (serviceParameters == null) {
             return Collections.emptyMap();
         }
@@ -136,7 +136,7 @@ public class ServicesCloudModelBuilder {
 
     protected String getInvalidServiceConfigTypeErrorMessage(String serviceName, Object serviceParameters) {
         return MessageFormat.format(com.sap.cloud.lm.sl.mta.message.Messages.INVALID_TYPE_FOR_KEY,
-            ValidatorUtil.getPrefixedName(serviceName, SupportedParameters.SERVICE_CONFIG), Map.class.getSimpleName(),
+            ValidatorUtil.getPrefixedName(serviceName, Parameter.SERVICE_CONFIG.getName()), Map.class.getSimpleName(),
             serviceParameters.getClass()
                 .getSimpleName());
     }

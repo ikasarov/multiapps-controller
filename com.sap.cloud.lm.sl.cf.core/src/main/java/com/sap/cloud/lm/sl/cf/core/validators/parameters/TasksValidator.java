@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.common.ParsingException;
 import com.sap.cloud.lm.sl.mta.model.v1.Module;
 import com.sap.cloud.lm.sl.mta.schema.Element.ElementBuilder;
@@ -59,8 +59,8 @@ public class TasksValidator implements ParameterValidator {
     }
 
     @Override
-    public String getParameterName() {
-        return SupportedParameters.TASKS;
+    public Parameter getParameter() {
+        return Parameter.TASKS;
     }
 
 }

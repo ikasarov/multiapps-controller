@@ -9,7 +9,7 @@ import com.sap.cloud.lm.sl.common.ContentException;
 
 public class SpecialResourceTypesRequiredParametersUtil {
     public static void checkRequiredParameters(String serviceName, ResourceType resourceType, Map<String, Object> parameters) {
-        Set<String> requiredParameters = resourceType.getRequiredParameters();
+        Set<String> requiredParameters = resourceType.getRequiredParameterNames();
         for (String parameter : requiredParameters) {
             if (!parameters.containsKey(parameter)) {
                 throw new ContentException(Messages.SERVICE_MISSING_REQUIRED_PARAMETER, serviceName, parameter);

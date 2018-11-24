@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.common.util.MapUtil;
 import com.sap.cloud.lm.sl.mta.builders.v1.PropertiesChainBuilder;
 import com.sap.cloud.lm.sl.mta.model.v1.DeploymentDescriptor;
@@ -57,18 +57,18 @@ public class UserProvidedResourceResolver {
         if (!shouldCreateUserProvidedService(parametersList)) {
             return null;
         }
-        String userProvidedServiceName = (String) getPropertyValue(parametersList, SupportedParameters.USER_PROVIDED_SERVICE_NAME, null);
+        String userProvidedServiceName = (String) getPropertyValue(parametersList, Parameter.USER_PROVIDED_SERVICE_NAME.getName(), null);
         if (userProvidedServiceName == null || userProvidedServiceName.isEmpty()) {
             return null;
         }
         Map<String, Object> userProvidedServiceConfig = (Map<String, Object>) getPropertyValue(parametersList,
-            SupportedParameters.USER_PROVIDED_SERVICE_CONFIG, Collections.emptyMap());
+            Parameter.USER_PROVIDED_SERVICE_CONFIG.getName(), Collections.emptyMap());
 
-        return createResource(userProvidedServiceName, MapUtil.asMap(SupportedParameters.SERVICE_CONFIG, userProvidedServiceConfig));
+        return createResource(userProvidedServiceName, MapUtil.asMap(Parameter.SERVICE_CONFIG.getName(), userProvidedServiceConfig));
     }
 
     private boolean shouldCreateUserProvidedService(List<Map<String, Object>> parametersList) {
-        return (Boolean) getPropertyValue(parametersList, SupportedParameters.CREATE_USER_PROVIDED_SERVICE, false);
+        return (Boolean) getPropertyValue(parametersList, Parameter.CREATE_USER_PROVIDED_SERVICE.getName(), false);
     }
 
     protected Resource createResource(String userProvidedServiceName, Map<String, Object> parameters) {

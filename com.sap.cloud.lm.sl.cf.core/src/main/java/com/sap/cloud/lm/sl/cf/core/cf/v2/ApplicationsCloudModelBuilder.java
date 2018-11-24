@@ -30,7 +30,7 @@ import com.sap.cloud.lm.sl.cf.core.helpers.v2.PropertiesAccessor;
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMtaModule;
-import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.cf.core.model.Parameter;
 import com.sap.cloud.lm.sl.cf.core.parser.MemoryParametersParser;
 import com.sap.cloud.lm.sl.cf.core.parser.RestartParametersParser;
 import com.sap.cloud.lm.sl.cf.core.parser.StagingParametersParser;
@@ -98,9 +98,9 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
         List<Map<String, Object>> parametersList = parametersChainBuilder.buildModuleChain(module.getName());
         warnAboutUnsupportedParameters(parametersList);
         Staging staging = parseParameters(parametersList, new StagingParametersParser());
-        int diskQuota = parseParameters(parametersList, new MemoryParametersParser(SupportedParameters.DISK_QUOTA, "0"));
-        int memory = parseParameters(parametersList, new MemoryParametersParser(SupportedParameters.MEMORY, "0"));
-        int instances = (Integer) getPropertyValue(parametersList, SupportedParameters.INSTANCES, 0);
+        int diskQuota = parseParameters(parametersList, new MemoryParametersParser(Parameter.DISK_QUOTA.getName(), "0"));
+        int memory = parseParameters(parametersList, new MemoryParametersParser(Parameter.MEMORY.getName(), "0"));
+        int instances = (Integer) getPropertyValue(parametersList, Parameter.INSTANCES.getName(), 0);
         DeployedMtaModule deployedModule = findDeployedModule(deployedMta, module);
         List<String> uris = urisCloudModelBuilder.getApplicationUris(module, parametersList, deployedModule);
         List<String> idleUris = urisCloudModelBuilder.getIdleApplicationUris(module, parametersList);
@@ -166,7 +166,7 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
     @SuppressWarnings("unchecked")
     protected Map<String, Object> getBindingParameters(RequiredDependency dependency, String moduleName) {
         Object bindingParameters = dependency.getParameters()
-            .get(SupportedParameters.SERVICE_BINDING_CONFIG);
+            .get(Parameter.SERVICE_BINDING_CONFIG.getName());
         if (bindingParameters == null) {
             return null;
         }
@@ -179,7 +179,7 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
     protected String getInvalidServiceBindingConfigTypeErrorMessage(String moduleName, String dependencyName, Object bindingParameters) {
         String prefix = ValidatorUtil.getPrefixedName(moduleName, dependencyName);
         return MessageFormat.format(com.sap.cloud.lm.sl.mta.message.Messages.INVALID_TYPE_FOR_KEY,
-            ValidatorUtil.getPrefixedName(prefix, SupportedParameters.SERVICE_BINDING_CONFIG), Map.class.getSimpleName(),
+            ValidatorUtil.getPrefixedName(prefix, Parameter.SERVICE_BINDING_CONFIG.getName()), Map.class.getSimpleName(),
             bindingParameters.getClass()
                 .getSimpleName());
     }
@@ -229,10 +229,10 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
         Resource resource = (Resource) getResource(dependency.getName());
         if (resource != null && CloudModelBuilderUtil.isServiceKey(resource, propertiesAccessor)) {
             Map<String, Object> resourceParameters = propertiesAccessor.getParameters(resource);
-            String serviceName = PropertiesUtil.getRequiredParameter(resourceParameters, SupportedParameters.SERVICE_NAME);
-            String serviceKeyName = (String) resourceParameters.getOrDefault(SupportedParameters.SERVICE_KEY_NAME, resource.getName());
+            String serviceName = PropertiesUtil.getRequiredParameter(resourceParameters, Parameter.SERVICE_NAME.getName());
+            String serviceKeyName = (String) resourceParameters.getOrDefault(Parameter.SERVICE_KEY_NAME.getName(), resource.getName());
             String envVarName = (String) dependency.getParameters()
-                .getOrDefault(SupportedParameters.ENV_VAR_NAME, serviceKeyName);
+                .getOrDefault(Parameter.ENV_VAR_NAME.getName(), serviceKeyName);
             return new ServiceKeyToInject(envVarName, serviceName, serviceKeyName);
         }
         return null;
@@ -258,8 +258,8 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
     }
 
     private ApplicationPortType getType(Map<String, Object> moduleParameters) {
-        boolean isTcpRoute = (boolean) moduleParameters.getOrDefault(SupportedParameters.TCP, false);
-        boolean isTcpsRoute = (boolean) moduleParameters.getOrDefault(SupportedParameters.TCPS, false);
+        boolean isTcpRoute = (boolean) moduleParameters.getOrDefault(Parameter.TCP.getName(), false);
+        boolean isTcpsRoute = (boolean) moduleParameters.getOrDefault(Parameter.TCPS.getName(), false);
         if (isTcpRoute && isTcpsRoute) {
             throw new ContentException(Messages.INVALID_TCP_ROUTE);
         }
