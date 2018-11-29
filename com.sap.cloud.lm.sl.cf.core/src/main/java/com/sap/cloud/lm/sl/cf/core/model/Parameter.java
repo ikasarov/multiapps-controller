@@ -7,7 +7,7 @@ import java.util.Map;
 
 public enum Parameter {
     // @formatter:off
- // General parameters:
+        // General parameters:
     USER("user"),
     DEFAULT_DOMAIN("default-domain"),
     DEPLOY_TARGET("deploy-target"),
@@ -29,19 +29,19 @@ public enum Parameter {
         // Module / module type parameters:
     APP_NAME("app-name"),
     @Deprecated
-    DOMAINS("domains"),
+    DOMAIN("domain"),
     @Deprecated
-    DOMAIN("domain", DOMAINS),
+    DOMAINS("domains", DOMAIN),
     @Deprecated
-    HOSTS("hosts"),
+    HOST("host"),
     @Deprecated
-    HOST("host", HOSTS),
+    HOSTS("hosts", HOST),
     @Deprecated
-    PORTS("ports"),
+    PORT("port"),
     @Deprecated
-    PORT("port", PORTS),
-    ROUTES("routes"),
-    ROUTE("route", ROUTES),
+    PORTS("ports", PORT),
+    ROUTE("route"),
+    ROUTES("routes", ROUTE),
     DEFAULT_HOST("default-host"),
     DEFAULT_PORT("default-port"),
     KEEP_EXISTING_ROUTES("keep-existing-routes"),
@@ -67,12 +67,12 @@ public enum Parameter {
     ROUTE_PATH("route-path"),
     DEFAULT_IDLE_HOST("default-idle-host"),
     DEFAULT_IDLE_PORT("default-idle-port"),
-    IDLE_PORTS("idle-ports"),
-    IDLE_PORT("idle-port", IDLE_PORTS),
-    IDLE_DOMAINS("idle-domains"),
-    IDLE_DOMAIN("idle-domain", IDLE_DOMAINS),
-    IDLE_HOSTS("idle-hosts"),
-    IDLE_HOST("idle-host", IDLE_HOSTS),
+    IDLE_PORT("idle-port"),
+    IDLE_PORTS("idle-ports", IDLE_PORT),
+    IDLE_DOMAIN("idle-domain"),
+    IDLE_DOMAINS("idle-domains", IDLE_DOMAIN),
+    IDLE_HOST("idle-host"),
+    IDLE_HOSTS("idle-hosts", IDLE_HOST),
     CREATE_USER_PROVIDED_SERVICE("create-user-provided-service"),
     USER_PROVIDED_SERVICE_NAME("user-provided-service-name"),
     USER_PROVIDED_SERVICE_CONFIG("user-provided-service-config"),
@@ -148,16 +148,21 @@ public enum Parameter {
     }
 
     private final String name;
-    private final Parameter plural;
+    private Parameter singular = null;
+    private Parameter plural = null;
     private boolean isDeprecated = false;
 
     Parameter(String name) {
         this.name = name;
-        this.plural = null;
     }
 
-    Parameter(String name, Parameter plural) {
+    Parameter(String name, Parameter singular) {
         this.name = name;
+        this.singular = singular;
+        singular.setPlural(this);
+    }
+
+    private void setPlural(Parameter plural) {
         this.plural = plural;
     }
 
@@ -178,11 +183,11 @@ public enum Parameter {
 
     public static Map<String, Parameter> nameIndexOf(Parameter... params) {
         Map<String, Parameter> prototypeMap = new HashMap<>();
-        
+
         if (params == null) {
             return new HashMap<>();
         }
-        
+
         for (Parameter param : params) {
             prototypeMap.put(param.name, param);
         }
@@ -200,15 +205,32 @@ public enum Parameter {
     public Parameter getPlural() {
         return plural;
     }
-    
+
     public String getPluralName() {
-        if (this.getPlural() == null) {
+        if (!hasPlural()) {
             return null;
         }
-        return this.getPlural().getName();
+
+        return getPlural().getName();
     }
 
     public boolean isDeprecated() {
         return isDeprecated;
+    }
+
+    public boolean hasSingular() {
+        return singular != null;
+    }
+
+    public Parameter getSingular() {
+        return singular;
+    }
+
+    public String getSingularName() {
+        if (!hasSingular()) {
+            return null;
+        }
+
+        return getSingular().getName();
     }
 }

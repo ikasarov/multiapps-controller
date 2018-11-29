@@ -49,24 +49,8 @@ public class SupportedParameters {
 
     public static final Map<String, String> SINGULAR_PLURAL_MAPPING = Collections.unmodifiableMap(Arrays.asList(Parameter.values())
         .stream()
-        .filter(p -> p.getPlural() != null)
-        .collect(Collectors.toMap(Parameter::getName, p -> p.getPlural()
-            .getName())));
-
-    // public static final Map<String, String> SINGULAR_PLURAL_MAPPING;
-    //
-    // static {
-    // Map<String, String> prototype = new HashMap<>();
-    // prototype.put(IDLE_HOST, IDLE_HOSTS);
-    // prototype.put(IDLE_DOMAIN, IDLE_DOMAINS);
-    // prototype.put(IDLE_PORT, IDLE_PORTS);
-    //
-    // prototype.put(ROUTE, ROUTES);
-    // prototype.put(HOST, HOSTS);
-    // prototype.put(DOMAIN, DOMAINS);
-    // prototype.put(PORT, PORTS);
-    // SINGULAR_PLURAL_MAPPING = Collections.unmodifiableMap(prototype);
-    // }
+        .filter(Parameter::hasPlural)
+        .collect(Collectors.toMap(Parameter::getName, Parameter::getPluralName)));
 
     public enum RoutingParameterSet {
         // @formatter:off
@@ -87,23 +71,26 @@ public class SupportedParameters {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> List<T> getAll(List<Map<String, Object>> propertiesList, Parameter param) {
         List<T> result = new ArrayList<>();
         if (param == null) {
             return result;
         }
+
         T value = (T) PropertiesUtil.getPropertyValue(propertiesList, param.getName(), null);
-        List<T> values = null;
-        if (param.getPlural() != null) {
-            values = (List<T>) PropertiesUtil.getPropertyValue(propertiesList, param.getPlural()
-                .getName(), null);
-        }
         if (value != null) {
             result.add(value);
         }
-        if (values != null) {
-            result.addAll(values);
+
+        if (param.hasPlural()) {
+            List<T> values = (List<T>) PropertiesUtil.getPropertyValue(propertiesList, param.getPlural()
+                .getName(), null);
+            if (values != null) {
+                result.addAll(values);
+            }
         }
+
         return result;
     }
 
