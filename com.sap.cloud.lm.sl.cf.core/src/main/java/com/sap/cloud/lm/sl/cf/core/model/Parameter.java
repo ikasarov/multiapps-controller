@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import com.sap.cloud.lm.sl.cf.core.message.Messages;
 
 public enum Parameter {
     // @formatter:off
@@ -29,17 +30,17 @@ public enum Parameter {
         // Module / module type parameters:
     APP_NAME("app-name"),
     @Deprecated
-    DOMAIN("domain"),
+    DOMAIN("domain", Messages.ROUTE_DEPRECATED_PARAMETER),
     @Deprecated
-    DOMAINS("domains", DOMAIN),
+    DOMAINS("domains", Messages.ROUTE_DEPRECATED_PARAMETER, DOMAIN),
     @Deprecated
-    HOST("host"),
+    HOST("host", Messages.ROUTE_DEPRECATED_PARAMETER),
     @Deprecated
-    HOSTS("hosts", HOST),
+    HOSTS("hosts", Messages.ROUTE_DEPRECATED_PARAMETER, HOST),
     @Deprecated
-    PORT("port"),
+    PORT("port", Messages.ROUTE_DEPRECATED_PARAMETER),
     @Deprecated
-    PORTS("ports", PORT),
+    PORTS("ports", Messages.ROUTE_DEPRECATED_PARAMETER, PORT),
     ROUTE("route"),
     ROUTES("routes", ROUTE),
     DEFAULT_HOST("default-host"),
@@ -148,18 +149,30 @@ public enum Parameter {
     }
 
     private final String name;
+    private boolean isDeprecated = false;
+    private String specificDeprecationMessage = null;
     private Parameter singular = null;
     private Parameter plural = null;
-    private boolean isDeprecated = false;
 
     Parameter(String name) {
-        this.name = name;
+        this(name, null, null);
+    }
+
+    Parameter(String name, String message) {
+        this(name, message, null);
     }
 
     Parameter(String name, Parameter singular) {
+        this(name, null, singular);
+    }
+
+    Parameter(String name, String message, Parameter singular) {
         this.name = name;
+        this.specificDeprecationMessage = message;
         this.singular = singular;
-        singular.setPlural(this);
+        if (singular != null) {
+            singular.setPlural(this);
+        }
     }
 
     private void setPlural(Parameter plural) {
@@ -196,6 +209,10 @@ public enum Parameter {
 
     public String getName() {
         return name;
+    }
+
+    public String getSpecificDeprecationMessage() {
+        return specificDeprecationMessage;
     }
 
     public boolean hasPlural() {

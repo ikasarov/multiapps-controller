@@ -2,19 +2,23 @@ package com.sap.cloud.lm.sl.cf.core.cf.v2;
 
 import static com.sap.cloud.lm.sl.mta.util.PropertiesUtil.getPropertyValue;
 import static com.sap.cloud.lm.sl.mta.util.PropertiesUtil.mergeProperties;
+import static com.sap.cloud.lm.sl.cf.core.model.SupportedParameters.ALL_PARAMETERS;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.cloudfoundry.client.lib.domain.Staging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy.KebabCaseStrategy;
 import com.sap.cloud.lm.sl.cf.client.lib.domain.ApplicationPort;
 import com.sap.cloud.lm.sl.cf.client.lib.domain.ApplicationPort.ApplicationPortType;
 import com.sap.cloud.lm.sl.cf.client.lib.domain.CloudApplicationExtended;
@@ -31,6 +35,7 @@ import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMtaModule;
 import com.sap.cloud.lm.sl.cf.core.model.Parameter;
+import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.cf.core.parser.MemoryParametersParser;
 import com.sap.cloud.lm.sl.cf.core.parser.RestartParametersParser;
 import com.sap.cloud.lm.sl.cf.core.parser.StagingParametersParser;
@@ -96,7 +101,7 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
     @Override
     protected CloudApplicationExtended getApplication(com.sap.cloud.lm.sl.mta.model.v1.Module module) {
         List<Map<String, Object>> parametersList = parametersChainBuilder.buildModuleChain(module.getName());
-        warnAboutUnsupportedParameters(parametersList);
+        validateParameters(parametersList);
         Staging staging = parseParameters(parametersList, new StagingParametersParser());
         int diskQuota = parseParameters(parametersList, new MemoryParametersParser(Parameter.DISK_QUOTA.getName(), "0"));
         int memory = parseParameters(parametersList, new MemoryParametersParser(Parameter.MEMORY.getName(), "0"));
@@ -135,13 +140,54 @@ public class ApplicationsCloudModelBuilder extends com.sap.cloud.lm.sl.cf.core.c
         return app;
     }
 
-    protected void warnAboutUnsupportedParameters(List<Map<String, Object>> fullParametersList) {
+    protected void validateParameters(List<Map<String, Object>> fullParametersList) {
         Map<String, Object> merged = mergeProperties(fullParametersList);
-        applicationEnvCloudModelBuilder.removeSpecialApplicationProperties(merged);
-        applicationEnvCloudModelBuilder.removeSpecialServiceProperties(merged);
-        for (String parameterName : merged.keySet()) {
+
+        warnAboutDeprecatedParameters(merged);
+        warnAboutUnsupportedParameters(merged);
+    }
+
+    protected void warnAboutUnsupportedParameters(Map<String, Object> parametersInApp) {
+        applicationEnvCloudModelBuilder.removeSpecialApplicationProperties(parametersInApp);
+        applicationEnvCloudModelBuilder.removeSpecialServiceProperties(parametersInApp);
+        for (String parameterName : parametersInApp.keySet()) {
             LOGGER.warn(MessageFormat.format(Messages.UNSUPPORTED_PARAMETER, parameterName));
         }
+    }
+
+    protected void warnAboutDeprecatedParameters(Map<String, Object> parametersInApp) {
+        List<Parameter> deprecatedParams = filterDeprecatedParameters(parametersInApp.keySet());
+
+        if (deprecatedParams != null && !deprecatedParams.isEmpty()) {
+
+            String combinedParameterNames = deprecatedParams.stream()
+                .map(Parameter::getName)
+                .collect(Collectors.joining(", "));
+
+            String combinedCustomDeprecationMessage = deprecatedParams.stream()
+                .filter(p -> p.getSpecificDeprecationMessage() != null)
+                .map(Parameter::getSpecificDeprecationMessage)
+                .collect(Collectors.joining(" "));
+            // TODO: check why this is even nullable
+            if (userMessageLogger != null) {
+                userMessageLogger.info(Messages.GENERAL_DEPRECATED_PARAMETER, combinedParameterNames);
+                if (combinedCustomDeprecationMessage != null) {
+                    userMessageLogger.info(combinedCustomDeprecationMessage);
+                }
+            }
+        }
+    }
+
+    protected List<Parameter> filterDeprecatedParameters(Collection<String> parameterNames) {
+        if (parameterNames == null) {
+            return null;
+        }
+
+        return parameterNames.stream()
+            .filter(ALL_PARAMETERS::containsKey)
+            .map(SupportedParameters.ALL_PARAMETERS::get)
+            .filter(Parameter::isDeprecated)
+            .collect(Collectors.toList());
     }
 
     protected Map<String, Map<String, Object>> getBindingParameters(Module module) {

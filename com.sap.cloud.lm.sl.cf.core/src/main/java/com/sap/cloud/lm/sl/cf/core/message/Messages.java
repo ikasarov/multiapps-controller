@@ -176,6 +176,9 @@ public final class Messages {
     public static final String PURGE_DELETE_REQUEST_SPACE_FROM_CONFIGURATION_TABLES = "All delete request spaces after date: {0} will be deleted from configuration tables.";
     public static final String RETRIEVED_USER_TOKEN = "Retrieved token for user: {0} with expiration time: {1}";
     public static final String FSS_CACHE_UPDATE_TIMEOUT = "Fss cache update timeout: {0} minutes";
+    
+    public static final String GENERAL_DEPRECATED_PARAMETER = "Deprecation warning: found deprecated parameters - {0}. These will be removed in the future.";
+    public static final String ROUTE_DEPRECATED_PARAMETER = "Route component attributes 'domain', 'domains', 'host', 'hosts' can be replaced with 'route' and 'routes'.";
 
     // Debug messages
     public static final String EXTENSION_DESCRIPTOR = "Extension descriptor \"{0}\": {1}";
