@@ -72,8 +72,8 @@ public class ResilientCloudControllerClient implements CloudControllerClient {
     }
 
     @Override
-    public void addRoute(String host, String domainName) {
-        executeWithRetry(() -> cc.addRoute(host, domainName));
+    public void addRoute(String host, String domainName, String path) {
+        executeWithRetry(() -> cc.addRoute(host, domainName, path));
     }
 
     @Override
@@ -119,8 +119,8 @@ public class ResilientCloudControllerClient implements CloudControllerClient {
     }
 
     @Override
-    public void deleteRoute(String host, String domainName) {
-        executeWithRetry(() -> cc.deleteRoute(host, domainName));
+    public void deleteRoute(String host, String domainName, String path) {
+        executeWithRetry(() -> cc.deleteRoute(host, domainName, path));
     }
 
     @Override

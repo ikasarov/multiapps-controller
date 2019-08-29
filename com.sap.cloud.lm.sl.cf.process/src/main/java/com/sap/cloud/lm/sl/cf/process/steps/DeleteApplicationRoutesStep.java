@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.sap.cloud.lm.sl.cf.core.cf.clients.ApplicationRoutesGetter;
 import com.sap.cloud.lm.sl.cf.core.helpers.ClientHelper;
+import com.sap.cloud.lm.sl.cf.core.util.ApplicationURI;
 import com.sap.cloud.lm.sl.cf.core.util.UriUtil;
 import com.sap.cloud.lm.sl.cf.process.message.Messages;
 import com.sap.cloud.lm.sl.common.NotFoundException;
@@ -48,6 +49,10 @@ public class DeleteApplicationRoutesStep extends UndeployAppStep {
     private void deleteApplicationRoutes(CloudControllerClient client, CloudApplication cloudApplication) {
         getStepLogger().info(Messages.DELETING_APP_ROUTES, cloudApplication.getName());
         List<CloudRoute> cloudApplicationRoutes = applicationRoutesGetter.getRoutes(client, cloudApplication.getName());
+        String debugRoutes = "";
+        for (CloudRoute route : cloudApplicationRoutes) {
+            debugRoutes += new ApplicationURI(route).toString() + " ";
+        }
         getStepLogger().debug(Messages.ROUTES_FOR_APPLICATION, cloudApplication.getName(), JsonUtil.toJson(cloudApplicationRoutes));
         client.updateApplicationUris(cloudApplication.getName(), Collections.emptyList());
         for (String uri : cloudApplication.getUris()) {
@@ -57,7 +62,6 @@ public class DeleteApplicationRoutesStep extends UndeployAppStep {
     }
 
     private void deleteApplicationRoutes(CloudControllerClient client, List<CloudRoute> routes, String uri) {
-        getStepLogger().info(Messages.DELETING_ROUTE, uri);
         try {
             CloudRoute route = UriUtil.findRoute(routes, uri);
             if (route.getAppsUsingRoute() > 1) {
@@ -67,6 +71,7 @@ public class DeleteApplicationRoutesStep extends UndeployAppStep {
             getStepLogger().debug(com.sap.cloud.lm.sl.cf.core.message.Messages.ROUTE_NOT_FOUND, uri);
             return;
         }
+        getStepLogger().info(Messages.DELETING_ROUTE, uri);
         new ClientHelper(client).deleteRoute(uri);
         getStepLogger().debug(Messages.ROUTE_DELETED, uri);
     }
