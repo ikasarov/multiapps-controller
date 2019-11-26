@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cloudfoundry.client.lib.CloudControllerClient;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.springframework.http.ResponseEntity;
 
+import com.sap.cloud.lm.sl.cf.core.Constants;
 import com.sap.cloud.lm.sl.cf.core.cf.CloudControllerClientProvider;
 import com.sap.cloud.lm.sl.cf.core.cf.detect.DeployedComponentsDetector;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedComponents;
@@ -38,12 +40,30 @@ public class MtasApiServiceImpl implements MtasApiService {
     public ResponseEntity<List<Mta>> getMtas(String spaceGuid) {
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
         return ResponseEntity.ok()
-                             .body(getMtas(deployedComponents));
+                             .body(getMtas(deployedComponents.getMtas()));
     }
 
     @Override
-    public ResponseEntity<Mta> getMta(String spaceGuid, String mtaId) {
-        DeployedMta mta = detectDeployedComponents(spaceGuid).findDeployedMta(mtaId);
+    public ResponseEntity<List<Mta>> getMtas(String spaceGuid, String mtaId) {
+        List<DeployedMta> mtas = detectDeployedComponents(spaceGuid).findDeployedMtas(mtaId);
+        if (mtas.size() == 0) {
+            throw new NotFoundException(Messages.MTA_NOT_FOUND, mtaId);
+        }
+        return ResponseEntity.ok()
+                             .body(getMtas(mtas));
+    }
+
+    @Override
+    public ResponseEntity<Mta> getMta(String spaceGuid, String mtaId, String namespace) {
+
+        final String qualifiedId;
+        if (StringUtils.isNotEmpty(namespace)) {
+            qualifiedId = namespace + Constants.NAMESPACE_SEPARATOR + mtaId;
+        } else {
+            qualifiedId = mtaId;
+        }
+        
+        DeployedMta mta = detectDeployedComponents(spaceGuid).findDeployedMta(qualifiedId);
         if (mta == null) {
             throw new NotFoundException(Messages.MTA_NOT_FOUND, mtaId);
         }
@@ -61,11 +81,10 @@ public class MtasApiServiceImpl implements MtasApiService {
         return clientProvider.getControllerClient(userInfo.getName(), spaceGuid);
     }
 
-    private List<Mta> getMtas(DeployedComponents components) {
-        return components.getMtas()
-                         .stream()
-                         .map(this::getMta)
-                         .collect(Collectors.toList());
+    private List<Mta> getMtas(List<DeployedMta> mtas) {
+        return mtas.stream()
+                   .map(this::getMta)
+                   .collect(Collectors.toList());
     }
 
     private Mta getMta(DeployedMta mta) {

@@ -20,47 +20,45 @@ public class ApplicationNameValidatorTest {
 
     @Test
     public void testCorrectionWithNoNamespaces() {
-        boolean useNamespaces = false;
-        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE, false);
+        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(null);
         String result = (String) applicationNameValidator.attemptToCorrect(APPLICATION_NAME);
         assertEquals(APPLICATION_NAME, result);
     }
 
     @Test
     public void testCorrectionWithNamespaces() {
-        boolean useNamespaces = true;
-        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE, true);
+        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE);
         String result = (String) applicationNameValidator.attemptToCorrect(APPLICATION_NAME);
         assertEquals(String.format("%s.%s", NAMESPACE, APPLICATION_NAME), result);
     }
 
     @Test
     public void testCorrectionWithInvalidApplicationName() {
-        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE, true);
+        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE);
         assertThrows(ContentException.class, () -> applicationNameValidator.attemptToCorrect(Collections.emptyList()));
     }
 
     @Test
     public void testValidation() {
-        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE, true);
+        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE);
         assertFalse(applicationNameValidator.isValid(APPLICATION_NAME));
     }
 
     @Test
     public void testGetContainerType() {
-        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE, true);
+        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE);
         assertEquals(Module.class, applicationNameValidator.getContainerType());
     }
 
     @Test
     public void testGetParameterName() {
-        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE, true);
+        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE);
         assertEquals(SupportedParameters.APP_NAME, applicationNameValidator.getParameterName());
     }
 
     @Test
     public void testCanCorrect() {
-        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE, true);
+        ApplicationNameValidator applicationNameValidator = new ApplicationNameValidator(NAMESPACE);
         assertTrue(applicationNameValidator.canCorrect());
     }
 

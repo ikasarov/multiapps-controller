@@ -51,7 +51,7 @@ public class CollectSystemParametersStepTest extends CollectSystemParametersStep
     }
 
     private DeployedMta createDeployedMta(String version, List<DeployedMtaModule> deployedModules) {
-        DeployedMtaMetadata metadata = new DeployedMtaMetadata("system-parameters-test", Version.parseVersion(version));
+        DeployedMtaMetadata metadata = new DeployedMtaMetadata("system-parameters-test", null, Version.parseVersion(version));
         return new DeployedMta(metadata, deployedModules, Collections.emptySet());
     }
 

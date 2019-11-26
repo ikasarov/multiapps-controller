@@ -1,5 +1,7 @@
 package com.sap.cloud.lm.sl.cf.core.validators.parameters;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.cf.core.util.NameUtil;
@@ -11,9 +13,9 @@ public class ApplicationNameValidator implements ParameterValidator {
     private final String namespace;
     private final boolean useNamespaces;
 
-    public ApplicationNameValidator(String namespace, boolean useNamespaces) {
+    public ApplicationNameValidator(String namespace) {
         this.namespace = namespace;
-        this.useNamespaces = useNamespaces;
+        this.useNamespaces = StringUtils.isNotEmpty(namespace);
     }
 
     @Override

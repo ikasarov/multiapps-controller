@@ -1,6 +1,11 @@
 package com.sap.cloud.lm.sl.cf.core.model;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.sap.cloud.lm.sl.cf.core.Constants;
 
 public class DeployedComponents {
 
@@ -31,11 +36,20 @@ public class DeployedComponents {
         this.standaloneApps = standaloneApps;
     }
 
-    public DeployedMta findDeployedMta(String mtaId) {
+    public List<DeployedMta> findDeployedMtas(String mtaId) {
         return getMtas().stream()
                         .filter(mta -> mta.getMetadata()
                                           .getId()
                                           .equalsIgnoreCase(mtaId))
+                        .collect(Collectors.toList());
+    }
+
+    public DeployedMta findDeployedMta(String qualifiedId) {
+
+        return getMtas().stream()
+                        .filter(mta -> mta.getMetadata()
+                                          .getQualifiedId()
+                                          .equalsIgnoreCase(qualifiedId))
                         .findFirst()
                         .orElse(null);
     }

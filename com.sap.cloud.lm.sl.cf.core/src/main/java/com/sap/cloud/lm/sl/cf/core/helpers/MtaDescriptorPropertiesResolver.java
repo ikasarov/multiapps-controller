@@ -97,9 +97,8 @@ public class MtaDescriptorPropertiesResolver {
     }
 
     private DeploymentDescriptor correctEntityNames(DeploymentDescriptor descriptor) {
-        List<ParameterValidator> correctors = Arrays.asList(new ApplicationNameValidator(descriptor.getId(), context.hasUseNamespaces()),
-                                                            new ServiceNameValidator(descriptor.getId(),
-                                                                                     context.hasUseNamespaces(),
+        List<ParameterValidator> correctors = Arrays.asList(new ApplicationNameValidator(context.getNamespace()),
+                                                            new ServiceNameValidator(context.getNamespace(),
                                                                                      context.hasUserNamespacesForServices()));
         return context.getHandlerFactory()
                       .getDescriptorParametersValidator(descriptor, correctors)

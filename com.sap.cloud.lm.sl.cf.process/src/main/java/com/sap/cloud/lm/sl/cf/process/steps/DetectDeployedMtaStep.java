@@ -16,7 +16,6 @@ import com.sap.cloud.lm.sl.cf.core.cf.detect.DeployedComponentsDetector;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedComponents;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
 import com.sap.cloud.lm.sl.cf.core.security.serialization.SecureSerializationFacade;
-import com.sap.cloud.lm.sl.cf.process.Constants;
 import com.sap.cloud.lm.sl.cf.process.message.Messages;
 import com.sap.cloud.lm.sl.common.util.JsonUtil;
 
@@ -36,8 +35,8 @@ public class DetectDeployedMtaStep extends SyncFlowableStep {
 
         List<CloudApplication> deployedApps = client.getApplications(false);
         StepsUtil.setDeployedApps(execution.getContext(), deployedApps);
-        String mtaId = (String) execution.getContext()
-                                         .getVariable(Constants.PARAM_MTA_ID);
+
+        String mtaId = StepsUtil.getQualifiedMtaId(execution.getContext());
 
         DeployedMta deployedMta = componentsDetector.apply(deployedApps)
                                                     .findDeployedMta(mtaId);
@@ -46,7 +45,7 @@ public class DetectDeployedMtaStep extends SyncFlowableStep {
         } else {
             getStepLogger().debug(Messages.DEPLOYED_MTA, JsonUtil.toJson(deployedMta, true));
             getStepLogger().info(MessageFormat.format(Messages.DEPLOYED_MTA_DETECTED_WITH_VERSION, deployedMta.getMetadata()
-                                                                                                              .getId(),
+                                                                                                              .getQualifiedId(),
                                                       deployedMta.getMetadata()
                                                                  .getVersion()));
         }

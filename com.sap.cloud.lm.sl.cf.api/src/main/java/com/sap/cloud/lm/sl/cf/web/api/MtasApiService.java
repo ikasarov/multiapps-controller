@@ -10,6 +10,8 @@ public interface MtasApiService {
 
     ResponseEntity<List<Mta>> getMtas(String spaceGuid);
 
-    ResponseEntity<Mta> getMta(String spaceGuid, String mtaId);
+    ResponseEntity<List<Mta>> getMtas(String spaceGuid, String mtaId);
+
+    ResponseEntity<Mta> getMta(String spaceGuid, String mtaId, String namespace);
 
 }

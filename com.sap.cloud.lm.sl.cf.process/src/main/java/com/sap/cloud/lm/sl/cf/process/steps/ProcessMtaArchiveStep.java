@@ -38,7 +38,7 @@ public class ProcessMtaArchiveStep extends SyncFlowableStep {
 
         String appArchiveId = StepsUtil.getRequiredString(execution.getContext(), Constants.PARAM_APP_ARCHIVE_ID);
         processApplicationArchive(execution.getContext(), appArchiveId);
-        setMtaIdForProcess(execution.getContext());
+        setMtaIdAndNamespaceForProcess(execution.getContext());
         getStepLogger().debug(Messages.MTA_ARCHIVE_PROCESSED);
         return StepPhase.DONE;
     }
@@ -107,11 +107,22 @@ public class ProcessMtaArchiveStep extends SyncFlowableStep {
         getStepLogger().debug("MTA Archive Resources: {0}", mtaArchiveResources.keySet());
     }
 
-    private void setMtaIdForProcess(DelegateExecution context) {
+    private void setMtaIdAndNamespaceForProcess(DelegateExecution context) {
         DeploymentDescriptor deploymentDescriptor = StepsUtil.getDeploymentDescriptor(context);
+        
         String mtaId = deploymentDescriptor.getId();
-        context.setVariable(Constants.PARAM_MTA_ID, mtaId);
+        StepsUtil.setMtaId(context, mtaId);
+        
+        String namespace = deploymentDescriptor.getNamespace();
+        //TODO: calculate the correct namespace at this point
+        String inputNamespace = StepsUtil.getNamespace(context);
+        if (inputNamespace != null) {
+            namespace = inputNamespace;
+        }
+        
+        StepsUtil.setNamespace(context, namespace);
+        
         conflictPreventerSupplier.apply(operationService)
-                                 .acquireLock(mtaId, StepsUtil.getSpaceId(context), StepsUtil.getCorrelationId(context));
+                                 .acquireLock(mtaId, namespace, StepsUtil.getSpaceId(context), StepsUtil.getCorrelationId(context));
     }
 }

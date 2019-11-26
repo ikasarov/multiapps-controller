@@ -49,6 +49,9 @@ public abstract class Operation implements AuditableConfiguration {
     public abstract String getMtaId();
 
     @Nullable
+    public abstract String getNamespace();
+
+    @Nullable
     public abstract String getUser();
 
     @Nullable
@@ -84,6 +87,7 @@ public abstract class Operation implements AuditableConfiguration {
         identifiersList.add(new ConfigurationIdentifier("ended at", Objects.toString(getEndedAt())));
         identifiersList.add(new ConfigurationIdentifier("space id", getSpaceId()));
         identifiersList.add(new ConfigurationIdentifier("mta id", getMtaId()));
+        identifiersList.add(new ConfigurationIdentifier("namespace", getNamespace()));
         identifiersList.add(new ConfigurationIdentifier("user", getUser()));
         identifiersList.add(new ConfigurationIdentifier("state", Objects.toString(getState())));
         identifiersList.add(new ConfigurationIdentifier("error type", Objects.toString(getErrorType())));

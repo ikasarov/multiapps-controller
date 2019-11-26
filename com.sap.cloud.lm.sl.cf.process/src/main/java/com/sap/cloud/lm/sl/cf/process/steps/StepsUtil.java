@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cloudfoundry.client.lib.CloudControllerClient;
 import org.cloudfoundry.client.lib.StartingInfo;
 import org.cloudfoundry.client.lib.StreamingLogToken;
@@ -158,6 +159,38 @@ public class StepsUtil {
 
     public static String getOrg(VariableScope scope) {
         return getString(scope, Constants.VAR_ORG);
+    }
+
+    public static String getMtaId(VariableScope scope) {
+        return getRequiredString(scope, Constants.PARAM_MTA_ID);
+    }
+
+    public static void setMtaId(VariableScope scope, String mtaId) {
+        scope.setVariable(Constants.PARAM_MTA_ID, mtaId);
+    }
+
+    public static String getNamespace(VariableScope scope) {
+        return getString(scope, Constants.PARAM_NAMESPACE);
+    }
+
+    public static void setNamespace(VariableScope scope, String namespace) {
+        scope.setVariable(Constants.PARAM_NAMESPACE, namespace);
+    }
+    
+    public static String getQualifiedMtaId(VariableScope scope) {
+        return getQualifiedMtaId(getMtaId(scope), getNamespace(scope));
+    }
+    
+    public static String getQualifiedMtaId(String mtaId, String namespace) {
+        String qualifiedId;
+        
+        if (StringUtils.isNotEmpty(namespace)) {
+            qualifiedId = namespace + com.sap.cloud.lm.sl.cf.core.Constants.NAMESPACE_SEPARATOR + mtaId;
+        } else {
+            qualifiedId = mtaId;
+        }
+        
+        return qualifiedId;
     }
 
     public static String getSpaceId(VariableScope scope) {
@@ -839,10 +872,6 @@ public class StepsUtil {
 
     static boolean getUseNamespacesForService(VariableScope scope) {
         return getBoolean(scope, Constants.PARAM_USE_NAMESPACES_FOR_SERVICES, false);
-    }
-
-    static boolean getUseNamespaces(VariableScope scope) {
-        return getBoolean(scope, Constants.PARAM_USE_NAMESPACES, false);
     }
 
     public static boolean getSkipUpdateConfigurationEntries(DelegateExecution context) {

@@ -20,49 +20,47 @@ public class ServiceNameValidatorTest {
 
     @Test
     public void testCorrectionWithNoNamespaces() {
-        boolean useNamespaces = false;
         boolean useNamespacesForServices = true;
-        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, useNamespaces, useNamespacesForServices);
+        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(null, useNamespacesForServices);
         String result = (String) serviceNameValidator.attemptToCorrect(SERVICE_NAME);
         assertEquals(SERVICE_NAME, result);
     }
 
     @Test
     public void testCorrectionWithNamespaces() {
-        boolean useNamespaces = true;
         boolean useNamespacesForServices = true;
-        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, useNamespaces, useNamespacesForServices);
+        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, useNamespacesForServices);
         String result = (String) serviceNameValidator.attemptToCorrect(SERVICE_NAME);
         assertEquals(String.format("%s.%s", NAMESPACE, SERVICE_NAME), result);
     }
 
     @Test
     public void testCorrectionWithInvalidServiceName() {
-        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true, true);
+        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true);
         assertThrows(ContentException.class, () -> serviceNameValidator.attemptToCorrect(Collections.emptyList()));
     }
 
     @Test
     public void testValidation() {
-        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true, true);
+        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true);
         assertFalse(serviceNameValidator.isValid(SERVICE_NAME));
     }
 
     @Test
     public void testGetContainerType() {
-        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true, true);
+        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true);
         assertEquals(Resource.class, serviceNameValidator.getContainerType());
     }
 
     @Test
     public void testGetParameterName() {
-        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true, true);
+        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true);
         assertEquals(SupportedParameters.SERVICE_NAME, serviceNameValidator.getParameterName());
     }
 
     @Test
     public void testCanCorrect() {
-        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true, true);
+        ServiceNameValidator serviceNameValidator = new ServiceNameValidator(NAMESPACE, true);
         assertTrue(serviceNameValidator.canCorrect());
     }
 

@@ -62,6 +62,7 @@ public class OperationService extends PersistenceService<Operation, OperationDto
                                      .endedAt(toZonedDateTime(dto.getEndedAt()))
                                      .spaceId(dto.getSpaceId())
                                      .mtaId(dto.getMtaId())
+                                     .namespace(dto.getNamespace())
                                      .user(dto.getUser())
                                      .hasAcquiredLock(dto.hasAcquiredLock())
                                      .state(toState(dto.getFinalState()))
@@ -88,6 +89,7 @@ public class OperationService extends PersistenceService<Operation, OperationDto
             Date endedAt = toDate(operation.getEndedAt());
             String spaceId = operation.getSpaceId();
             String mtaId = operation.getMtaId();
+            String namespace = operation.getNamespace();
             String user = operation.getUser();
             String state = toString(operation.getState());
             boolean acquiredLock = operation.hasAcquiredLock();
@@ -98,6 +100,7 @@ public class OperationService extends PersistenceService<Operation, OperationDto
                                .endedAt(endedAt)
                                .spaceId(spaceId)
                                .mtaId(mtaId)
+                               .namespace(namespace)
                                .user(user)
                                .acquiredLock(acquiredLock)
                                .finalState(state)

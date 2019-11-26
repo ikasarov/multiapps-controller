@@ -27,14 +27,26 @@ public class MtasApi {
     @Inject
     private MtasApiService delegate;
 
-    @GetMapping(path = "/{mtaId}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @GetMapping(path = "/{mtaId}/namespace/{namespace}", produces = { MediaType.APPLICATION_JSON_VALUE,
+        MediaType.APPLICATION_JSON_UTF8_VALUE })
     @ApiOperation(value = "", notes = "Retrieves Multi-Target Application in a space ", response = Mta.class, authorizations = {
         @Authorization(value = "oauth2", scopes = {
 
         }) }, tags = {})
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = Mta.class) })
-    public ResponseEntity<Mta> getMta(@PathVariable("spaceGuid") String spaceGuid, @PathVariable("mtaId") String mtaId) {
-        return delegate.getMta(spaceGuid, mtaId);
+    public ResponseEntity<Mta> getMtas(@PathVariable("spaceGuid") String spaceGuid, @PathVariable("mtaId") String mtaId,
+                                       @PathVariable("namespace") String namespace) {
+        return delegate.getMta(spaceGuid, mtaId, namespace);
+    }
+
+    @GetMapping(path = "/{mtaId}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @ApiOperation(value = "", notes = "Retrieves all Multi-Target Applications for id in a space ", response = Mta.class, authorizations = {
+        @Authorization(value = "oauth2", scopes = {
+
+        }) }, tags = {})
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = Mta.class) })
+    public ResponseEntity<List<Mta>> getMtas(@PathVariable("spaceGuid") String spaceGuid, @PathVariable("mtaId") String mtaId) {
+        return delegate.getMtas(spaceGuid, mtaId);
     }
 
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })

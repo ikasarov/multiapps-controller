@@ -2,6 +2,8 @@ package com.sap.cloud.lm.sl.cf.core.model;
 
 import java.util.List;
 
+import com.sap.cloud.lm.sl.cf.core.Constants;
+
 /**
  * MTA metadata information associated with an application;
  */
@@ -30,6 +32,14 @@ public class ApplicationMtaMetadata {
 
     public String getModuleName() {
         return moduleName;
+    }
+
+    public String getQualifiedModuleName() {
+        if (this.mtaMetadata.getNamespace() == null) {
+            return getModuleName();
+        }
+
+        return this.mtaMetadata.getNamespace() + Constants.NAMESPACE_SEPARATOR + this.moduleName;
     }
 
     public List<String> getProvidedDependencyNames() {

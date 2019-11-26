@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.UUID;
 
+import com.sap.cloud.lm.sl.cf.core.Constants;
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
 import com.sap.cloud.lm.sl.common.SLException;
@@ -37,7 +38,7 @@ public class NameUtil {
     }
 
     public static String getNamespacePrefix(String namespace) {
-        return namespace + ".";
+        return namespace + Constants.NAMESPACE_SEPARATOR;
     }
 
     public static String getWithoutNamespacePrefix(String name) {

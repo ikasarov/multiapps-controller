@@ -166,7 +166,7 @@ public class CheckForCreationConflictsStep extends SyncFlowableStep {
         }
         String owningMtaId = owningMta.get()
                                       .getMetadata()
-                                      .getId();
+                                      .getQualifiedId();
         throw new SLException(Messages.APPLICATION_ASSOCIATED_WITH_ANOTHER_MTA, appName, owningMtaId);
     }
 

@@ -79,14 +79,14 @@ public class ProcessDescriptorStep extends SyncFlowableStep {
         CloudTarget cloudTarget = new CloudTarget(StepsUtil.getOrg(context), StepsUtil.getSpace(context));
         String currentSpaceId = StepsUtil.getSpaceId(context);
         boolean useNamespacesForServices = StepsUtil.getUseNamespacesForService(context);
-        boolean useNamespaces = StepsUtil.getUseNamespaces(context);
+        String namespace = StepsUtil.getNamespace(context);
         boolean setIdleRoutes = StepsUtil.getUseIdleUris(context);
 
         return ImmutableMtaDescriptorPropertiesResolverContext.builder()
                                                               .handlerFactory(handlerFactory)
                                                               .cloudTarget(cloudTarget)
                                                               .currentSpaceId(currentSpaceId)
-                                                              .hasUseNamespaces(useNamespaces)
+                                                              .namespaces(namespace)
                                                               .hasUserNamespacesForServices(useNamespacesForServices)
                                                               .shouldReserveTemporaryRoute(setIdleRoutes)
                                                               .configurationEntryService(configurationEntryService)

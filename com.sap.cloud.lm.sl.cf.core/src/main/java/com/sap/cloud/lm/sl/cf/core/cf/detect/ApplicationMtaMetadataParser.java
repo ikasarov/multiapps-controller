@@ -67,8 +67,9 @@ public class ApplicationMtaMetadataParser {
         String exceptionMessage = MessageFormat.format(Messages.ENV_OF_APP_0_CONTAINS_INVALID_VALUE_FOR_1, app.getName(),
                                                        Constants.ENV_MTA_METADATA);
         String id = (String) getRequired(mtaMetadata, Constants.ATTR_ID, exceptionMessage);
+        String namespace = (String) mtaMetadata.get(Constants.ATTR_NAMESPACE);
         String version = (String) getRequired(mtaMetadata, Constants.ATTR_VERSION, exceptionMessage);
-        return new DeployedMtaMetadata(id, Version.parseVersion(version));
+        return new DeployedMtaMetadata(id, namespace, Version.parseVersion(version));
     }
 
     private static List<String> parseServices(Map<String, String> appEnv) {
