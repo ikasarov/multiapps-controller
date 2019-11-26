@@ -101,6 +101,7 @@ public class StartProcessListener extends AbstractProcessExecutionListener {
                                                 .spaceId(StepsUtil.getSpaceId(context))
                                                 .user(StepsUtil.determineCurrentUser(context, getStepLogger()))
                                                 .hasAcquiredLock(false)
+                                                .namespace(StepsUtil.getNamespace(context))
                                                 .build();
         operationService.add(operation);
     }

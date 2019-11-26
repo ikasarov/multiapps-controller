@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +31,7 @@ public class InfoApi {
 
         }) }, tags = {})
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = Info.class) })
-    public ResponseEntity<Info> getInfo() {
+    public ResponseEntity<Info> getInfo(@PathVariable("spaceGuid") String spaceGuid) {
         return delegate.getInfo();
     }
 

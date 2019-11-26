@@ -30,9 +30,9 @@ public class CloudModelBuilderUtil {
     }
 
     public static boolean isService(Resource resource) {
-        Set<ResourceType> resourceTypes = ResourceType.getServiceTypes();
+        Set<ResourceType> resourceTypesForService = ResourceType.getServiceTypes();
         ResourceType resourceType = getResourceType(resource);
-        return resourceTypes.contains(resourceType);
+        return resourceTypesForService.contains(resourceType);
     }
 
     public static boolean isServiceKey(Resource resource) {

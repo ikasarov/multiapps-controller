@@ -225,7 +225,7 @@ public class Messages {
     public static final String MTA_SCHEMA_VERSION_DETECTED_AS = "Detected MTA schema version: \"{0}\"";
     public static final String DEPLOYING_IN_ORG_0_AND_SPACE_1 = "Deploying in org \"{0}\" and space \"{1}\"";
     public static final String NO_DEPLOYED_MTA_DETECTED = "No deployed MTA detected - this is initial deployment";
-    public static final String DEPLOYED_MTA_DETECTED_WITH_VERSION = "Detected deployed MTA with ID \"{0}\" and version \"{1}\"";
+    public static final String DEPLOYED_MTA_DETECTED_WITH_VERSION = "Detected deployed MTA with namespace \"{0}\", ID \"{1}\" and version \"{2}\"";
     public static final String ASSUMED_LIVE_AND_IDLE_COLORS = "Assuming {0} is the live and {1} is the idle MTA color";
     public static final String DEPLOYED_MTA_COLOR = "Deployed MTA color: {0}";
     public static final String NEW_MTA_COLOR = "New MTA color: {0}";
@@ -461,6 +461,7 @@ public class Messages {
     public static final String ARCHIVE_IS_VERIFIED = "Archive signature is verified";
     public static final String CHECKING_FOR_OVERWRITING_READ_ONLY_PARAMETERS = "Checking for overwriting read-only parameters for mta with id: \"{0}\"";
     public static final String NO_READ_ONLY_PARAMETERS_ARE_OVERWRITTEN = "No read-only parameters are overwritten";
+    public static final String NAMESPACE_IN_DESCRIPTOR_IS_OVERWRITTEN = "Namespace parameter provided multiple times - operation parameter overwriting one given in descriptor.";
 
     protected Messages() {
     }

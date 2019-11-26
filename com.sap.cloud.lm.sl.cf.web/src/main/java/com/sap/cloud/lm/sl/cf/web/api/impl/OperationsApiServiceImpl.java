@@ -253,6 +253,13 @@ public class OperationsApiServiceImpl implements OperationsApiService {
                                                                               .getName());
         parameters.put(com.sap.cloud.lm.sl.cf.process.Constants.VAR_SPACE, space.getName());
         parameters.put(com.sap.cloud.lm.sl.cf.process.Constants.VAR_USER, user);
+        
+        String namespace = operation.getNamespace();
+        if (namespace != null) {
+            parameters.put(com.sap.cloud.lm.sl.cf.process.Constants.PARAM_NAMESPACE, namespace);
+            parameters.put(com.sap.cloud.lm.sl.cf.process.Constants.PARAM_APPLY_NAMESPACE, true);
+        }
+        
         return ImmutableOperation.copyOf(operation)
                                  .withParameters(parameters);
     }

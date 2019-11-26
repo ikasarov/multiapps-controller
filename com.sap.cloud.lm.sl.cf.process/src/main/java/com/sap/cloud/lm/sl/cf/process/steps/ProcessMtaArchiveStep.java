@@ -28,17 +28,21 @@ import com.sap.cloud.lm.sl.mta.model.DeploymentDescriptor;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class ProcessMtaArchiveStep extends SyncFlowableStep {
 
-    protected Function<OperationService, ProcessConflictPreventer> conflictPreventerSupplier = ProcessConflictPreventer::new;
     @Inject
     private OperationService operationService;
-
+    
+    protected Function<OperationService, ProcessConflictPreventer> conflictPreventerSupplier = ProcessConflictPreventer::new;
+    
     @Override
     protected StepPhase executeStep(ExecutionWrapper execution) throws FileStorageException {
         getStepLogger().debug(Messages.PROCESSING_MTA_ARCHIVE);
 
         String appArchiveId = StepsUtil.getRequiredString(execution.getContext(), Constants.PARAM_APP_ARCHIVE_ID);
         processApplicationArchive(execution.getContext(), appArchiveId);
+        
         setMtaIdForProcess(execution.getContext());
+        acquireOperationLock(execution.getContext());
+        
         getStepLogger().debug(Messages.MTA_ARCHIVE_PROCESSED);
         return StepPhase.DONE;
     }
@@ -109,9 +113,16 @@ public class ProcessMtaArchiveStep extends SyncFlowableStep {
 
     private void setMtaIdForProcess(DelegateExecution context) {
         DeploymentDescriptor deploymentDescriptor = StepsUtil.getDeploymentDescriptor(context);
+        
         String mtaId = deploymentDescriptor.getId();
-        context.setVariable(Constants.PARAM_MTA_ID, mtaId);
+        StepsUtil.setMtaId(context, mtaId);
+    }
+
+    private void acquireOperationLock(DelegateExecution context) {
+        String mtaId = StepsUtil.getMtaId(context);
+        String namespace = StepsUtil.getNamespace(context);
+
         conflictPreventerSupplier.apply(operationService)
-                                 .acquireLock(mtaId, StepsUtil.getSpaceId(context), StepsUtil.getCorrelationId(context));
+                                 .acquireLock(mtaId, namespace, StepsUtil.getSpaceId(context), StepsUtil.getCorrelationId(context));
     }
 }

@@ -128,6 +128,7 @@
         <flowable:in source="deleteServiceKeys" target="deleteServiceKeys"></flowable:in>
         <flowable:in source="mtaArchiveElements" target="mtaArchiveElements"></flowable:in>
         <flowable:in source="appArchiveId" target="appArchiveId"></flowable:in>
+        <flowable:in source="namespace" target="namespace"></flowable:in>
       </extensionElements>
       <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="servicesToCreate" flowable:elementVariable="serviceToProcess"></multiInstanceLoopCharacteristics>
     </callActivity>
@@ -318,8 +319,8 @@
         <omgdi:waypoint x="588.9499999999985" y="241.26878172588832"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
-        <omgdi:waypoint x="719.9499999999999" y="62.5"></omgdi:waypoint>
-        <omgdi:waypoint x="765.0" y="62.5"></omgdi:waypoint>
+        <omgdi:waypoint x="719.9499999999884" y="62.5"></omgdi:waypoint>
+        <omgdi:waypoint x="764.9999999999486" y="62.5"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
         <omgdi:waypoint x="1004.9499999999999" y="62.5"></omgdi:waypoint>
@@ -336,8 +337,8 @@
       <bpmndi:BPMNEdge bpmnElement="noGitRepoUriFlow" id="BPMNEdge_noGitRepoUriFlow">
         <omgdi:waypoint x="386.64285714285717" y="40.33989266547405"></omgdi:waypoint>
         <omgdi:waypoint x="386.0" y="5.0"></omgdi:waypoint>
-        <omgdi:waypoint x="667.5" y="5.0"></omgdi:waypoint>
-        <omgdi:waypoint x="667.5" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="667.0" y="5.0"></omgdi:waypoint>
+        <omgdi:waypoint x="667.2173913043479" y="30.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="doNotSkipOwnershipValidationFlow" id="BPMNEdge_doNotSkipOwnershipValidationFlow">
         <omgdi:waypoint x="1339.0" y="241.0"></omgdi:waypoint>
@@ -348,8 +349,8 @@
         <omgdi:waypoint x="717.8574440209503" y="622.0475"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
-        <omgdi:waypoint x="1424.95" y="62.5"></omgdi:waypoint>
-        <omgdi:waypoint x="1475.0" y="62.5"></omgdi:waypoint>
+        <omgdi:waypoint x="1424.9499999999994" y="62.24390243902439"></omgdi:waypoint>
+        <omgdi:waypoint x="1475.0" y="62.0"></omgdi:waypoint>
         <omgdi:waypoint x="1475.0" y="141.0"></omgdi:waypoint>
         <omgdi:waypoint x="1411.9499999999935" y="141.2727272727273"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
@@ -476,7 +477,7 @@
         <omgdi:waypoint x="702.999999999999" y="485.7619047619049"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-551217F6-DE4D-48F4-9A55-77B2AFA8B145" id="BPMNEdge_sid-551217F6-DE4D-48F4-9A55-77B2AFA8B145">
-        <omgdi:waypoint x="869.9499999999999" y="62.5"></omgdi:waypoint>
+        <omgdi:waypoint x="869.9499999999882" y="62.5"></omgdi:waypoint>
         <omgdi:waypoint x="900.0" y="62.5"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="doNotDeleteDiscontinuedServicesFlow" id="BPMNEdge_doNotDeleteDiscontinuedServicesFlow">

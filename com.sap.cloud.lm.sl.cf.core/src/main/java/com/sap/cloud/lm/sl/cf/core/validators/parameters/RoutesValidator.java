@@ -26,7 +26,7 @@ public class RoutesValidator implements ParameterValidator {
     }
 
     @Override
-    public boolean isValid(Object routes) {
+    public boolean isValid(Object routes, final Map<String, Object> context) {
         List<Map<String, Object>> routesList = applyRoutesType(routes);
 
         if (CollectionUtils.isEmpty(routesList)) {
@@ -38,7 +38,7 @@ public class RoutesValidator implements ParameterValidator {
             boolean hasUnsupportedOrInvalidElement = routesElement.keySet()
                                                                   .stream()
                                                                   .anyMatch(key -> validators.get(key) == null || !validators.get(key)
-                                                                                                                             .isValid(routesElement.get(key)));
+                                                                                                                             .isValid(routesElement.get(key), null));
 
             if (hasUnsupportedOrInvalidElement) {
                 return false;
@@ -49,7 +49,7 @@ public class RoutesValidator implements ParameterValidator {
     }
 
     @Override
-    public Object attemptToCorrect(Object routes) {
+    public Object attemptToCorrect(Object routes, final Map<String, Object> context) {
         List<Map<String, Object>> routesList = applyRoutesType(routes);
 
         if (CollectionUtils.isEmpty(routesList)) {
@@ -73,12 +73,12 @@ public class RoutesValidator implements ParameterValidator {
     }
 
     private Object attemptToCorrectParameter(ParameterValidator validator, Object parameter) {
-        if (validator.isValid(parameter)) {
+        if (validator.isValid(parameter, null)) {
             return parameter;
         }
 
         if (validator.canCorrect()) {
-            return validator.attemptToCorrect(parameter);
+            return validator.attemptToCorrect(parameter, null);
         }
 
         throw new SLException(Messages.COULD_NOT_CREATE_VALID_ROUTE, parameter);

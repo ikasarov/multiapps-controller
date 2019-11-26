@@ -10,6 +10,7 @@ import com.sap.cloud.lm.sl.mta.model.Version;
 public class DeployedMtaMetadataDto {
 
     private String id;
+    private String namespace;
     private String version;
 
     protected DeployedMtaMetadataDto() {
@@ -18,12 +19,17 @@ public class DeployedMtaMetadataDto {
 
     public DeployedMtaMetadataDto(DeployedMtaMetadata metadata) {
         this.id = metadata.getId();
+        this.namespace = metadata.getNamespace();
         this.version = metadata.getVersion()
                                .toString();
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getNamespace() {
+        return namespace;
     }
 
     public String getVersion() {
@@ -33,6 +39,7 @@ public class DeployedMtaMetadataDto {
     public DeployedMtaMetadata toDeployedMtaMetadata() {
         DeployedMtaMetadata result = new DeployedMtaMetadata();
         result.setId(id);
+        result.setNamespace(namespace);
         result.setVersion(Version.parseVersion(version));
         return result;
     }

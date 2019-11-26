@@ -30,7 +30,7 @@ public class FilesApi {
     private FilesApiService delegate;
 
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
-    @ApiOperation(value = "", notes = "Retrieves all Multi-Target Application files ", response = FileMetadata.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "", nickname = "getMtaFiles", notes = "Retrieves all Multi-Target Application files ", response = FileMetadata.class, responseContainer = "List", authorizations = {
         @Authorization(value = "oauth2", scopes = {
 
         }) }, tags = {})
@@ -41,7 +41,7 @@ public class FilesApi {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = { MediaType.APPLICATION_JSON_VALUE,
         MediaType.APPLICATION_JSON_UTF8_VALUE })
-    @ApiOperation(value = "", notes = "Uploads an Multi Target Application file ", response = FileMetadata.class, authorizations = {
+    @ApiOperation(value = "", nickname = "uploadMtaFile", notes = "Uploads an Multi Target Application file ", response = FileMetadata.class, authorizations = {
         @Authorization(value = "oauth2", scopes = {
 
         }) }, tags = {})

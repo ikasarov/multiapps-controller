@@ -70,7 +70,7 @@ public class MtaDescriptorPropertiesResolverTest {
                                                               .cloudTarget(new CloudTarget("", ""))
                                                               .currentSpaceId("")
                                                               .applicationConfiguration(configuration)
-                                                              .hasUseNamespaces(false)
+                                                              .namespace(null)
                                                               .hasUserNamespacesForServices(false)
                                                               .shouldReserveTemporaryRoute(false)
                                                               .build();

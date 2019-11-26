@@ -29,6 +29,8 @@ public class SupportedParameters {
     public static final String GENERATED_PASSWORD = "generated-password";
     public static final String DEFAULT_IDLE_DOMAIN = "default-idle-domain";
     public static final String ENABLE_PARALLEL_DEPLOYMENTS = "enable-parallel-deployments";
+    public static final String NAMESPACE = "namespace";
+    public static final String APPLY_NAMESPACE = "appply-namespace";
 
     // Module / module type parameters:
     public static final String APP_NAME = "app-name";
@@ -145,7 +147,8 @@ public class SupportedParameters {
                                                                                                                                  VERSION,
                                                                                                                                  MTA_ID,
                                                                                                                                  MTA_VERSION,
-                                                                                                                                 MTA_PROVIDES_DEPENDENCY)));
+                                                                                                                                 MTA_PROVIDES_DEPENDENCY,
+                                                                                                                                 NAMESPACE)));
 
     public static final Set<String> APP_ATTRIBUTES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(EXECUTE_APP, SUCCESS_MARKER,
                                                                                                              FAILURE_MARKER, STOP_APP,

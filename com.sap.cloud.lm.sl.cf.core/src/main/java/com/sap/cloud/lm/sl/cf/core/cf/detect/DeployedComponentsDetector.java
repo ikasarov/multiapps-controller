@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -85,17 +88,17 @@ public class DeployedComponentsDetector {
     private DeployedMta createDeployedMta(Entry<DeployedMtaMetadata, List<DeployedMtaModule>> entry,
                                           Map<DeployedMtaMetadata, Set<String>> servicesMap) {
         List<DeployedMtaModule> modules = entry.getValue();
-        DeployedMtaMetadata mtaId = entry.getKey();
-        return new DeployedMta(mtaId, modules, servicesMap.get(mtaId));
+        DeployedMtaMetadata mtaMetadata = entry.getKey();
+        return new DeployedMta(mtaMetadata, modules, servicesMap.get(mtaMetadata));
     }
 
     private List<DeployedMta> mergeDifferentVersionsOfMtasWithSameId(List<DeployedMta> mtas) {
-        Set<String> mtaIds = getMtaIds(mtas);
+        Set<DeployedMtaMetadata> uniqueMtasMetadata = getUniqueMtasMetadata(mtas);
         List<DeployedMta> result = new ArrayList<>();
-        for (String mtaId : mtaIds) {
-            List<DeployedMta> mtasWithSameId = getMtasWithSameId(mtas, mtaId);
+        for (DeployedMtaMetadata metadata : uniqueMtasMetadata) {
+            List<DeployedMta> mtasWithSameId = getMtasWithSameId(mtas, metadata.getQualifiedId());
             if (mtasWithSameId.size() > 1) {
-                result.add(mergeMtas(mtaId, mtasWithSameId));
+                result.add(mergeMtas(metadata, mtasWithSameId));
             } else {
                 result.add(mtasWithSameId.get(0));
             }
@@ -103,29 +106,35 @@ public class DeployedComponentsDetector {
         return result;
     }
 
-    private Set<String> getMtaIds(List<DeployedMta> mtas) {
+    private Set<DeployedMtaMetadata> getUniqueMtasMetadata(List<DeployedMta> mtas) {
         return mtas.stream()
-                   .map(mta -> mta.getMetadata()
-                                  .getId())
+                   .map(mta -> mta.getMetadata())
+                   .filter(distinctByKey(DeployedMtaMetadata::getQualifiedId))
+                   .map(metadata -> new DeployedMtaMetadata(metadata.getId(), metadata.getNamespace()))
                    .collect(Collectors.toSet());
     }
+    
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
 
-    private List<DeployedMta> getMtasWithSameId(List<DeployedMta> mtas, String id) {
+    private List<DeployedMta> getMtasWithSameId(List<DeployedMta> mtas, String qualifiedId) {
         return mtas.stream()
                    .filter(mta -> mta.getMetadata()
-                                     .getId()
-                                     .equals(id))
+                                     .getQualifiedId()
+                                     .equals(qualifiedId))
                    .collect(Collectors.toList());
     }
 
-    private DeployedMta mergeMtas(String mtaId, List<DeployedMta> mtas) {
+    private DeployedMta mergeMtas(DeployedMtaMetadata metadata, List<DeployedMta> mtas) {
         List<DeployedMtaModule> modules = new ArrayList<>();
         Set<String> services = new HashSet<>();
         for (DeployedMta mta : mtas) {
             services.addAll(mta.getServices());
             modules.addAll(mta.getModules());
         }
-        return new DeployedMta(new DeployedMtaMetadata(mtaId), modules, services);
+        return new DeployedMta(metadata, modules, services);
     }
 
 }

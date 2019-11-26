@@ -46,7 +46,7 @@ public class OperationsApi {
     }
 
     @GetMapping(path = "/{operationId}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
-    @ApiOperation(value = "", notes = "Retrieves Multi-Target Application operation ", response = Operation.class, authorizations = {
+    @ApiOperation(value = "", nickname = "getMtaOperation", notes = "Retrieves Multi-Target Application operation ", response = Operation.class, authorizations = {
         @Authorization(value = "oauth2", scopes = {
 
         }) }, tags = {})
@@ -58,7 +58,7 @@ public class OperationsApi {
     }
 
     @GetMapping(path = "/{operationId}/logs", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
-    @ApiOperation(value = "", notes = "Retrieves the logs Multi-Target Application operation ", response = Log.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "", nickname = "getMtaOperationLogs", notes = "Retrieves the logs Multi-Target Application operation ", response = Log.class, responseContainer = "List", authorizations = {
         @Authorization(value = "oauth2", scopes = {
 
         }) }, tags = {})
@@ -69,7 +69,7 @@ public class OperationsApi {
     }
 
     @GetMapping(path = "/{operationId}/logs/{logId}/content", produces = MediaType.TEXT_PLAIN_VALUE)
-    @ApiOperation(value = "", notes = "Retrieves the log content for Multi-Target Application operation ", response = String.class, authorizations = {
+    @ApiOperation(value = "", nickname = "getMtaOperationLogContent", notes = "Retrieves the log content for Multi-Target Application operation ", response = String.class, authorizations = {
         @Authorization(value = "oauth2", scopes = {
 
         }) }, tags = {})
@@ -81,7 +81,7 @@ public class OperationsApi {
     }
 
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
-    @ApiOperation(value = "", notes = "Retrieves Multi-Target Application operations ", response = Operation.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "", nickname = "getMtaOperations", notes = "Retrieves Multi-Target Application operations ", response = Operation.class, responseContainer = "List", authorizations = {
         @Authorization(value = "oauth2", scopes = {
 
         }) }, tags = {})
@@ -105,7 +105,7 @@ public class OperationsApi {
 
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = {
         MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
-    @ApiOperation(value = "", notes = "Starts execution of a Multi-Target Application operation ", authorizations = {
+    @ApiOperation(value = "", nickname = "startMtaOperation", notes = "Starts execution of a Multi-Target Application operation ", authorizations = {
         @Authorization(value = "oauth2", scopes = {
 
         }) }, tags = {})

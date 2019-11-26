@@ -20,8 +20,8 @@ public class Constants {
     public static final String PARAM_NO_START = "noStart";
     public static final String PARAM_START_TIMEOUT = "startTimeout";
     public static final String PARAM_UPLOAD_TIMEOUT = "uploadTimeout";
-    public static final String PARAM_USE_NAMESPACES = "useNamespaces";
-    public static final String PARAM_USE_NAMESPACES_FOR_SERVICES = "useNamespacesForServices";
+    public static final String PARAM_NAMESPACE = "namespace";
+    public static final String PARAM_APPLY_NAMESPACE = "apply-namespace";
     public static final String PARAM_ALLOW_INVALID_ENV_NAMES = "allowInvalidEnvNames";
     public static final String PARAM_VERSION_RULE = "versionRule";
     public static final String PARAM_DELETE_SERVICES = "deleteServices";

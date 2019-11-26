@@ -7,16 +7,6 @@
       },
       "modules": [
         {
-          "moduleName": "mta-module-1",
-          "appName": "mta-application-1",
-          "services": [],
-          "providedDependencyNames": [
-            "mta-provided-dependency-1",
-            "mta-provided-dependency-2"
-          ],
-          "uris": []
-        },
-        {
           "moduleName": "mta-module-2",
           "appName": "mta-application-2",
           "services": [
@@ -24,6 +14,16 @@
             "service-2"
           ],
           "providedDependencyNames": [],
+          "uris": []
+        },
+        {
+          "moduleName": "mta-module-1",
+          "appName": "mta-application-1",
+          "services": [],
+          "providedDependencyNames": [
+            "mta-provided-dependency-1",
+            "mta-provided-dependency-2"
+          ],
           "uris": []
         }
       ],
