@@ -51,4 +51,75 @@
             <artifactId>com.sap.cloud.lm.sl.mta</artifactId>
         </dependency>
     </dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.kongchen</groupId>
+				<artifactId>swagger-maven-plugin</artifactId>
+				<version>3.1.8</version>
+				<configuration>
+					<skipSwaggerGeneration>false</skipSwaggerGeneration>
+					<apiSources>
+						<apiSource>
+							<springmvc>true</springmvc>
+							<schemes>https</schemes>
+							<info>
+								<title>MTA REST API</title>
+								<description>This is an API for the deploy-service(MTA) application</description>
+								<contact>
+									<email>DL_563CD7577BCF844DBD000037@exchange.sap.corp</email>
+								</contact>
+								<license>
+									<name>Apache 2.0</name>
+									<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+								</license>
+								<version>1.0.0</version>
+							</info>
+							<outputFormats>yaml</outputFormats>
+							<swaggerDirectory>${project.basedir}/src/main/resources</swaggerDirectory>
+							<securityDefinitions>
+								<securityDefinition>
+									<jsonPath>${project.basedir}/src/main/resources/securityDefinition.json</jsonPath>
+								</securityDefinition>
+							</securityDefinitions>
+						</apiSource>
+					</apiSources>
+				</configuration>
+				<executions>
+					<execution>
+						<id>api-doc</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+												<configuration>
+							<apiSources>
+								<apiSource>
+									<locations>com.sap.cloud.lm.sl.cf.web.api</locations>
+									<swaggerFileName>mtarest</swaggerFileName>
+									<basePath>/api/v1/spaces/{space_guid}</basePath>
+								</apiSource>
+							</apiSources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>api-doc-v2</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<apiSources>
+								<apiSource>
+									<locations>com.sap.cloud.lm.sl.cf.web.api.v2</locations>
+									<swaggerFileName>mtarest_v2</swaggerFileName>
+								</apiSource>
+							</apiSources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
