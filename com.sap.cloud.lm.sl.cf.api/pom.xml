@@ -51,4 +51,52 @@
             <artifactId>com.sap.cloud.lm.sl.mta</artifactId>
         </dependency>
     </dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.kongchen</groupId>
+				<artifactId>swagger-maven-plugin</artifactId>
+				<version>3.1.8</version>
+				<configuration>
+					<skipSwaggerGeneration>false</skipSwaggerGeneration>
+					<apiSources>
+						<apiSource>
+							<springmvc>true</springmvc>
+							<locations>com.sap.cloud.lm.sl.cf.web.api</locations>
+							<schemes>https</schemes>
+							<info>
+								<title>MTA REST API</title>
+								<description>This is an API for the deploy-service(MTA) application</description>
+								<contact>
+									<email>DL_563CD7577BCF844DBD000037@exchange.sap.corp</email>
+								</contact>
+								<license>
+									<name>Apache 2.0</name>
+									<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+								</license>
+								<version>1.0.0</version>
+							</info>
+							<outputFormats>yaml</outputFormats>
+							<swaggerDirectory>${project.basedir}/src/main/resources</swaggerDirectory>
+							<swaggerFileName>mtarest</swaggerFileName>
+							<securityDefinitions>
+								<securityDefinition>
+									<jsonPath>${project.basedir}/src/main/resources/securityDefinition.json</jsonPath>
+								</securityDefinition>
+							</securityDefinitions>
+						</apiSource>
+					</apiSources>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

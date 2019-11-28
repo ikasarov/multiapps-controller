@@ -1,0 +1,582 @@
+---
+swagger: "2.0"
+info:
+  description: "This is an API for the deploy-service(MTA) application"
+  version: "1.0.0"
+  title: "MTA REST API"
+  contact:
+    email: "DL_563CD7577BCF844DBD000037@exchange.sap.corp"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+schemes:
+- "https"
+paths:
+  /api/v1/csrf-token:
+    get:
+      summary: ""
+      description: "Retrieves a csrf-token header "
+      operationId: "getCsrfToken"
+      parameters: []
+      responses:
+        204:
+          description: "No Content"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/files:
+    get:
+      summary: ""
+      description: "Retrieves all Multi-Target Application files "
+      operationId: "getFiles"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/FileMetadata"
+      security:
+      - oauth2: []
+    post:
+      summary: ""
+      description: "Uploads an Multi Target Application file "
+      operationId: "uploadFile"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/FileMetadata"
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/FileMetadata"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/info:
+    get:
+      summary: ""
+      description: "Retrieve information about the Deploy Service application "
+      operationId: "getInfo"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Info"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/mtas:
+    get:
+      summary: ""
+      description: "Retrieves all Multi-Target Applications in a space "
+      operationId: "getMtas"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Mta"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/mtas/{mtaId}:
+    get:
+      summary: ""
+      description: "Retrieves all Multi-Target Applications for id in a space "
+      operationId: "getMtas"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "mtaId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Mta"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/mtas/{mtaId}/namespace/{namespace}:
+    get:
+      summary: ""
+      description: "Retrieves Multi-Target Application in a space "
+      operationId: "getMtas"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "mtaId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "namespace"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Mta"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/operations:
+    get:
+      summary: ""
+      description: "Retrieves Multi-Target Application operations "
+      operationId: "getOperations"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "last"
+        in: "query"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "state"
+        in: "query"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Operation"
+      security:
+      - oauth2: []
+    post:
+      summary: ""
+      description: "Starts execution of a Multi-Target Application operation "
+      operationId: "startOperation"
+      consumes:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Operation"
+        202:
+          description: "Accepted"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/operations/{operationId}:
+    get:
+      summary: ""
+      description: "Retrieves Multi-Target Application operation "
+      operationId: "getOperation"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "operationId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "embed"
+        in: "query"
+        description: "Adds the specified property in the response body "
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Operation"
+      security:
+      - oauth2: []
+    post:
+      summary: ""
+      description: "Executes a particular action over Multi-Target Application operation "
+      operationId: "executeOperationAction"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "operationId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "actionId"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        202:
+          description: "Accepted"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/operations/{operationId}/actions:
+    get:
+      summary: ""
+      description: "Retrieves available actions for Multi-Target Application operation "
+      operationId: "getOperationActions"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "operationId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/operations/{operationId}/logs:
+    get:
+      summary: ""
+      description: "Retrieves the logs Multi-Target Application operation "
+      operationId: "getOperationLogs"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "operationId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Log"
+      security:
+      - oauth2: []
+  /api/v1/spaces/{spaceGuid}/operations/{operationId}/logs/{logId}/content:
+    get:
+      summary: ""
+      description: "Retrieves the log content for Multi-Target Application operation "
+      operationId: "getOperationLogContent"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "operationId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "logId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "string"
+      security:
+      - oauth2: []
+securityDefinitions:
+  oauth2:
+    type: "oauth2"
+    tokenUrl: "https://uaa.bosh-lite.com/oauth/token"
+    flow: "password"
+    scopes: {}
+definitions:
+  ConfigurationIdentifier:
+    type: "object"
+    properties:
+      identifierName:
+        type: "string"
+      identifierValue:
+        type: "string"
+  FileMetadata:
+    type: "object"
+    properties:
+      configurationIdentifiers:
+        type: "array"
+        items:
+          $ref: "#/definitions/ConfigurationIdentifier"
+      configurationName:
+        type: "string"
+      configurationType:
+        type: "string"
+      id:
+        type: "string"
+        readOnly: true
+      name:
+        type: "string"
+        readOnly: true
+      size:
+        type: "integer"
+        readOnly: true
+      digest:
+        type: "string"
+        readOnly: true
+      digestAlgorithm:
+        type: "string"
+        readOnly: true
+      space:
+        type: "string"
+        readOnly: true
+  Info:
+    type: "object"
+    properties:
+      api_version:
+        type: "integer"
+        format: "int32"
+        readOnly: true
+  Log:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        readOnly: true
+      lastModified:
+        type: "string"
+        format: "date-time"
+        readOnly: true
+      content:
+        type: "string"
+        readOnly: true
+      size:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      displayName:
+        type: "string"
+        readOnly: true
+      description:
+        type: "string"
+        readOnly: true
+      externalInfo:
+        type: "string"
+        readOnly: true
+  Message:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      text:
+        type: "string"
+        readOnly: true
+      type:
+        type: "string"
+        readOnly: true
+        enum:
+        - "INFO"
+        - "ERROR"
+        - "WARNING"
+        - "EXT"
+        - "TASK_STARTUP"
+  Metadata:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        readOnly: true
+      version:
+        type: "string"
+        readOnly: true
+      namespace:
+        type: "string"
+        readOnly: true
+  Module:
+    type: "object"
+    properties:
+      moduleName:
+        type: "string"
+        readOnly: true
+      appName:
+        type: "string"
+        readOnly: true
+      createdOn:
+        type: "string"
+        format: "date-time"
+        readOnly: true
+      updatedOn:
+        type: "string"
+        format: "date-time"
+        readOnly: true
+      providedDendencyNames:
+        type: "array"
+        readOnly: true
+        items:
+          type: "string"
+      services:
+        type: "array"
+        readOnly: true
+        items:
+          type: "string"
+      uris:
+        type: "array"
+        readOnly: true
+        items:
+          type: "string"
+  Mta:
+    type: "object"
+    properties:
+      metadata:
+        readOnly: true
+        $ref: "#/definitions/Metadata"
+      modules:
+        type: "array"
+        readOnly: true
+        items:
+          $ref: "#/definitions/Module"
+      services:
+        type: "array"
+        readOnly: true
+        uniqueItems: true
+        items:
+          type: "string"
+  Operation:
+    type: "object"
+    properties:
+      configurationIdentifiers:
+        type: "array"
+        items:
+          $ref: "#/definitions/ConfigurationIdentifier"
+      configurationName:
+        type: "string"
+      configurationType:
+        type: "string"
+      processId:
+        type: "string"
+        readOnly: true
+      processType:
+        readOnly: true
+        $ref: "#/definitions/ProcessType"
+      startedAt:
+        type: "string"
+        format: "date-time"
+        readOnly: true
+      endedAt:
+        type: "string"
+        format: "date-time"
+        readOnly: true
+      spaceId:
+        type: "string"
+        readOnly: true
+      mtaId:
+        type: "string"
+        readOnly: true
+      namespace:
+        type: "string"
+        readOnly: true
+      user:
+        type: "string"
+        readOnly: true
+      acquiredLock:
+        type: "boolean"
+        readOnly: true
+      state:
+        type: "string"
+        readOnly: true
+        enum:
+        - "RUNNING"
+        - "FINISHED"
+        - "ERROR"
+        - "ABORTED"
+        - "ACTION_REQUIRED"
+      errorType:
+        type: "string"
+        readOnly: true
+        enum:
+        - "CONTENT"
+        - "INFRASTRUCTURE"
+      messages:
+        type: "array"
+        readOnly: true
+        items:
+          $ref: "#/definitions/Message"
+      parameters:
+        type: "object"
+        readOnly: true
+        additionalProperties:
+          type: "object"
+  ProcessType:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        readOnly: true
