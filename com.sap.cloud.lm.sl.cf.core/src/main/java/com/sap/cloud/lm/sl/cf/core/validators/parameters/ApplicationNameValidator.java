@@ -1,6 +1,8 @@
 package com.sap.cloud.lm.sl.cf.core.validators.parameters;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
@@ -11,11 +13,11 @@ import com.sap.cloud.lm.sl.mta.model.Module;
 public class ApplicationNameValidator implements ParameterValidator {
 
     private final String namespace;
-    private final boolean useNamespaces;
+    private final boolean applyNamespaceGlobal;
 
-    public ApplicationNameValidator(String namespace) {
+    public ApplicationNameValidator(String namespace, boolean applyNamespace) {
         this.namespace = namespace;
-        this.useNamespaces = StringUtils.isNotEmpty(namespace);
+        this.applyNamespaceGlobal = applyNamespace;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class ApplicationNameValidator implements ParameterValidator {
     }
 
     @Override
-    public boolean isValid(Object applicationName) {
+    public boolean isValid(Object applicationName, final Map<String, Object> context) {
         // The value supplied by the user must always be corrected.
         return false;
     }
@@ -40,11 +42,25 @@ public class ApplicationNameValidator implements ParameterValidator {
     }
 
     @Override
-    public Object attemptToCorrect(Object applicationName) {
+    public Object attemptToCorrect(Object applicationName, final Map<String, Object> relatedParameters) {
         if (!(applicationName instanceof String)) {
             throw new ContentException(Messages.COULD_NOT_CREATE_VALID_APPLICATION_NAME_FROM_0, applicationName);
         }
-        return NameUtil.computeValidApplicationName((String) applicationName, namespace, useNamespaces);
+
+        Object applyNamespaceParameter = relatedParameters.get(SupportedParameters.APPLY_NAMESPACE);
+
+        if (applyNamespaceParameter != null && !(applyNamespaceParameter instanceof Boolean)) {
+            throw new ContentException(Messages.COULD_NOT_PARSE_APPLY_NAMESPACE);
+        }
+
+        boolean resolvedAppyNamespace = NameUtil.resolveApplyNamespaceFlag(applyNamespaceGlobal, (Boolean) applyNamespaceParameter);
+
+        return NameUtil.computeValidApplicationName((String) applicationName, namespace, resolvedAppyNamespace);
+    }
+
+    @Override
+    public Set<String> getRelatedParameterNames() {
+        return Collections.singleton(SupportedParameters.APPLY_NAMESPACE);
     }
 
 }

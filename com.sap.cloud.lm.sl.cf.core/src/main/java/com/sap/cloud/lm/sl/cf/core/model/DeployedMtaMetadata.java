@@ -50,6 +50,14 @@ public class DeployedMtaMetadata {
         return namespace;
     }
     
+    public boolean hasSameNamespace(String namespace) {
+        if (namespace == null) {
+            return this.namespace == null;
+        }
+        
+        return namespace.equalsIgnoreCase(this.namespace);
+    }
+    
     public String getQualifiedId() {
         if (namespace == null) {
             return getId();

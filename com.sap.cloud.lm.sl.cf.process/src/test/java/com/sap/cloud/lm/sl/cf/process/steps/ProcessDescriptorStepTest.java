@@ -43,7 +43,6 @@ public class ProcessDescriptorStepTest extends SyncFlowableStepTest<ProcessDescr
         StepsUtil.setDeploymentDescriptorWithSystemParameters(context, DEPLOYMENT_DESCRIPTOR);
 
         context.setVariable(com.sap.cloud.lm.sl.cf.persistence.Constants.VARIABLE_NAME_SERVICE_ID, Constants.DEPLOY_SERVICE_ID);
-        context.setVariable(Constants.PARAM_USE_NAMESPACES, false);
         context.setVariable(Constants.PARAM_USE_NAMESPACES_FOR_SERVICES, false);
 
         context.setVariable(Constants.VAR_MTA_MAJOR_SCHEMA_VERSION, MTA_MAJOR_SCHEMA_VERSION);

@@ -40,7 +40,7 @@ public class DeployedComponentsDetector {
 
             if (appMetadata != null) {
                 // This application is an MTA module.
-                String moduleName = (appMetadata.getModuleName() != null) ? appMetadata.getQualifiedModuleName() : appName;
+                String moduleName = (appMetadata.getModuleName() != null) ? appMetadata.getModuleName() : appName;
                 List<String> providedDependencies = (appMetadata.getProvidedDependencyNames() != null)
                     ? appMetadata.getProvidedDependencyNames()
                     : new ArrayList<>();

@@ -9,6 +9,7 @@ import java.util.UUID;
 import com.sap.cloud.lm.sl.cf.core.Constants;
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
+import com.sap.cloud.lm.sl.common.ContentException;
 import com.sap.cloud.lm.sl.common.SLException;
 import com.sap.cloud.lm.sl.mta.model.Module;
 import com.sap.cloud.lm.sl.mta.model.Resource;
@@ -49,15 +50,22 @@ public class NameUtil {
     public static boolean isValidName(String name, String namePattern) {
         return name.matches(namePattern);
     }
+    
+    public static boolean resolveApplyNamespaceFlag(boolean applyNamespaceGlobal, Boolean applyNamespaceParameter) {
+        if (applyNamespaceParameter == null) {
+            return applyNamespaceGlobal;
+        }
+        
+        return applyNamespaceGlobal || applyNamespaceParameter.booleanValue();
+    }
 
     public static String computeValidApplicationName(String applicationName, String namespace, boolean useNamespaces) {
         String prefix = useNamespaces ? getNamespacePrefix(namespace) : "";
         return prefix + getNameWithProperLength(applicationName, NameRequirements.APP_NAME_MAX_LENGTH - prefix.length());
     }
 
-    public static String computeValidServiceName(String serviceName, String namespace, boolean useNamespaces,
-                                                 boolean useNamespacesForServices) {
-        String prefix = useNamespaces && useNamespacesForServices ? getNamespacePrefix(namespace) : "";
+    public static String computeValidServiceName(String serviceName, String namespace, boolean useNamespaces) {
+        String prefix = useNamespaces ? getNamespacePrefix(namespace) : "";
         return prefix + getNameWithProperLength(serviceName, NameRequirements.SERVICE_NAME_MAX_LENGTH - prefix.length());
     }
 

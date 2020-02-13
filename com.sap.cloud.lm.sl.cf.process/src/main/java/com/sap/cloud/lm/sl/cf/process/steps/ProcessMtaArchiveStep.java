@@ -28,17 +28,21 @@ import com.sap.cloud.lm.sl.mta.model.DeploymentDescriptor;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class ProcessMtaArchiveStep extends SyncFlowableStep {
 
-    protected Function<OperationService, ProcessConflictPreventer> conflictPreventerSupplier = ProcessConflictPreventer::new;
     @Inject
     private OperationService operationService;
-
+    
+    protected Function<OperationService, ProcessConflictPreventer> conflictPreventerSupplier = ProcessConflictPreventer::new;
+    
     @Override
     protected StepPhase executeStep(ExecutionWrapper execution) throws FileStorageException {
         getStepLogger().debug(Messages.PROCESSING_MTA_ARCHIVE);
 
         String appArchiveId = StepsUtil.getRequiredString(execution.getContext(), Constants.PARAM_APP_ARCHIVE_ID);
         processApplicationArchive(execution.getContext(), appArchiveId);
-        setMtaIdAndNamespaceForProcess(execution.getContext());
+        
+        setMtaIdForProcess(execution.getContext());
+        acquireOperationLock(execution.getContext());
+        
         getStepLogger().debug(Messages.MTA_ARCHIVE_PROCESSED);
         return StepPhase.DONE;
     }
@@ -107,21 +111,17 @@ public class ProcessMtaArchiveStep extends SyncFlowableStep {
         getStepLogger().debug("MTA Archive Resources: {0}", mtaArchiveResources.keySet());
     }
 
-    private void setMtaIdAndNamespaceForProcess(DelegateExecution context) {
+    private void setMtaIdForProcess(DelegateExecution context) {
         DeploymentDescriptor deploymentDescriptor = StepsUtil.getDeploymentDescriptor(context);
         
         String mtaId = deploymentDescriptor.getId();
         StepsUtil.setMtaId(context, mtaId);
-        
-        String namespace = deploymentDescriptor.getNamespace();
-        //TODO: calculate the correct namespace at this point
-        String inputNamespace = StepsUtil.getNamespace(context);
-        if (inputNamespace != null) {
-            namespace = inputNamespace;
-        }
-        
-        StepsUtil.setNamespace(context, namespace);
-        
+    }
+
+    private void acquireOperationLock(DelegateExecution context) {
+        String mtaId = StepsUtil.getMtaId(context);
+        String namespace = StepsUtil.getNamespace(context);
+
         conflictPreventerSupplier.apply(operationService)
                                  .acquireLock(mtaId, namespace, StepsUtil.getSpaceId(context), StepsUtil.getCorrelationId(context));
     }

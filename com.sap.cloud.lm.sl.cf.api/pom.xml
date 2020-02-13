@@ -63,7 +63,6 @@
 					<apiSources>
 						<apiSource>
 							<springmvc>true</springmvc>
-							<locations>com.sap.cloud.lm.sl.cf.web.api</locations>
 							<schemes>https</schemes>
 							<info>
 								<title>MTA REST API</title>
@@ -79,7 +78,6 @@
 							</info>
 							<outputFormats>yaml</outputFormats>
 							<swaggerDirectory>${project.basedir}/src/main/resources</swaggerDirectory>
-							<swaggerFileName>mtarest</swaggerFileName>
 							<securityDefinitions>
 								<securityDefinition>
 									<jsonPath>${project.basedir}/src/main/resources/securityDefinition.json</jsonPath>
@@ -90,10 +88,35 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>api-doc</id>
 						<phase>compile</phase>
 						<goals>
 							<goal>generate</goal>
 						</goals>
+						<configuration>
+							<apiSources>
+								<apiSource>
+									<locations>com.sap.cloud.lm.sl.cf.web.api</locations>
+									<swaggerFileName>mtarest</swaggerFileName>
+									<basePath>/api/v1/spaces/{space_guid}</basePath>
+								</apiSource>
+							</apiSources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>api-doc-v2</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<apiSources>
+								<apiSource>
+									<locations>com.sap.cloud.lm.sl.cf.web.api.v2</locations>
+									<swaggerFileName>mtarest_v2</swaggerFileName>
+								</apiSource>
+							</apiSources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

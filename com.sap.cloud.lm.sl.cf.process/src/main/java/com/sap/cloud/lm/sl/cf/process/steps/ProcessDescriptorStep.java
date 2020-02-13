@@ -16,7 +16,6 @@ import com.sap.cloud.lm.sl.cf.core.cf.HandlerFactory;
 import com.sap.cloud.lm.sl.cf.core.helpers.MtaDescriptorPropertiesResolver;
 import com.sap.cloud.lm.sl.cf.core.model.CloudTarget;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription;
-import com.sap.cloud.lm.sl.cf.core.model.ImmutableMtaDescriptorPropertiesResolverContext;
 import com.sap.cloud.lm.sl.cf.core.model.MtaDescriptorPropertiesResolverContext;
 import com.sap.cloud.lm.sl.cf.core.persistence.service.ConfigurationEntryService;
 import com.sap.cloud.lm.sl.cf.core.security.serialization.SecureSerializationFacade;
@@ -24,6 +23,7 @@ import com.sap.cloud.lm.sl.cf.process.message.Messages;
 import com.sap.cloud.lm.sl.mta.model.DeploymentDescriptor;
 import com.sap.cloud.lm.sl.mta.model.Module;
 
+import annotations.com.sap.cloud.lm.sl.cf.core.model.ImmutableMtaDescriptorPropertiesResolverContext;
 import liquibase.util.StringUtils;
 
 public class ProcessDescriptorStep extends SyncFlowableStep {
@@ -32,6 +32,7 @@ public class ProcessDescriptorStep extends SyncFlowableStep {
 
     @Inject
     private ConfigurationEntryService configurationEntryService;
+
 
     @Override
     protected StepPhase executeStep(ExecutionWrapper execution) {
@@ -78,16 +79,16 @@ public class ProcessDescriptorStep extends SyncFlowableStep {
         HandlerFactory handlerFactory = StepsUtil.getHandlerFactory(context);
         CloudTarget cloudTarget = new CloudTarget(StepsUtil.getOrg(context), StepsUtil.getSpace(context));
         String currentSpaceId = StepsUtil.getSpaceId(context);
-        boolean useNamespacesForServices = StepsUtil.getUseNamespacesForService(context);
         String namespace = StepsUtil.getNamespace(context);
+        boolean applyNamespace = StepsUtil.getApplyNamespace(context);
         boolean setIdleRoutes = StepsUtil.getUseIdleUris(context);
 
         return ImmutableMtaDescriptorPropertiesResolverContext.builder()
                                                               .handlerFactory(handlerFactory)
                                                               .cloudTarget(cloudTarget)
                                                               .currentSpaceId(currentSpaceId)
-                                                              .namespaces(namespace)
-                                                              .hasUserNamespacesForServices(useNamespacesForServices)
+                                                              .namespace(namespace)
+                                                              .applyNamespace(applyNamespace)
                                                               .shouldReserveTemporaryRoute(setIdleRoutes)
                                                               .configurationEntryService(configurationEntryService)
                                                               .applicationConfiguration(configuration)

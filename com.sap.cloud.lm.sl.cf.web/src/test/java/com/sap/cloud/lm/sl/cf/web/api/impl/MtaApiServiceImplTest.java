@@ -83,9 +83,7 @@ public class MtaApiServiceImplTest {
     public void testGetMta() {
         Mta mtaToGet = mtas.get(1);
         ResponseEntity<Mta> response = testedClass.getMta(SPACE_GUID, mtaToGet.getMetadata()
-                                                                              .getId(),
-                                                          mtaToGet.getMetadata()
-                                                                  .getNamespace());
+                                                                              .getId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Mta responseMtas = response.getBody();
         mtaToGet.equals(responseMtas);
@@ -94,7 +92,7 @@ public class MtaApiServiceImplTest {
 
     @Test
     public void testGetMtaNotFound() {
-        Assertions.assertThrows(NotFoundException.class, () -> testedClass.getMta(SPACE_GUID, "not_a_real_mta", "whatever"));
+        Assertions.assertThrows(NotFoundException.class, () -> testedClass.getMta(SPACE_GUID, "not_a_real_mta"));
     }
 
     private void mockClient(String user) {

@@ -169,6 +169,14 @@ public class StepsUtil {
         scope.setVariable(Constants.PARAM_MTA_ID, mtaId);
     }
 
+    public static void setApplyNamespace(VariableScope scope, boolean state) {
+        scope.setVariable(Constants.PARAM_APPLY_NAMESPACE, state);
+    }
+
+    public static boolean getApplyNamespace(VariableScope scope) {
+        return getBoolean(scope, Constants.PARAM_APPLY_NAMESPACE, false);
+    }
+
     public static String getNamespace(VariableScope scope) {
         return getString(scope, Constants.PARAM_NAMESPACE);
     }
@@ -176,20 +184,20 @@ public class StepsUtil {
     public static void setNamespace(VariableScope scope, String namespace) {
         scope.setVariable(Constants.PARAM_NAMESPACE, namespace);
     }
-    
+
     public static String getQualifiedMtaId(VariableScope scope) {
         return getQualifiedMtaId(getMtaId(scope), getNamespace(scope));
     }
-    
+
     public static String getQualifiedMtaId(String mtaId, String namespace) {
         String qualifiedId;
-        
+
         if (StringUtils.isNotEmpty(namespace)) {
             qualifiedId = namespace + com.sap.cloud.lm.sl.cf.core.Constants.NAMESPACE_SEPARATOR + mtaId;
         } else {
             qualifiedId = mtaId;
         }
-        
+
         return qualifiedId;
     }
 
@@ -868,10 +876,6 @@ public class StepsUtil {
 
     static boolean getDeleteIdleUris(VariableScope scope) {
         return getBoolean(scope, Constants.VAR_DELETE_IDLE_URIS, false);
-    }
-
-    static boolean getUseNamespacesForService(VariableScope scope) {
-        return getBoolean(scope, Constants.PARAM_USE_NAMESPACES_FOR_SERVICES, false);
     }
 
     public static boolean getSkipUpdateConfigurationEntries(DelegateExecution context) {

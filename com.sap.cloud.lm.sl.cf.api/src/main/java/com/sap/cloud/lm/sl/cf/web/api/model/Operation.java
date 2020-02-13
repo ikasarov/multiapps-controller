@@ -17,6 +17,8 @@ import com.sap.cloud.lm.sl.cf.web.api.Nullable;
 import com.sap.cloud.lm.sl.mta.model.AuditableConfiguration;
 import com.sap.cloud.lm.sl.mta.model.ConfigurationIdentifier;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Value.Immutable
 @JsonSerialize(as = ImmutableOperation.class)
 @JsonDeserialize(as = ImmutableOperation.class)
@@ -70,16 +72,19 @@ public abstract class Operation implements AuditableConfiguration {
     public abstract Map<String, Object> getParameters();
 
     @Override
+    @ApiModelProperty(hidden = true)
     public String getConfigurationType() {
         return "MTA operation";
     }
 
     @Override
+    @ApiModelProperty(hidden = true)
     public String getConfigurationName() {
         return getProcessId();
     }
 
     @Override
+    @ApiModelProperty(hidden = true)
     public List<ConfigurationIdentifier> getConfigurationIdentifiers() {
         List<ConfigurationIdentifier> identifiersList = new ArrayList<>();
         identifiersList.add(new ConfigurationIdentifier("process type", Objects.toString(getProcessType())));
@@ -87,7 +92,6 @@ public abstract class Operation implements AuditableConfiguration {
         identifiersList.add(new ConfigurationIdentifier("ended at", Objects.toString(getEndedAt())));
         identifiersList.add(new ConfigurationIdentifier("space id", getSpaceId()));
         identifiersList.add(new ConfigurationIdentifier("mta id", getMtaId()));
-        identifiersList.add(new ConfigurationIdentifier("namespace", getNamespace()));
         identifiersList.add(new ConfigurationIdentifier("user", getUser()));
         identifiersList.add(new ConfigurationIdentifier("state", Objects.toString(getState())));
         identifiersList.add(new ConfigurationIdentifier("error type", Objects.toString(getErrorType())));

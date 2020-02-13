@@ -3,10 +3,6 @@ package com.sap.cloud.lm.sl.cf.core.model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.sap.cloud.lm.sl.cf.core.Constants;
-
 public class DeployedComponents {
 
     private List<DeployedMta> mtas;
@@ -36,20 +32,29 @@ public class DeployedComponents {
         this.standaloneApps = standaloneApps;
     }
 
-    public List<DeployedMta> findDeployedMtas(String mtaId) {
+    public List<DeployedMta> findDeployedMtasByName(String name) {
         return getMtas().stream()
                         .filter(mta -> mta.getMetadata()
                                           .getId()
-                                          .equalsIgnoreCase(mtaId))
+                                          .equalsIgnoreCase(name))
                         .collect(Collectors.toList());
     }
 
-    public DeployedMta findDeployedMta(String qualifiedId) {
+    public List<DeployedMta> findDeployedMtasByNamespace(String namespace) {
+        return getMtas().stream()
+                        .filter(mta -> mta.getMetadata()
+                                          .hasSameNamespace(namespace))
+                        .collect(Collectors.toList());
+    }
+
+    public DeployedMta findDeployedMta(String namespace, String name) {
 
         return getMtas().stream()
                         .filter(mta -> mta.getMetadata()
-                                          .getQualifiedId()
-                                          .equalsIgnoreCase(qualifiedId))
+                                          .hasSameNamespace(namespace)
+                            && mta.getMetadata()
+                                  .getId()
+                                  .equalsIgnoreCase(name))
                         .findFirst()
                         .orElse(null);
     }

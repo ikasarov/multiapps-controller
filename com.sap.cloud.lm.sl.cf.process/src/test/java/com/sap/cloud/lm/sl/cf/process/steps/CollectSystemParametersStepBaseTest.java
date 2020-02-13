@@ -33,7 +33,6 @@ public abstract class CollectSystemParametersStepBaseTest extends SyncFlowableSt
     protected static final UUID DEFAULT_DOMAIN_GUID = UUID.fromString("7b5987e9-4325-4bb6-93e2-a0b1c562e60c");
     protected static final String VERSION_RULE = VersionRule.SAME_HIGHER.toString();
 
-    protected static final boolean DEFAULT_USE_NAMESPACES = false;
     protected static final boolean DEFAULT_USE_NAMESPACES_FOR_SERVICES = false;
 
     @Mock
@@ -51,7 +50,6 @@ public abstract class CollectSystemParametersStepBaseTest extends SyncFlowableSt
         context.setVariable(Constants.VAR_ORG, ORG);
         context.setVariable(Constants.VAR_SPACE, SPACE);
 
-        context.setVariable(Constants.PARAM_USE_NAMESPACES, DEFAULT_USE_NAMESPACES);
         context.setVariable(Constants.PARAM_USE_NAMESPACES_FOR_SERVICES, DEFAULT_USE_NAMESPACES_FOR_SERVICES);
         context.setVariable(Constants.PARAM_VERSION_RULE, VERSION_RULE);
 

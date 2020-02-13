@@ -9,6 +9,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/api/v1/spaces/{space_guid}"
 schemes:
 - "https"
 paths:
@@ -27,7 +28,7 @@ paths:
     get:
       summary: ""
       description: "Retrieves all Multi-Target Application files "
-      operationId: "getFiles"
+      operationId: "getMtaFiles"
       produces:
       - "application/json"
       - "application/json;charset=UTF-8"
@@ -48,7 +49,7 @@ paths:
     post:
       summary: ""
       description: "Uploads an Multi Target Application file "
-      operationId: "uploadFile"
+      operationId: "uploadMtaFile"
       consumes:
       - "multipart/form-data"
       produces:
@@ -78,7 +79,11 @@ paths:
       produces:
       - "application/json"
       - "application/json;charset=UTF-8"
-      parameters: []
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        required: true
+        type: "string"
       responses:
         200:
           description: "OK"
@@ -97,6 +102,7 @@ paths:
       parameters:
       - name: "spaceGuid"
         in: "path"
+        description: "GUID of space with mtas"
         required: true
         type: "string"
       responses:
@@ -111,45 +117,18 @@ paths:
   /api/v1/spaces/{spaceGuid}/mtas/{mtaId}:
     get:
       summary: ""
-      description: "Retrieves all Multi-Target Applications for id in a space "
-      operationId: "getMtas"
-      produces:
-      - "application/json"
-      - "application/json;charset=UTF-8"
-      parameters:
-      - name: "spaceGuid"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "mtaId"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/Mta"
-      security:
-      - oauth2: []
-  /api/v1/spaces/{spaceGuid}/mtas/{mtaId}/namespace/{namespace}:
-    get:
-      summary: ""
       description: "Retrieves Multi-Target Application in a space "
-      operationId: "getMtas"
+      operationId: "getMta"
       produces:
       - "application/json"
       - "application/json;charset=UTF-8"
       parameters:
       - name: "spaceGuid"
         in: "path"
+        description: "GUID of space with mtas"
         required: true
         type: "string"
       - name: "mtaId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "namespace"
         in: "path"
         required: true
         type: "string"
@@ -164,7 +143,7 @@ paths:
     get:
       summary: ""
       description: "Retrieves Multi-Target Application operations "
-      operationId: "getOperations"
+      operationId: "getMtaOperations"
       produces:
       - "application/json"
       - "application/json;charset=UTF-8"
@@ -197,7 +176,7 @@ paths:
     post:
       summary: ""
       description: "Starts execution of a Multi-Target Application operation "
-      operationId: "startOperation"
+      operationId: "startMtaOperation"
       consumes:
       - "application/json"
       - "application/json;charset=UTF-8"
@@ -227,7 +206,7 @@ paths:
     get:
       summary: ""
       description: "Retrieves Multi-Target Application operation "
-      operationId: "getOperation"
+      operationId: "getMtaOperation"
       produces:
       - "application/json"
       - "application/json;charset=UTF-8"
@@ -304,7 +283,7 @@ paths:
     get:
       summary: ""
       description: "Retrieves the logs Multi-Target Application operation "
-      operationId: "getOperationLogs"
+      operationId: "getMtaOperationLogs"
       produces:
       - "application/json"
       - "application/json;charset=UTF-8"
@@ -330,7 +309,7 @@ paths:
     get:
       summary: ""
       description: "Retrieves the log content for Multi-Target Application operation "
-      operationId: "getOperationLogContent"
+      operationId: "getMtaOperationLogContent"
       produces:
       - "text/plain"
       parameters:
@@ -353,6 +332,39 @@ paths:
             type: "string"
       security:
       - oauth2: []
+  /api/v2/spaces/{spaceGuid}/mtas:
+    get:
+      summary: ""
+      description: "Retrieves all Multi-Target Applications in a space "
+      operationId: "getMtasV2"
+      produces:
+      - "application/json"
+      - "application/json;charset=UTF-8"
+      parameters:
+      - name: "spaceGuid"
+        in: "path"
+        description: "GUID of space with mtas"
+        required: true
+        type: "string"
+      - name: "namespace"
+        in: "query"
+        description: "Filter mtas by namespace"
+        required: false
+        type: "string"
+      - name: "name"
+        in: "query"
+        description: "Filter mtas by name"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Mta"
+      security:
+      - oauth2: []
 securityDefinitions:
   oauth2:
     type: "oauth2"
@@ -360,24 +372,9 @@ securityDefinitions:
     flow: "password"
     scopes: {}
 definitions:
-  ConfigurationIdentifier:
-    type: "object"
-    properties:
-      identifierName:
-        type: "string"
-      identifierValue:
-        type: "string"
   FileMetadata:
     type: "object"
     properties:
-      configurationIdentifiers:
-        type: "array"
-        items:
-          $ref: "#/definitions/ConfigurationIdentifier"
-      configurationName:
-        type: "string"
-      configurationType:
-        type: "string"
       id:
         type: "string"
         readOnly: true
@@ -512,14 +509,6 @@ definitions:
   Operation:
     type: "object"
     properties:
-      configurationIdentifiers:
-        type: "array"
-        items:
-          $ref: "#/definitions/ConfigurationIdentifier"
-      configurationName:
-        type: "string"
-      configurationType:
-        type: "string"
       processId:
         type: "string"
         readOnly: true

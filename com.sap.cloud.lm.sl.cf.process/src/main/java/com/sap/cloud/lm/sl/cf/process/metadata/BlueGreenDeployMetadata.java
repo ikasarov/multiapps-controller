@@ -39,12 +39,11 @@ public class BlueGreenDeployMetadata {
                                              .type(ParameterType.INTEGER)
                                              .build());
         PARAMS.add(ImmutableParameterMetadata.builder()
-                                             .id(Constants.PARAM_USE_NAMESPACES)
-                                             .defaultValue(false)
-                                             .type(ParameterType.BOOLEAN)
+                                             .id(Constants.PARAM_NAMESPACE)
+                                             .type(ParameterType.STRING)
                                              .build());
         PARAMS.add(ImmutableParameterMetadata.builder()
-                                             .id(Constants.PARAM_USE_NAMESPACES_FOR_SERVICES)
+                                             .id(Constants.PARAM_APPLY_NAMESPACE)
                                              .defaultValue(false)
                                              .type(ParameterType.BOOLEAN)
                                              .build());

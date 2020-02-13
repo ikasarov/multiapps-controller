@@ -27,7 +27,7 @@ public interface MtaDescriptorPropertiesResolverContext {
     @Nullable
     String getNamespace();
 
-    boolean hasUserNamespacesForServices();
+    boolean applyNamespace();
 
     boolean shouldReserveTemporaryRoute();
 }
