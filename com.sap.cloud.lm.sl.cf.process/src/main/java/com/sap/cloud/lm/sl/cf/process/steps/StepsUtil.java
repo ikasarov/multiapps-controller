@@ -49,6 +49,7 @@ import com.sap.cloud.lm.sl.cf.core.cf.v2.ServicesCloudModelBuilder;
 import com.sap.cloud.lm.sl.cf.core.helpers.ModuleToDeployHelper;
 import com.sap.cloud.lm.sl.cf.core.helpers.MtaArchiveElements;
 import com.sap.cloud.lm.sl.cf.core.model.ApplicationColor;
+import com.sap.cloud.lm.sl.cf.core.model.CloudTarget;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationEntry;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
@@ -185,10 +186,6 @@ public class StepsUtil {
         scope.setVariable(Constants.PARAM_NAMESPACE, namespace);
     }
 
-    public static String getQualifiedMtaId(VariableScope scope) {
-        return getQualifiedMtaId(getMtaId(scope), getNamespace(scope));
-    }
-
     public static String getQualifiedMtaId(String mtaId, String namespace) {
         String qualifiedId;
 
@@ -211,6 +208,10 @@ public class StepsUtil {
 
     public static String getSpace(VariableScope scope) {
         return getString(scope, Constants.VAR_SPACE);
+    }
+    
+    public static CloudTarget getCloudTarget(VariableScope scope) {
+        return new CloudTarget(getOrg(scope), getSpace(scope));
     }
 
     static String getNewMtaVersion(VariableScope scope) {
@@ -795,11 +796,12 @@ public class StepsUtil {
         HandlerFactory handlerFactory = StepsUtil.getHandlerFactory(scope);
 
         String deployId = DEPLOY_ID_PREFIX + getCorrelationId(scope);
+        String namespace = getNamespace(scope);
 
         DeploymentDescriptor deploymentDescriptor = StepsUtil.getCompleteDeploymentDescriptor(scope);
         DeployedMta deployedMta = StepsUtil.getDeployedMta(scope);
 
-        return handlerFactory.getApplicationCloudModelBuilder(deploymentDescriptor, true, deployedMta, deployId, stepLogger);
+        return handlerFactory.getApplicationCloudModelBuilder(deploymentDescriptor, true, deployedMta, deployId, namespace, stepLogger);
     }
 
     static List<String> getDomainsFromApps(VariableScope scope, DeploymentDescriptor descriptor,

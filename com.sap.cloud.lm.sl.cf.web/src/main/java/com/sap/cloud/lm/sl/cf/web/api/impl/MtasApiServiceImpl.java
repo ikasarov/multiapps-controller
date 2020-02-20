@@ -24,6 +24,7 @@ import com.sap.cloud.lm.sl.cf.web.api.model.Module;
 import com.sap.cloud.lm.sl.cf.web.api.model.Mta;
 import com.sap.cloud.lm.sl.cf.web.message.Messages;
 import com.sap.cloud.lm.sl.cf.web.util.SecurityContextUtil;
+import com.sap.cloud.lm.sl.common.ConflictException;
 import com.sap.cloud.lm.sl.common.NotFoundException;
 
 import com.sap.cloud.lm.sl.cf.web.api.model.ImmutableMetadata;
@@ -39,25 +40,32 @@ public class MtasApiServiceImpl implements MtasApiService {
     @Override
     public ResponseEntity<List<Mta>> getMtas(String spaceGuid) {
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
+        // only return mtas without namespace for compatibility
         return ResponseEntity.ok()
-                             .body(getMtas(deployedComponents.getMtas()));
+                             .body(getMtas(deployedComponents.getMtasWithoutNamespace()));
     }
 
     @Override
     public ResponseEntity<Mta> getMta(String spaceGuid, String mtaId) {
-        DeployedMta mta = detectDeployedComponents(spaceGuid).findDeployedMta(null, mtaId);
-        if (mta == null) {
+        List<DeployedMta> mtas = detectDeployedComponents(spaceGuid).findDeployedMtasByName(mtaId);
+
+        if (mtas.isEmpty()) {
             throw new NotFoundException(Messages.MTA_NOT_FOUND, mtaId);
         }
+
+        if (mtas.size() != 1) {
+            throw new ConflictException(Messages.MTA_SEARCH_NOT_UNIQUE_BY_NAME, mtaId);
+        }
+
         return ResponseEntity.ok()
-                             .body(getMta(mta));
+                             .body(getMta(mtas.get(0)));
     }
 
     @Override
     public ResponseEntity<List<Mta>> getMtas(String spaceGuid, String namespace, String name) {
 
         if (name == null && namespace == null) {
-            return getMtas(spaceGuid);
+            return getAllMtas(spaceGuid);
         } else if (namespace == null) {
             return getMtasByName(spaceGuid, name);
         } else if (name == null) {
@@ -65,7 +73,7 @@ public class MtasApiServiceImpl implements MtasApiService {
         }
 
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
-        DeployedMta mta = deployedComponents.findDeployedMta(namespace, name);
+        DeployedMta mta = deployedComponents.findDeployedMtaByNameAndNamespace(namespace, name);
 
         if (mta == null) {
             throw new NotFoundException(Messages.SPECIFIC_MTA_NOT_FOUND, name, namespace);
@@ -74,7 +82,14 @@ public class MtasApiServiceImpl implements MtasApiService {
                              .body(getMtas(Arrays.asList(mta)));
     }
 
-    public ResponseEntity<List<Mta>> getMtasByNamespace(String spaceGuid, String namespace) {
+    protected ResponseEntity<List<Mta>> getAllMtas(String spaceGuid) {
+        DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
+        // only return mtas without namespace for compatibility
+        return ResponseEntity.ok()
+                             .body(getMtas(deployedComponents.getMtas()));
+    }
+
+    protected ResponseEntity<List<Mta>> getMtasByNamespace(String spaceGuid, String namespace) {
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
         List<DeployedMta> mtas = deployedComponents.findDeployedMtasByNamespace(namespace);
 
@@ -86,7 +101,7 @@ public class MtasApiServiceImpl implements MtasApiService {
                              .body(getMtas(mtas));
     }
 
-    public ResponseEntity<List<Mta>> getMtasByName(String spaceGuid, String name) {
+    protected ResponseEntity<List<Mta>> getMtasByName(String spaceGuid, String name) {
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
         List<DeployedMta> mtas = deployedComponents.findDeployedMtasByName(name);
 

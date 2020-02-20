@@ -7,7 +7,7 @@ import java.util.Set;
 import com.sap.cloud.lm.sl.cf.core.Constants;
 
 public interface ParameterValidator {
-    
+
     default boolean isValid(Object parameter, final Map<String, Object> relatedParameters) {
         return true;
     }
@@ -15,7 +15,7 @@ public interface ParameterValidator {
     default boolean canCorrect() {
         return false;
     }
-    
+
     default Object attemptToCorrect(Object parameter, final Map<String, Object> relatedParameters) {
         throw new UnsupportedOperationException();
     }
@@ -27,13 +27,12 @@ public interface ParameterValidator {
 
         return false;
     }
-    
+
     default Set<String> getRelatedParameterNames() {
         return Collections.EMPTY_SET;
     }
-    
+
     String getParameterName();
 
     Class<?> getContainerType();
-
 }

@@ -64,12 +64,15 @@ public class ApplicationCloudModelBuilder {
     protected final ParametersChainBuilder parametersChainBuilder;
 
     public ApplicationCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, boolean prettyPrinting, DeployedMta deployedMta,
-                                        String deployId, UserMessageLogger stepLogger) {
+                                        String deployId, String namespace, UserMessageLogger stepLogger) {
         HandlerFactory handlerFactory = createHandlerFactory();
         this.handler = handlerFactory.getDescriptorHandler();
         this.deploymentDescriptor = deploymentDescriptor;
         this.prettyPrinting = prettyPrinting;
-        this.applicationEnvCloudModelBuilder = new ApplicationEnvironmentCloudModelBuilder(deploymentDescriptor, deployId, prettyPrinting);
+        this.applicationEnvCloudModelBuilder = new ApplicationEnvironmentCloudModelBuilder(deploymentDescriptor,
+                                                                                           deployId,
+                                                                                           namespace,
+                                                                                           prettyPrinting);
         this.deployedMta = deployedMta;
         this.parametersChainBuilder = new ParametersChainBuilder(deploymentDescriptor);
         this.stepLogger = stepLogger;

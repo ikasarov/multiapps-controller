@@ -20,6 +20,7 @@ public class ConfigurationEntry implements AuditableConfiguration {
     @JsonSerialize(using = VersionJsonSerializer.class)
     @JsonDeserialize(using = VersionJsonDeserializer.class)
     private Version providerVersion;
+    private String providerNamespace;
     private CloudTarget targetSpace;
     private String content;
     private List<CloudTarget> visibility;
@@ -29,21 +30,22 @@ public class ConfigurationEntry implements AuditableConfiguration {
     protected ConfigurationEntry() {
     }
 
-    public ConfigurationEntry(long id, String providerNid, String providerId, Version providerVersion, CloudTarget targetSpace,
-                              String content, List<CloudTarget> visibility, String spaceId) {
+    public ConfigurationEntry(long id, String providerNid, String providerId, Version providerVersion, String providerNamespace,
+                              CloudTarget targetSpace, String content, List<CloudTarget> visibility, String spaceId) {
         this.id = id;
         this.providerNid = providerNid;
         this.providerId = providerId;
         this.providerVersion = providerVersion;
+        this.providerNamespace = providerNamespace;
         this.targetSpace = targetSpace;
         this.content = content;
         this.visibility = visibility;
         this.spaceId = spaceId;
     }
 
-    public ConfigurationEntry(String providerNid, String providerId, Version providerVersion, CloudTarget targetSpace, String content,
-                              List<CloudTarget> cloudTargets, String spaceId) {
-        this(0, providerNid, providerId, providerVersion, targetSpace, content, cloudTargets, spaceId);
+    public ConfigurationEntry(String providerNid, String providerId, Version providerVersion, String providerNamespace,
+                              CloudTarget targetSpace, String content, List<CloudTarget> cloudTargets, String spaceId) {
+        this(0, providerNid, providerId, providerVersion, providerNamespace, targetSpace, content, cloudTargets, spaceId);
     }
 
     public long getId() {
@@ -68,6 +70,10 @@ public class ConfigurationEntry implements AuditableConfiguration {
 
     public Version getProviderVersion() {
         return providerVersion;
+    }
+
+    public String getProviderNamespace() {
+        return providerNamespace;
     }
 
     public String getContent() {
@@ -99,9 +105,10 @@ public class ConfigurationEntry implements AuditableConfiguration {
     @Override
     public List<ConfigurationIdentifier> getConfigurationIdentifiers() {
         List<ConfigurationIdentifier> configurationIdentifiers = new ArrayList<>();
-        configurationIdentifiers.add(new ConfigurationIdentifier("provider namespace", providerNid));
         configurationIdentifiers.add(new ConfigurationIdentifier("provider id", providerId));
+        configurationIdentifiers.add(new ConfigurationIdentifier("provider nid", providerNid));
         configurationIdentifiers.add(new ConfigurationIdentifier("provider version", Objects.toString(providerVersion)));
+        configurationIdentifiers.add(new ConfigurationIdentifier("provider namespace", providerNamespace)); // welp
         configurationIdentifiers.add(new ConfigurationIdentifier("provider target",
                                                                  targetSpace.getOrganizationName() + "/" + targetSpace.getSpaceName()));
         configurationIdentifiers.add(new ConfigurationIdentifier("configuration content", content));

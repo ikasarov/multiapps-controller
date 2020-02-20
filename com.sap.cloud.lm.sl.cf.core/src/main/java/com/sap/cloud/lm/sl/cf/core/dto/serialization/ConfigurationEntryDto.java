@@ -29,6 +29,9 @@ public class ConfigurationEntryDto {
     @XmlElement(name = "provider-version")
     private String providerVersion;
 
+    @XmlElement(name = "provider-namespace")
+    private String providerNamespace;
+
     @XmlElement(name = "target-space")
     private String targetSpace;
 
@@ -59,6 +62,7 @@ public class ConfigurationEntryDto {
         this.content = entry.getContent();
         this.visibility = entry.getVisibility();
         this.spaceId = entry.getSpaceId();
+        this.providerNamespace = entry.getProviderNamespace();
     }
 
     public long getId() {
@@ -79,6 +83,10 @@ public class ConfigurationEntryDto {
 
     public String getProviderVersion() {
         return providerVersion;
+    }
+
+    public String getProviderNamespace() {
+        return providerNamespace;
     }
 
     public String getContent() {
@@ -107,6 +115,7 @@ public class ConfigurationEntryDto {
                                       getOriginal(providerNid),
                                       providerId,
                                       getParsedVersion(getOriginal(providerVersion)),
+                                      providerNamespace,
                                       target,
                                       content,
                                       visibility,

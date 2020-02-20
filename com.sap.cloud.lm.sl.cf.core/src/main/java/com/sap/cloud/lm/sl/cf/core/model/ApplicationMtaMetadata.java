@@ -34,15 +34,6 @@ public class ApplicationMtaMetadata {
         return moduleName;
     }
 
-// not needed since modulename should be changed according to apply flag or shouldn't even contain namespace
-//    public String getQualifiedModuleName() {
-//        if (this.mtaMetadata.getNamespace() == null) {
-//            return getModuleName();
-//        }
-//
-//        return this.mtaMetadata.getNamespace() + Constants.NAMESPACE_SEPARATOR + this.moduleName;
-//    }
-
     public List<String> getProvidedDependencyNames() {
         return providedDependencyNames;
     }

@@ -1,6 +1,8 @@
 package com.sap.cloud.lm.sl.cf.core.validators.parameters;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import com.sap.cloud.lm.sl.cf.core.message.Messages;
 import com.sap.cloud.lm.sl.cf.core.model.SupportedParameters;
@@ -45,15 +47,15 @@ public class ServiceNameValidator implements ParameterValidator {
             throw new ContentException(Messages.COULD_NOT_CREATE_VALID_SERVICE_NAME_FROM_0, serviceName);
         }
 
-        Object applyNamespaceParameter = relatedParameters.get(SupportedParameters.APPLY_NAMESPACE);
+        Boolean applyNamespaceLocal = NameUtil.parseBooleanFlag(relatedParameters, SupportedParameters.APPLY_NAMESPACE);
+        boolean applyNamespace = NameUtil.resolveApplyNamespaceFlag(applyNamespaceGlobal, applyNamespaceLocal);
 
-        if (applyNamespaceParameter != null && !(applyNamespaceParameter instanceof Boolean)) {
-            throw new ContentException(Messages.COULD_NOT_PARSE_APPLY_NAMESPACE);
-        }
+        return NameUtil.computeValidServiceName((String) serviceName, namespace, applyNamespace);
+    }
 
-        boolean resolvedAppyNamespace = NameUtil.resolveApplyNamespaceFlag(applyNamespaceGlobal, (Boolean) applyNamespaceParameter);
-
-        return NameUtil.computeValidServiceName((String) serviceName, namespace, resolvedAppyNamespace);
+    @Override
+    public Set<String> getRelatedParameterNames() {
+        return Collections.singleton(SupportedParameters.APPLY_NAMESPACE);
     }
 
 }

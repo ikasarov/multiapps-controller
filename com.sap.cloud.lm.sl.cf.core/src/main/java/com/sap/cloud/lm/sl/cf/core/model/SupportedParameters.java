@@ -30,7 +30,7 @@ public class SupportedParameters {
     public static final String DEFAULT_IDLE_DOMAIN = "default-idle-domain";
     public static final String ENABLE_PARALLEL_DEPLOYMENTS = "enable-parallel-deployments";
     public static final String NAMESPACE = "namespace";
-    public static final String APPLY_NAMESPACE = "appply-namespace";
+    public static final String APPLY_NAMESPACE = "apply-namespace";
 
     // Module / module type parameters:
     public static final String APP_NAME = "app-name";
@@ -128,6 +128,7 @@ public class SupportedParameters {
     public static final String PROVIDER_NID = "provider-nid";
     public static final String VERSION = "version";
     public static final String PROVIDER_ID = "provider-id";
+    public static final String PROVIDER_NAMESPACE = "provider-namespace";
     public static final String TARGET = "target";
     public static final String FILTER = "filter";
     public static final String VISIBILITY = "visibility";

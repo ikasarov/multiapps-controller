@@ -30,6 +30,10 @@ public class UndeployMetadata {
                                              .type(ParameterType.STRING)
                                              .build());
         PARAMS.add(ImmutableParameterMetadata.builder()
+                                             .id(Constants.PARAM_NAMESPACE)
+                                             .type(ParameterType.STRING)
+                                             .build());
+        PARAMS.add(ImmutableParameterMetadata.builder()
                                              .id(Constants.PARAM_NO_RESTART_SUBSCRIBED_APPS)
                                              .defaultValue(false)
                                              .type(ParameterType.BOOLEAN)

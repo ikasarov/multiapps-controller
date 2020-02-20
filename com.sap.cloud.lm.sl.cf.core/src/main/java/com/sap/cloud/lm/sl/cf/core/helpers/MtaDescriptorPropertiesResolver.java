@@ -75,7 +75,8 @@ public class MtaDescriptorPropertiesResolver {
         ConfigurationReferencesResolver resolver = handlerFactory.getConfigurationReferencesResolver(descriptor,
                                                                                                      context.getConfigurationEntryService(),
                                                                                                      context.getCloudTarget(),
-                                                                                                     context.getApplicationConfiguration());
+                                                                                                     context.getApplicationConfiguration(),
+                                                                                                     context.getNamespace());
 
         resolver.resolve(descriptor);
 

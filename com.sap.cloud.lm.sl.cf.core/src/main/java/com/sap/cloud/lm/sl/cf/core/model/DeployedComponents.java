@@ -3,6 +3,8 @@ package com.sap.cloud.lm.sl.cf.core.model;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.sap.cloud.lm.sl.cf.web.api.model.Mta;
+
 public class DeployedComponents {
 
     private List<DeployedMta> mtas;
@@ -32,6 +34,13 @@ public class DeployedComponents {
         this.standaloneApps = standaloneApps;
     }
 
+    public List<DeployedMta> getMtasWithoutNamespace() {
+        return getMtas().stream()
+                        .filter(mta -> mta.getMetadata()
+                                          .hasNamespace(null))
+                        .collect(Collectors.toList());
+    }
+
     public List<DeployedMta> findDeployedMtasByName(String name) {
         return getMtas().stream()
                         .filter(mta -> mta.getMetadata()
@@ -43,18 +52,18 @@ public class DeployedComponents {
     public List<DeployedMta> findDeployedMtasByNamespace(String namespace) {
         return getMtas().stream()
                         .filter(mta -> mta.getMetadata()
-                                          .hasSameNamespace(namespace))
+                                          .hasNamespace(namespace))
                         .collect(Collectors.toList());
     }
 
-    public DeployedMta findDeployedMta(String namespace, String name) {
+    public DeployedMta findDeployedMtaByNameAndNamespace(String namespace, String name) {
 
         return getMtas().stream()
                         .filter(mta -> mta.getMetadata()
-                                          .hasSameNamespace(namespace)
+                                          .getId()
+                                          .equalsIgnoreCase(name)
                             && mta.getMetadata()
-                                  .getId()
-                                  .equalsIgnoreCase(name))
+                                  .hasNamespace(namespace))
                         .findFirst()
                         .orElse(null);
     }

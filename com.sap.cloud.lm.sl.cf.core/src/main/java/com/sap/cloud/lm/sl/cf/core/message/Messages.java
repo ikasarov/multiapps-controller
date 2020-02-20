@@ -31,10 +31,10 @@ public final class Messages {
     public static final String COULD_NOT_CREATE_VALID_APPLICATION_NAME_FROM_0 = "Could not create a valid application name from \"{0}\"";
     public static final String COULD_NOT_CREATE_VALID_SERVICE_NAME_FROM_0 = "Could not create a valid service name from \"{0}\"";
     public static final String COULD_NOT_PARSE_ROUTE = "Cannot parse 'routes' property - check documentation for correct format.";
-    public static final String COULD_NOT_PARSE_APPLY_NAMESPACE = "Cannot parse 'applyNamespace' parameter - check documentation for correct format.";
+    public static final String COULD_NOT_PARSE_BOOLEAN_FLAG = "Cannot parse \"{0}\" flag - expected a boolean format.";
     public static final String COULD_NOT_CREATE_VALID_ROUTE_NESTED_EXCEPTION = "Invalid route \"{0}\" : {1}";
     public static final String CANNOT_CORRECT_PARAMETER = "Value for parameter \"{0}\" is not valid and cannot be corrected";
-    public static final String CONFIGURATION_ENTRY_ALREADY_EXISTS = "Configuration entry with namespace ID \"{0}\", ID \"{1}\", version \"{2}\", target org \"{3}\" and target space \"{4}\", already exists";
+    public static final String CONFIGURATION_ENTRY_ALREADY_EXISTS = "Configuration entry with nid \"{0}\", ID \"{1}\", version \"{2}\", namespace \"{3}\", target org \"{4}\" and target space \"{5}\", already exists";
     public static final String CONFIGURATION_SUBSCRIPTION_ALREADY_EXISTS = "Configuration subscription for MTA \"{0}\", app \"{1}\" and resource \"{2}\" already exists in space \"{3}\"";
     public static final String CONFIGURATION_ENTRY_NOT_FOUND = "Configuration entry with ID \"{0}\" does not exist";
     public static final String CONFIGURATION_ENTRY_SATISFYING_VERSION_AND_VIS_NOT_FOUND = "Configuration entry that satisfies version requirement \"{0}\" and/or visibility targets in format ('org', 'space'): (\"{1}\") has not been found";
@@ -65,7 +65,6 @@ public final class Messages {
     public static final String ILLEGAL_SERVICE_OPERATION_STATE = "Illegal service operation state: {0}";
     public static final String ILLEGAL_SERVICE_OPERATION_TYPE = "Illegal service operation type: {0}";
     public static final String SERVICE_ALREADY_EXISTS = "Service \"{0}\" already exists.";
-    public static final String MULTIPLE_CONFIGURATION_ENTRIES = "Multiple configuration entries were found matching the filter specified in resource \"{0}\": \"{1}\"";
     public static final String INVALID_TCP_ROUTE = "TCP route can either be TCP or TCPS";
     public static final String NO_SERVICE_PLAN_FOUND = "Could not create service instance \"{0}\". Service plan \"{1}\" from service offering \"{2}\" was not found.";
     public static final String EMPTY_SERVICE_PLANS_LIST_FOUND = "An empty service plans list was found for service \"{0}\"";

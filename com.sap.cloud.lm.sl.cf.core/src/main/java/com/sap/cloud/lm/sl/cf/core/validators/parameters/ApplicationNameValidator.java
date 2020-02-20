@@ -47,15 +47,10 @@ public class ApplicationNameValidator implements ParameterValidator {
             throw new ContentException(Messages.COULD_NOT_CREATE_VALID_APPLICATION_NAME_FROM_0, applicationName);
         }
 
-        Object applyNamespaceParameter = relatedParameters.get(SupportedParameters.APPLY_NAMESPACE);
+        Boolean applyNamespaceLocal = NameUtil.parseBooleanFlag(relatedParameters, SupportedParameters.APPLY_NAMESPACE);
+        boolean applyNamespace = NameUtil.resolveApplyNamespaceFlag(applyNamespaceGlobal, applyNamespaceLocal);
 
-        if (applyNamespaceParameter != null && !(applyNamespaceParameter instanceof Boolean)) {
-            throw new ContentException(Messages.COULD_NOT_PARSE_APPLY_NAMESPACE);
-        }
-
-        boolean resolvedAppyNamespace = NameUtil.resolveApplyNamespaceFlag(applyNamespaceGlobal, (Boolean) applyNamespaceParameter);
-
-        return NameUtil.computeValidApplicationName((String) applicationName, namespace, resolvedAppyNamespace);
+        return NameUtil.computeValidApplicationName((String) applicationName, namespace, applyNamespace);
     }
 
     @Override

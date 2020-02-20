@@ -43,9 +43,9 @@ public class FilesApiServiceImpl implements FilesApiService {
     private FileService fileService;
 
     @Override
-    public ResponseEntity<List<FileMetadata>> getFiles(String spaceGuid) {
+    public ResponseEntity<List<FileMetadata>> getFiles(String spaceGuid, String namespace) {
         try {
-            List<FileEntry> entries = fileService.listFiles(spaceGuid, null);
+            List<FileEntry> entries = fileService.listFiles(spaceGuid, namespace);
             List<FileMetadata> files = entries.stream()
                                               .map(this::parseFileEntry)
                                               .collect(Collectors.toList());
@@ -57,11 +57,11 @@ public class FilesApiServiceImpl implements FilesApiService {
     }
 
     @Override
-    public ResponseEntity<FileMetadata> uploadFile(HttpServletRequest request, String spaceGuid) {
+    public ResponseEntity<FileMetadata> uploadFile(HttpServletRequest request, String spaceGuid, String namespace) {
         try {
             StopWatch stopWatch = StopWatch.createStarted();
             LOGGER.trace("Received upload request on URI: {}", request.getRequestURI());
-            FileEntry fileEntry = uploadFiles(request, spaceGuid).get(0);
+            FileEntry fileEntry = uploadFiles(request, spaceGuid, namespace).get(0);
             FileMetadata file = parseFileEntry(fileEntry);
             AuditLoggingProvider.getFacade()
                                 .logConfigCreate(file);
@@ -75,7 +75,7 @@ public class FilesApiServiceImpl implements FilesApiService {
         }
     }
 
-    private List<FileEntry> uploadFiles(HttpServletRequest request, String spaceGuid)
+    private List<FileEntry> uploadFiles(HttpServletRequest request, String spaceGuid, String namespace)
         throws FileUploadException, IOException, FileStorageException {
         ServletFileUpload upload = getFileUploadServlet();
         long maxUploadSize = getConfiguration().getMaxUploadSize();
@@ -95,7 +95,7 @@ public class FilesApiServiceImpl implements FilesApiService {
             }
 
             try (InputStream in = item.openStream()) {
-                FileEntry entry = fileService.addFile(spaceGuid, item.getName(), in);
+                FileEntry entry = fileService.addFile(spaceGuid, namespace, item.getName(), in);
                 uploadedFiles.add(entry);
             }
         }
@@ -118,6 +118,7 @@ public class FilesApiServiceImpl implements FilesApiService {
                                     .name(fileEntry.getName())
                                     .size(fileEntry.getSize())
                                     .space(fileEntry.getSpace())
+                                    .namespace(fileEntry.getNamespace())
                                     .build();
     }
 }
