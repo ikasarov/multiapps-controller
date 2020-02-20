@@ -88,7 +88,7 @@ public class ConfigurationFilter {
             return true;
         }
         
-        if (ConfigurationEntriesUtil.providerNamespaceMustBeEmpty(this.providerNamespace) && providerNamespace == null) {
+        if (ConfigurationEntriesUtil.providerNamespaceIsEmpty(this.providerNamespace, true) && providerNamespace == null) {
             return true;
         }
         

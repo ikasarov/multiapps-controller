@@ -82,17 +82,18 @@ public class ConfigurationEntryQueryImpl extends AbstractQueryImpl<Configuration
     }
 
     @Override
-    public ConfigurationEntryQuery providerNamespace(String providerNamespace, boolean ensureEmptyIfNull) {
-        boolean ensureEmpty = ConfigurationEntriesUtil.providerNamespaceMustBeEmpty(providerNamespace, ensureEmptyIfNull);
-        
-        if (providerNamespace == null && !ensureEmpty) {
+    public ConfigurationEntryQuery providerNamespace(String providerNamespace, boolean considerNullAsEmpty) {
+        boolean shouldFilterForEmptyNamespace = ConfigurationEntriesUtil.providerNamespaceIsEmpty(providerNamespace, considerNullAsEmpty);
+
+        if (providerNamespace == null && !shouldFilterForEmptyNamespace) {
             return this;
         }
 
-        if (ensureEmpty) {
+        if (shouldFilterForEmptyNamespace) {
             queryCriteria.addRestriction(ImmutableQueryAttributeRestriction.builder()
                                                                            .attribute(AttributeNames.PROVIDER_NAMESPACE)
-                                                                           .condition(getCriteriaBuilder()::isNull)
+                                                                           .condition(getCriteriaBuilder()::equal)
+                                                                           .value(null)
                                                                            .build());
         } else {
             queryCriteria.addRestriction(ImmutableQueryAttributeRestriction.builder()

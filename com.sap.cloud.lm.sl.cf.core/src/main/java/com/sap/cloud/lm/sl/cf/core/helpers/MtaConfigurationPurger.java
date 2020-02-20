@@ -123,6 +123,7 @@ public class MtaConfigurationPurger {
                                       null,
                                       null,
                                       null,
+                                      null,
                                       null);
     }
 

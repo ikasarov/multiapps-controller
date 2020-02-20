@@ -261,7 +261,7 @@ public class ConfigurationEntriesResource {
         Map<String, Object> content = parseContentFilterParameter(bean.getContent());
         CloudTarget target = bean.getCloudTarget() == null ? ConfigurationEntriesUtil.createImplicitCloudTarget(bean.getTargetSpace())
             : bean.getCloudTarget();
-        return new ConfigurationFilter(providerNid, providerId, providerVersion, target, content);
+        return new ConfigurationFilter(providerNid, providerId, providerVersion, null, target, content);
     }
 
     @PostMapping("/purge")

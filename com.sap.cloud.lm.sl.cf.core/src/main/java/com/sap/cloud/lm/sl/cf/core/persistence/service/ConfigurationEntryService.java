@@ -97,13 +97,21 @@ public class ConfigurationEntryService extends PersistenceService<ConfigurationE
             Long id = dto.getPrimaryKey();
             String providerNid = getOriginal(dto.getProviderNid());
             String providerId = dto.getProviderId();
-            Version version = getParsedVersion(getOriginal(dto.getProviderVersion()));
+            Version providerVersion = getParsedVersion(getOriginal(dto.getProviderVersion()));
             String providerNamespace = dto.getProviderNamespace();
             CloudTarget targetSpace = new CloudTarget(dto.getTargetOrg(), dto.getTargetSpace());
             String content = dto.getContent();
             List<CloudTarget> visibility = getParsedVisibility(dto.getVisibility());
             String spaceId = dto.getSpaceId();
-            return new ConfigurationEntry(id, providerNid, providerId, version, targetSpace, content, visibility, spaceId, providerNamespace);
+            return new ConfigurationEntry(id,
+                                          providerNid,
+                                          providerId,
+                                          providerVersion,
+                                          providerNamespace,
+                                          targetSpace,
+                                          content,
+                                          visibility,
+                                          spaceId);
         }
 
         private String getOriginal(String source) {

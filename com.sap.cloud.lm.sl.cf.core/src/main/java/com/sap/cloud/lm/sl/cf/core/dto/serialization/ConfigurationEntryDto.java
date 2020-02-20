@@ -115,11 +115,11 @@ public class ConfigurationEntryDto {
                                       getOriginal(providerNid),
                                       providerId,
                                       getParsedVersion(getOriginal(providerVersion)),
+                                      providerNamespace,
                                       target,
                                       content,
                                       visibility,
-                                      spaceId,
-                                      providerNamespace);
+                                      spaceId);
     }
 
     private Version getParsedVersion(String versionString) {
