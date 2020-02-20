@@ -24,6 +24,7 @@ import com.sap.cloud.lm.sl.cf.web.api.model.Module;
 import com.sap.cloud.lm.sl.cf.web.api.model.Mta;
 import com.sap.cloud.lm.sl.cf.web.message.Messages;
 import com.sap.cloud.lm.sl.cf.web.util.SecurityContextUtil;
+import com.sap.cloud.lm.sl.common.ConflictException;
 import com.sap.cloud.lm.sl.common.NotFoundException;
 
 import com.sap.cloud.lm.sl.cf.web.api.model.ImmutableMetadata;
@@ -40,17 +41,23 @@ public class MtasApiServiceImpl implements MtasApiService {
     public ResponseEntity<List<Mta>> getMtas(String spaceGuid) {
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
         return ResponseEntity.ok()
-                             .body(getMtas(deployedComponents.getMtas()));
+                             .body(getMtas(deployedComponents.getMtasWithoutNamespace()));
     }
 
     @Override
     public ResponseEntity<Mta> getMta(String spaceGuid, String mtaId) {
-        DeployedMta mta = detectDeployedComponents(spaceGuid).findDeployedMta(null, mtaId);
-        if (mta == null) {
+        List<DeployedMta> mtas = detectDeployedComponents(spaceGuid).findDeployedMtasByName(mtaId);
+
+        if (mtas.isEmpty()) {
             throw new NotFoundException(Messages.MTA_NOT_FOUND, mtaId);
         }
+
+        if (mtas.size() != 1) {
+            throw new ConflictException(Messages.MTA_SEARCH_NOT_UNIQUE_BY_NAME, mtaId);
+        }
+
         return ResponseEntity.ok()
-                             .body(getMta(mta));
+                             .body(getMta(mtas.get(0)));
     }
 
     @Override
@@ -65,7 +72,7 @@ public class MtasApiServiceImpl implements MtasApiService {
         }
 
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
-        DeployedMta mta = deployedComponents.findDeployedMta(namespace, name);
+        DeployedMta mta = deployedComponents.findDeployedMtaByNameAndNamespace(namespace, name);
 
         if (mta == null) {
             throw new NotFoundException(Messages.SPECIFIC_MTA_NOT_FOUND, name, namespace);

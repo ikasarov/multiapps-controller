@@ -33,26 +33,9 @@ public class DeleteDiscontinuedConfigurationEntriesStep extends SyncFlowableStep
     @Override
     protected StepPhase executeStep(ExecutionWrapper execution) {
         getStepLogger().debug(Messages.DELETING_PUBLISHED_DEPENDENCIES);
-        String mtaId = (String) execution.getContext()
-                                         .getVariable(Constants.PARAM_MTA_ID);
-        String org = StepsUtil.getOrg(execution.getContext());
-        String space = StepsUtil.getSpace(execution.getContext());
-        CloudTarget target = new CloudTarget(org, space);
 
-        List<ConfigurationEntry> publishedEntries = StepsUtil.getPublishedEntriesFromSubProcesses(execution.getContext(), flowableFacade);
-
-        List<ConfigurationEntry> entriesToDelete = getEntriesToDelete(mtaId, target, publishedEntries);
-        for (ConfigurationEntry entry : entriesToDelete) {
-            getStepLogger().info(MessageFormat.format(Messages.DELETING_DISCONTINUED_DEPENDENCY_0, entry.getProviderId()));
-            int deletedEntries = configurationEntryService.createQuery()
-                                                          .id(entry.getId())
-                                                          .delete();
-            if (deletedEntries == 0) {
-                getStepLogger().warn(Messages.COULD_NOT_DELETE_PROVIDED_DEPENDENCY, entry.getProviderId());
-            }
-        }
-        getStepLogger().debug(Messages.DELETED_ENTRIES, JsonUtil.toJson(entriesToDelete, true));
-        StepsUtil.setDeletedEntries(execution.getContext(), entriesToDelete);
+        List<ConfigurationEntry> entriesToDelete = getEntriesToDelete(execution.getContext());
+        deleteConfigurationEntries(entriesToDelete, execution.getContext());
 
         getStepLogger().debug(Messages.PUBLISHED_DEPENDENCIES_DELETED);
         return StepPhase.DONE;
@@ -63,19 +46,42 @@ public class DeleteDiscontinuedConfigurationEntriesStep extends SyncFlowableStep
         return Messages.ERROR_DELETING_PUBLISHED_DEPENDENCIES;
     }
 
-    private List<ConfigurationEntry> getEntriesToDelete(String mtaId, CloudTarget target, List<ConfigurationEntry> publishedEntries) {
-        List<ConfigurationEntry> allEntriesForCurrentMta = getEntries(mtaId, target);
+    private List<ConfigurationEntry> getEntriesToDelete(DelegateExecution context) {
+        List<ConfigurationEntry> publishedEntries = StepsUtil.getPublishedEntriesFromSubProcesses(context, flowableFacade);
+
+        List<ConfigurationEntry> allEntriesForCurrentMta = getEntries(context);
+        
         List<Long> publishedEntryIds = getEntryIds(publishedEntries);
+        
         return allEntriesForCurrentMta.stream()
                                       .filter(entry -> !publishedEntryIds.contains(entry.getId()))
                                       .collect(Collectors.toList());
     }
 
-    private List<ConfigurationEntry> getEntries(String mtaId, CloudTarget target) {
+    private void deleteConfigurationEntries(List<ConfigurationEntry> entriesToDelete, DelegateExecution context) {
+        for (ConfigurationEntry entry : entriesToDelete) {
+            getStepLogger().info(MessageFormat.format(Messages.DELETING_DISCONTINUED_DEPENDENCY_0, entry.getProviderId()));
+            int deletedEntries = configurationEntryService.createQuery()
+                                                          .id(entry.getId())
+                                                          .delete();
+            if (deletedEntries == 0) {
+                getStepLogger().warn(Messages.COULD_NOT_DELETE_PROVIDED_DEPENDENCY, entry.getProviderId());
+            }
+        }
+        getStepLogger().debug(Messages.DELETED_ENTRIES, JsonUtil.toJson(entriesToDelete, true));
+        StepsUtil.setDeletedEntries(context, entriesToDelete);
+    }
+
+    private List<ConfigurationEntry> getEntries(DelegateExecution context) {
+        String mtaId = (String) context.getVariable(Constants.PARAM_MTA_ID);
+        CloudTarget target = StepsUtil.getCloudTarget(context);
+        String namespace = StepsUtil.getNamespace(context);
+        
         return configurationEntryService.createQuery()
                                         .providerNid(ConfigurationEntriesUtil.PROVIDER_NID)
                                         .target(target)
                                         .mtaId(mtaId)
+                                        .providerNamespace(namespace, true)
                                         .list();
     }
 

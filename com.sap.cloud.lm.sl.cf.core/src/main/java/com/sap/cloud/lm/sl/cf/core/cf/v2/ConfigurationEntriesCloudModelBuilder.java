@@ -25,11 +25,13 @@ public class ConfigurationEntriesCloudModelBuilder {
     private final String orgName;
     private final String spaceName;
     private final String spaceId;
+    private final String namespace;
 
-    public ConfigurationEntriesCloudModelBuilder(String orgName, String spaceName, String spaceId) {
+    public ConfigurationEntriesCloudModelBuilder(String orgName, String spaceName, String spaceId, String namespace) {
         this.orgName = orgName;
         this.spaceName = spaceName;
         this.spaceId = spaceId;
+        this.namespace = namespace;
     }
 
     public Map<String, List<ConfigurationEntry>> build(DeploymentDescriptor deploymentDescriptor) {
@@ -54,11 +56,12 @@ public class ConfigurationEntriesCloudModelBuilder {
     private ConfigurationEntry createConfigurationEntry(DeploymentDescriptor deploymentDescriptor, ProvidedDependency providedDependency) {
         String providerNid = ConfigurationEntriesUtil.PROVIDER_NID;
         String providerId = ConfigurationEntriesUtil.computeProviderId(deploymentDescriptor.getId(), providedDependency.getName());
-        Version version = Version.parseVersion(deploymentDescriptor.getVersion());
+        Version providerVersion = Version.parseVersion(deploymentDescriptor.getVersion());
+        String providerNamespace = namespace;
         CloudTarget target = new CloudTarget(orgName, spaceName);
         String content = JsonUtil.toJson(providedDependency.getProperties());
         List<CloudTarget> visibility = getVisibilityTargets(providedDependency);
-        return new ConfigurationEntry(providerNid, providerId, version, target, content, visibility, spaceId);
+        return new ConfigurationEntry(providerNid, providerId, providerVersion, providerNamespace, target, content, visibility, spaceId);
     }
 
     private List<CloudTarget> getVisibilityTargets(ProvidedDependency providedDependency) {

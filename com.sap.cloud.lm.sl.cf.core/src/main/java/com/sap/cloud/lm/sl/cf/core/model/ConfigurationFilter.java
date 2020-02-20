@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sap.cloud.lm.sl.cf.core.filters.ContentFilter;
+import com.sap.cloud.lm.sl.cf.core.util.ConfigurationEntriesUtil;
 import com.sap.cloud.lm.sl.common.model.xml.PropertiesAdapter;
 
 @XmlRootElement(name = "configuration-filter")
@@ -28,6 +29,8 @@ public class ConfigurationFilter {
     private CloudTarget targetSpace;
     @XmlElement(name = "provider-version")
     private String providerVersion;
+    @XmlElement(name = "provider-namespace")
+    private String providerNamespace;
     @XmlTransient
     @JsonIgnore
     private boolean strictTargetSpace;
@@ -36,18 +39,19 @@ public class ConfigurationFilter {
 
     }
 
-    public ConfigurationFilter(String providerNid, String providerId, String providerVersion, CloudTarget targetSpace,
-                               Map<String, Object> requiredContent) {
-        this(providerNid, providerId, providerVersion, targetSpace, requiredContent, true);
+    public ConfigurationFilter(String providerNid, String providerId, String providerVersion, String providerNamespace,
+                               CloudTarget targetSpace, Map<String, Object> requiredContent) {
+        this(providerNid, providerId, providerVersion, providerNamespace, targetSpace, requiredContent, true);
     }
 
-    public ConfigurationFilter(String providerNid, String providerId, String providerVersion, CloudTarget targetSpace,
-                               Map<String, Object> requiredContent, boolean strictTargetSpace) {
-        this.providerId = providerId;
-        this.requiredContent = requiredContent;
+    public ConfigurationFilter(String providerNid, String providerId, String providerVersion, String providerNamespace,
+                               CloudTarget targetSpace, Map<String, Object> requiredContent, boolean strictTargetSpace) {
         this.providerNid = providerNid;
-        this.targetSpace = targetSpace;
+        this.providerId = providerId;
         this.providerVersion = providerVersion;
+        this.providerNamespace = providerNamespace;
+        this.targetSpace = targetSpace;
+        this.requiredContent = requiredContent;
         this.strictTargetSpace = strictTargetSpace;
     }
 
@@ -74,6 +78,22 @@ public class ConfigurationFilter {
     public boolean isStrictTargetSpace() {
         return strictTargetSpace;
     }
+    
+    public String getProviderNamespace() {
+        return providerNamespace;
+    }
+
+    private boolean namespaceConstraintIsSatisfied(String providerNamespace) {
+        if (this.providerNamespace == null) {
+            return true;
+        }
+        
+        if (ConfigurationEntriesUtil.providerNamespaceMustBeEmpty(this.providerNamespace) && providerNamespace == null) {
+            return true;
+        }
+        
+        return this.providerNamespace.equals(providerNamespace);
+    }
 
     public boolean matches(ConfigurationEntry entry) {
         if (providerNid != null && !providerNid.equals(entry.getProviderNid())) {
@@ -87,6 +107,9 @@ public class ConfigurationFilter {
         }
         if (providerVersion != null && (entry.getProviderVersion() == null || !entry.getProviderVersion()
                                                                                     .satisfies(providerVersion))) {
+            return false;
+        }
+        if (!namespaceConstraintIsSatisfied(entry.getProviderNamespace())) {
             return false;
         }
         return new ContentFilter().test(entry.getContent(), requiredContent);

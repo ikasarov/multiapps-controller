@@ -49,6 +49,7 @@ import com.sap.cloud.lm.sl.cf.core.cf.v2.ServicesCloudModelBuilder;
 import com.sap.cloud.lm.sl.cf.core.helpers.ModuleToDeployHelper;
 import com.sap.cloud.lm.sl.cf.core.helpers.MtaArchiveElements;
 import com.sap.cloud.lm.sl.cf.core.model.ApplicationColor;
+import com.sap.cloud.lm.sl.cf.core.model.CloudTarget;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationEntry;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationSubscription;
 import com.sap.cloud.lm.sl.cf.core.model.DeployedMta;
@@ -211,6 +212,10 @@ public class StepsUtil {
 
     public static String getSpace(VariableScope scope) {
         return getString(scope, Constants.VAR_SPACE);
+    }
+    
+    public static CloudTarget getCloudTarget(VariableScope scope) {
+        return new CloudTarget(getOrg(scope), getSpace(scope));
     }
 
     static String getNewMtaVersion(VariableScope scope) {

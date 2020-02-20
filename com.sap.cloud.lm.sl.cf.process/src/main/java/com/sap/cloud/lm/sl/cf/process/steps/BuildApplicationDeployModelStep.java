@@ -15,6 +15,7 @@ import com.sap.cloud.lm.sl.cf.core.cf.v2.ConfigurationEntriesCloudModelBuilder;
 import com.sap.cloud.lm.sl.cf.core.helpers.ModuleToDeployHelper;
 import com.sap.cloud.lm.sl.cf.core.model.ConfigurationEntry;
 import com.sap.cloud.lm.sl.cf.core.security.serialization.SecureSerializationFacade;
+import com.sap.cloud.lm.sl.cf.core.util.ConfigurationEntriesUtil;
 import com.sap.cloud.lm.sl.cf.process.message.Messages;
 import com.sap.cloud.lm.sl.common.util.JsonUtil;
 import com.sap.cloud.lm.sl.mta.model.DeploymentDescriptor;
@@ -91,7 +92,10 @@ public class BuildApplicationDeployModelStep extends SyncFlowableStep {
         String orgName = StepsUtil.getOrg(context);
         String spaceName = StepsUtil.getSpace(context);
         String spaceId = StepsUtil.getSpaceId(context);
-        return new ConfigurationEntriesCloudModelBuilder(orgName, spaceName, spaceId);
+        String namespace = StepsUtil.getNamespace(context);
+        getStepLogger().warn("Building configuration entries for org {0}, space {1}, spaceId {2} and namespace {3}!", orgName, spaceName,
+                             spaceId, namespace);
+        return new ConfigurationEntriesCloudModelBuilder(orgName, spaceName, spaceId, namespace);
     }
 
 }

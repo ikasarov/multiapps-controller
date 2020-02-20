@@ -128,6 +128,7 @@ public class SupportedParameters {
     public static final String PROVIDER_NID = "provider-nid";
     public static final String VERSION = "version";
     public static final String PROVIDER_ID = "provider-id";
+    public static final String PROVIDER_NAMESPACE = "provider-namespace";
     public static final String TARGET = "target";
     public static final String FILTER = "filter";
     public static final String VISIBILITY = "visibility";
