@@ -186,10 +186,6 @@ public class StepsUtil {
         scope.setVariable(Constants.PARAM_NAMESPACE, namespace);
     }
 
-    public static String getQualifiedMtaId(VariableScope scope) {
-        return getQualifiedMtaId(getMtaId(scope), getNamespace(scope));
-    }
-
     public static String getQualifiedMtaId(String mtaId, String namespace) {
         String qualifiedId;
 
@@ -800,11 +796,12 @@ public class StepsUtil {
         HandlerFactory handlerFactory = StepsUtil.getHandlerFactory(scope);
 
         String deployId = DEPLOY_ID_PREFIX + getCorrelationId(scope);
+        String namespace = getNamespace(scope);
 
         DeploymentDescriptor deploymentDescriptor = StepsUtil.getCompleteDeploymentDescriptor(scope);
         DeployedMta deployedMta = StepsUtil.getDeployedMta(scope);
 
-        return handlerFactory.getApplicationCloudModelBuilder(deploymentDescriptor, true, deployedMta, deployId, stepLogger);
+        return handlerFactory.getApplicationCloudModelBuilder(deploymentDescriptor, true, deployedMta, deployId, namespace, stepLogger);
     }
 
     static List<String> getDomainsFromApps(VariableScope scope, DeploymentDescriptor descriptor,

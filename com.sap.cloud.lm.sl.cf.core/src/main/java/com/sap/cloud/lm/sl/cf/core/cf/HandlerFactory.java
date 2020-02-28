@@ -102,9 +102,10 @@ public class HandlerFactory extends com.sap.cloud.lm.sl.mta.handlers.HandlerFact
 
     @Override
     public ApplicationCloudModelBuilder getApplicationCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, boolean prettyPrinting,
-                                                                        DeployedMta deployedMta, String deployId,
+                                                                        DeployedMta deployedMta, String deployId, String namespace,
                                                                         UserMessageLogger stepLogger) {
-        return getHelperDelegate().getApplicationCloudModelBuilder(deploymentDescriptor, prettyPrinting, deployedMta, deployId, stepLogger);
+        return getHelperDelegate().getApplicationCloudModelBuilder(deploymentDescriptor, prettyPrinting, deployedMta, deployId, namespace,
+                                                                   stepLogger);
     }
 
     @Override

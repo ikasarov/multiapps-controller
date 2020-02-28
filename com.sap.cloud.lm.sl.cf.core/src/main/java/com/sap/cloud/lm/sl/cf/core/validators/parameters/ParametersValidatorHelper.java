@@ -92,6 +92,7 @@ public class ParametersValidatorHelper {
         }
 
         return relatedParameterNames.stream()
+                                    .filter(name -> parameters.get(name) != null)
                                     .collect(Collectors.toMap(name -> name, name -> parameters.get(name)));
     }
 

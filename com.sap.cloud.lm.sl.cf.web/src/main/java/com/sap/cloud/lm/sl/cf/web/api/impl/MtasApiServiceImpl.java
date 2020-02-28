@@ -40,6 +40,7 @@ public class MtasApiServiceImpl implements MtasApiService {
     @Override
     public ResponseEntity<List<Mta>> getMtas(String spaceGuid) {
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
+        // only return mtas without namespace for compatibility
         return ResponseEntity.ok()
                              .body(getMtas(deployedComponents.getMtasWithoutNamespace()));
     }
@@ -64,7 +65,7 @@ public class MtasApiServiceImpl implements MtasApiService {
     public ResponseEntity<List<Mta>> getMtas(String spaceGuid, String namespace, String name) {
 
         if (name == null && namespace == null) {
-            return getMtas(spaceGuid);
+            return getAllMtas(spaceGuid);
         } else if (namespace == null) {
             return getMtasByName(spaceGuid, name);
         } else if (name == null) {
@@ -81,7 +82,14 @@ public class MtasApiServiceImpl implements MtasApiService {
                              .body(getMtas(Arrays.asList(mta)));
     }
 
-    public ResponseEntity<List<Mta>> getMtasByNamespace(String spaceGuid, String namespace) {
+    protected ResponseEntity<List<Mta>> getAllMtas(String spaceGuid) {
+        DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
+        // only return mtas without namespace for compatibility
+        return ResponseEntity.ok()
+                             .body(getMtas(deployedComponents.getMtas()));
+    }
+
+    protected ResponseEntity<List<Mta>> getMtasByNamespace(String spaceGuid, String namespace) {
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
         List<DeployedMta> mtas = deployedComponents.findDeployedMtasByNamespace(namespace);
 
@@ -93,7 +101,7 @@ public class MtasApiServiceImpl implements MtasApiService {
                              .body(getMtas(mtas));
     }
 
-    public ResponseEntity<List<Mta>> getMtasByName(String spaceGuid, String name) {
+    protected ResponseEntity<List<Mta>> getMtasByName(String spaceGuid, String name) {
         DeployedComponents deployedComponents = detectDeployedComponents(spaceGuid);
         List<DeployedMta> mtas = deployedComponents.findDeployedMtasByName(name);
 

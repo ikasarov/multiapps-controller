@@ -23,7 +23,8 @@ import com.sap.cloud.lm.sl.mta.model.Platform;
 public interface HelperFactoryConstructor {
 
     ApplicationCloudModelBuilder getApplicationCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, boolean prettyPrinting,
-                                                                 DeployedMta deployedMta, String deployId, UserMessageLogger stepLogger);
+                                                                 DeployedMta deployedMta, String deployId, String namespace,
+                                                                 UserMessageLogger stepLogger);
 
     ServicesCloudModelBuilder getServicesCloudModelBuilder(DeploymentDescriptor deploymentDescriptor);
 

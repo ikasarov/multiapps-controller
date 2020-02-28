@@ -39,9 +39,9 @@ public class HelperFactory implements HelperFactoryConstructor {
 
     @Override
     public ApplicationCloudModelBuilder getApplicationCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, boolean prettyPrinting,
-                                                                        DeployedMta deployedMta, String deployId,
+                                                                        DeployedMta deployedMta, String deployId, String namespace,
                                                                         UserMessageLogger stepLogger) {
-        return new ApplicationCloudModelBuilder(deploymentDescriptor, prettyPrinting, deployedMta, deployId, stepLogger);
+        return new ApplicationCloudModelBuilder(deploymentDescriptor, prettyPrinting, deployedMta, deployId, namespace, stepLogger);
     }
 
     @Override

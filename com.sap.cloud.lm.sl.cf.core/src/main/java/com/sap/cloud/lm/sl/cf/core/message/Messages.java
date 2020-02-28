@@ -31,7 +31,7 @@ public final class Messages {
     public static final String COULD_NOT_CREATE_VALID_APPLICATION_NAME_FROM_0 = "Could not create a valid application name from \"{0}\"";
     public static final String COULD_NOT_CREATE_VALID_SERVICE_NAME_FROM_0 = "Could not create a valid service name from \"{0}\"";
     public static final String COULD_NOT_PARSE_ROUTE = "Cannot parse 'routes' property - check documentation for correct format.";
-    public static final String COULD_NOT_PARSE_APPLY_NAMESPACE = "Cannot parse 'applyNamespace' parameter - check documentation for correct format.";
+    public static final String COULD_NOT_PARSE_BOOLEAN_FLAG = "Cannot parse \"{0}\" flag - expected a boolean format.";
     public static final String COULD_NOT_CREATE_VALID_ROUTE_NESTED_EXCEPTION = "Invalid route \"{0}\" : {1}";
     public static final String CANNOT_CORRECT_PARAMETER = "Value for parameter \"{0}\" is not valid and cannot be corrected";
     public static final String CONFIGURATION_ENTRY_ALREADY_EXISTS = "Configuration entry with nid \"{0}\", ID \"{1}\", version \"{2}\", namespace \"{3}\", target org \"{4}\" and target space \"{5}\", already exists";

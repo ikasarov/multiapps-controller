@@ -4,6 +4,7 @@ import static com.sap.cloud.lm.sl.mta.util.ValidatorUtil.getPrefixedName;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import com.sap.cloud.lm.sl.cf.core.Constants;
@@ -38,35 +39,29 @@ public class NameUtil {
     private NameUtil() {
     }
 
-    public static String getNamespacePrefix(String namespace) {
-        return namespace + Constants.NAMESPACE_SEPARATOR;
-    }
-
-    public static String getWithoutNamespacePrefix(String name) {
-        int i = name.lastIndexOf('.');
-        return (i >= 0) ? name.substring(i + 1) : name;
-    }
-
     public static boolean isValidName(String name, String namePattern) {
         return name.matches(namePattern);
     }
-    
-    public static boolean resolveApplyNamespaceFlag(boolean applyNamespaceGlobal, Boolean applyNamespaceParameter) {
-        if (applyNamespaceParameter == null) {
-            return applyNamespaceGlobal;
+
+    public static Boolean parseBooleanFlag(final Map<String, Object> parameters, String flagName) throws ContentException {
+        Object applyNamespaceParameter = parameters.get(flagName);
+
+        if (applyNamespaceParameter != null && !(applyNamespaceParameter instanceof Boolean)) {
+            throw new ContentException(Messages.COULD_NOT_PARSE_BOOLEAN_FLAG, flagName);
         }
-        
-        return applyNamespaceGlobal || applyNamespaceParameter.booleanValue();
+        return (Boolean) applyNamespaceParameter;
     }
 
-    public static String computeValidApplicationName(String applicationName, String namespace, boolean useNamespaces) {
-        String prefix = useNamespaces ? getNamespacePrefix(namespace) : "";
-        return prefix + getNameWithProperLength(applicationName, NameRequirements.APP_NAME_MAX_LENGTH - prefix.length());
+    public static boolean resolveApplyNamespaceFlag(boolean applyNamespaceGlobal, Boolean applyNamespaceParameter) {
+        return applyNamespaceParameter != null ? applyNamespaceParameter.booleanValue() : applyNamespaceGlobal;
     }
 
-    public static String computeValidServiceName(String serviceName, String namespace, boolean useNamespaces) {
-        String prefix = useNamespaces ? getNamespacePrefix(namespace) : "";
-        return prefix + getNameWithProperLength(serviceName, NameRequirements.SERVICE_NAME_MAX_LENGTH - prefix.length());
+    public static String computeValidApplicationName(String applicationName, String namespace, boolean applyNamespace) {
+        return computeNamespacedNameWithLength(applicationName, namespace, applyNamespace, NameRequirements.APP_NAME_MAX_LENGTH);
+    }
+
+    public static String computeValidServiceName(String serviceName, String namespace, boolean applyNamespace) {
+        return computeNamespacedNameWithLength(serviceName, namespace, applyNamespace, NameRequirements.SERVICE_NAME_MAX_LENGTH);
     }
 
     public static String computeValidContainerName(String organization, String space, String serviceName) {
@@ -96,6 +91,18 @@ public class NameUtil {
             return getShortenedName(name, maxLength);
         }
         return name;
+    }
+
+    private static String computeNamespacedNameWithLength(String name, String namespace, boolean applyNamespace, int maxLength) {
+        String prefix = "";
+        if (namespace != null && applyNamespace) {
+            prefix = getNamespacePrefix(namespace);
+        }
+        return prefix + getNameWithProperLength(name, maxLength - prefix.length());
+    }
+
+    public static String getNamespacePrefix(String namespace) {
+        return namespace + Constants.NAMESPACE_SEPARATOR;
     }
 
     private static String getShortenedName(String name, int maxLength) {

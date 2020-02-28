@@ -38,8 +38,9 @@ public class DetectDeployedMtaStep extends SyncFlowableStep {
         StepsUtil.setDeployedApps(execution.getContext(), deployedApps);
 
         String namespace = StepsUtil.getNamespace(execution.getContext());
-        String mtaId = StepsUtil.getQualifiedMtaId(execution.getContext());
+        String mtaId = StepsUtil.getMtaId(execution.getContext());
 
+        getStepLogger().info("Detecting MTA by id {0} and namespace {1}", mtaId, namespace);
         DeployedMta deployedMta = componentsDetector.apply(deployedApps)
                                                     .findDeployedMtaByNameAndNamespace(namespace, mtaId);
         if (deployedMta == null) {
