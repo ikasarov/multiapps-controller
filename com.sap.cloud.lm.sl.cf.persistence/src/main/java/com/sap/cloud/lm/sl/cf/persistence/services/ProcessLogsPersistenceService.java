@@ -37,19 +37,19 @@ public class ProcessLogsPersistenceService extends DatabaseFileService {
         super(dataSourceWithDialect, new ByteArraySqlFileQueryProvider(TABLE_NAME, dataSourceWithDialect.getDataSourceDialect()));
     }
 
-    public List<String> getLogNames(String space, String namespace) throws FileStorageException {
-        List<FileEntry> logFiles = listFiles(space, namespace);
+    public List<String> getLogNames(String space, String serviceId) throws FileStorageException {
+        List<FileEntry> logFiles = listFiles(space, serviceId);
         return logFiles.stream()
                        .map(FileEntry::getName)
                        .distinct()
                        .collect(Collectors.toList());
     }
 
-    public String getLogContent(String space, String namespace, String logName) throws FileStorageException {
+    public String getLogContent(String space, String serviceId, String logName) throws FileStorageException {
         final StringBuilder builder = new StringBuilder();
-        List<String> logIds = getSortedByTimestampFileIds(space, namespace, logName);
+        List<String> logIds = getSortedByTimestampFileIds(space, serviceId, logName);
         if (logIds.isEmpty()) {
-            throw new NotFoundException(MessageFormat.format(Messages.ERROR_LOG_FILE_NOT_FOUND, logName, namespace, space));
+            throw new NotFoundException(MessageFormat.format(Messages.ERROR_LOG_FILE_NOT_FOUND, logName, serviceId, space));
         }
 
         FileContentProcessor streamProcessor = is -> builder.append(IOUtils.toString(is, Charset.defaultCharset()));
@@ -59,20 +59,20 @@ public class ProcessLogsPersistenceService extends DatabaseFileService {
         return builder.toString();
     }
 
-    private List<String> getSortedByTimestampFileIds(String space, String namespace, String fileName) throws FileStorageException {
-        List<FileEntry> listFiles = listFiles(space, namespace, fileName);
+    private List<String> getSortedByTimestampFileIds(String space, String serviceId, String fileName) throws FileStorageException {
+        List<FileEntry> listFiles = listFiles(space, serviceId, fileName);
         return listFiles.stream()
                         .sorted(Comparator.comparing(FileEntry::getModified))
                         .map(FileEntry::getId)
                         .collect(Collectors.toList());
     }
 
-    private List<FileEntry> listFiles(final String space, final String namespace, final String fileName) throws FileStorageException {
+    private List<FileEntry> listFiles(final String space, final String serviceId, final String fileName) throws FileStorageException {
         try {
-            return getSqlQueryExecutor().execute(getSqlFileQueryProvider().getListFilesQuery(space, namespace, fileName));
+            return getSqlQueryExecutor().execute(getSqlFileQueryProvider().getListFilesQuery(space, serviceId, fileName));
         } catch (SQLException e) {
-            throw new FileStorageException(MessageFormat.format(Messages.ERROR_GETTING_FILES_WITH_SPACE_NAMESPACE_AND_NAME, space,
-                                                                namespace, fileName),
+            throw new FileStorageException(MessageFormat.format(Messages.ERROR_GETTING_FILES_WITH_SPACE_SERVICE_ID_AND_NAME, space,
+                                                                serviceId, fileName),
                                            e);
         }
     }
@@ -95,7 +95,7 @@ public class ProcessLogsPersistenceService extends DatabaseFileService {
         }
     }
 
-    private FileEntry createFileEntry(final String space, final String namespace, final String remoteLogName, File localLog)
+    private FileEntry createFileEntry(final String space, final String serviceId, final String remoteLogName, File localLog)
         throws NoSuchAlgorithmException, IOException {
 
         FileInfo localLogFileInfo = ImmutableFileInfo.builder()
@@ -104,14 +104,14 @@ public class ProcessLogsPersistenceService extends DatabaseFileService {
                                                      .digest(DigestHelper.computeFileChecksum(localLog.toPath(), DIGEST_METHOD))
                                                      .digestAlgorithm(DIGEST_METHOD)
                                                      .build();
-        return createFileEntry(space, namespace, remoteLogName, localLogFileInfo);
+        return createFileEntry(space, serviceId, remoteLogName, localLogFileInfo);
     }
 
-    public int deleteByNamespace(final String namespace) {
+    public int deleteByServiceId(final String serviceId) {
         try {
-            return getSqlQueryExecutor().execute(getSqlFileQueryProvider().getDeleteByNamespaceQuery(namespace));
+            return getSqlQueryExecutor().execute(getSqlFileQueryProvider().getDeleteByServiceIdQuery(serviceId));
         } catch (SQLException e) {
-            throw new SLException(e, Messages.ERROR_DELETING_PROCESS_LOGS_WITH_NAMESPACE, namespace);
+            throw new SLException(e, Messages.ERROR_DELETING_PROCESS_LOGS_WITH_SERVICE_ID, serviceId);
         }
     }
 }

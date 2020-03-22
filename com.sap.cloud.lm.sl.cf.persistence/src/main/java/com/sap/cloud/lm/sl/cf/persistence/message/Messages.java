@@ -20,10 +20,10 @@ public final class Messages {
     public static final String ERROR_READING_FILE_CONTENT = "Error reading content of file {0}: {1}";
     public static final String FILE_WITH_ID_AND_SPACE_DOES_NOT_EXIST = "File with ID \"{0}\" and space \"{1}\" does not exist.";
     public static final String ERROR_DELETING_FILE_WITH_ID = "Error deleting file with ID \"{0}\"";
-    public static final String ERROR_GETTING_FILES_WITH_SPACE_AND_NAMESPACE = "Error getting files with space {0} and namespace {1}";
-    public static final String ERROR_GETTING_FILES_WITH_SPACE_NAMESPACE_AND_NAME = "Error getting files with space {0} namespace {1} and file name {2}";
+    public static final String ERROR_GETTING_FILES_WITH_SPACE_AND_SERVICE_ID = "Error getting files with space {0} and serviceId {1}";
+    public static final String ERROR_GETTING_FILES_WITH_SPACE_SERVICE_ID_AND_NAME = "Error getting files with space {0} serviceId {1} and file name {2}";
     public static final String ERROR_GETTING_ALL_FILES = "Error getting all files";
-    public static final String ERROR_DELETING_PROCESS_LOGS_WITH_NAMESPACE = "Error deleting process logs with namespace \"{0}\"";
+    public static final String ERROR_DELETING_PROCESS_LOGS_WITH_SERVICE_ID = "Error deleting process logs with serviceId \"{0}\"";
     public static final String ERROR_DELETING_DIRECTORY = "Error deleting directory \"{0}\"";
     public static final String ERROR_STORING_LOG_FILE = "Error storing log file \"{0}\"";
     public static final String ERROR_LOG_FILE_NOT_FOUND = "Log file with name \"{0}\" for operation \"{1}\" in space \"{2}\" was not found";
@@ -57,7 +57,7 @@ public final class Messages {
     public static final String STORED_FILE_0 = "Stored file: \"{0}\"";
     public static final String STORED_FILE_0_WITH_SIZE_1_SUCCESSFULLY_2 = "Stored file \"{0}\" with size {1}";
     public static final String DELETED_0_FILES_WITH_SPACE_1 = "Deleted {0} files with space \"{1}\".";
-    public static final String DELETED_0_FILES_WITH_SPACE_1_AND_NAMESPACE_2 = "Deleted {0} files with space \"{1}\" and namespace \"{2}\".";
+    public static final String DELETED_0_FILES_WITH_SPACE_1_AND_SERVICE_ID_2 = "Deleted {0} files with space \"{1}\" and serviceId \"{2}\".";
     public static final String DELETED_0_FILES_MODIFIED_BEFORE_1 = "Deleted {0} files modified before \"{1}\".";
     public static final String DELETED_0_FILES_WITH_ID_1_AND_SPACE_2 = "Deleted {0} files with ID \"{1}\" and space \"{2}\".";
     public static final String DELETED_0_FILES_WITHOUT_CONTENT = "Deleted {0} files without content.";

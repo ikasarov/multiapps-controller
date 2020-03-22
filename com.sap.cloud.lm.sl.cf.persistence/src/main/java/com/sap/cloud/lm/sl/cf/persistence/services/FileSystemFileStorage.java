@@ -51,7 +51,7 @@ public class FileSystemFileStorage implements FileStorage {
             File newFile = newFilePath.toFile();
             if (!newFile.exists()) {
                 throw new FileStorageException(MessageFormat.format(Messages.FILE_UPLOAD_FAILED, fileEntry.getName(),
-                                                                    fileEntry.getNamespace()));
+                                                                    fileEntry.getServiceId()));
             }
             logger.debug(MessageFormat.format(Messages.STORED_FILE_0_WITH_SIZE_1_SUCCESSFULLY_2, newFile, newFile.length()));
         } catch (IOException e) {
@@ -95,7 +95,7 @@ public class FileSystemFileStorage implements FileStorage {
     }
 
     @Override
-    public void deleteFilesBySpaceAndNamespace(String space, String namespace) {
+    public void deleteFilesBySpaceAndServiceId(String space, String serviceId) {
         throw new UnsupportedOperationException();
     }
 

@@ -16,7 +16,7 @@ public interface FileStorage {
 
     void deleteFilesBySpace(String space) throws FileStorageException;
 
-    void deleteFilesBySpaceAndNamespace(String space, String namespace);
+    void deleteFilesBySpaceAndServiceId(String space, String serviceId);
 
     int deleteFilesModifiedBefore(Date modificationTime) throws FileStorageException;
 

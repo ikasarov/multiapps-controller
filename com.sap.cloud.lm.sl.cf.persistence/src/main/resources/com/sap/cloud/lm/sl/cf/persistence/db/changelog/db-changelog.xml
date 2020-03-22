@@ -33,4 +33,6 @@
 		file="com/sap/cloud/lm/sl/cf/persistence/db/changelog/db-changelog-remove_process_log_unique_constraint.xml" />
 	<include
 		file="com/sap/cloud/lm/sl/cf/persistence/db/changelog/db-changelog-alter_process_log_add_content_column_for_bytea_cf.xml" />
+	<include
+		file="com/sap/cloud/lm/sl/cf/persistence/db/changelog/db-changelog-alter_lm_sl_persistance_file_rename_namespace_column.xml" />
 </databaseChangeLog>

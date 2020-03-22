@@ -22,10 +22,13 @@ public interface FileEntry {
     String getName();
 
     @Nullable
-    String getNamespace();
+    String getServiceId();
 
     @Nullable
     String getSpace();
+
+//    @Nullable
+//    String getNamespace();
 
     @Nullable
     BigInteger getSize();

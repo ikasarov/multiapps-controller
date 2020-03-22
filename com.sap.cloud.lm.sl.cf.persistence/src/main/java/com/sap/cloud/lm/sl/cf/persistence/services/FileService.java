@@ -60,14 +60,14 @@ public class FileService {
      * Uploads a new file.
      *
      * @param space
-     * @param namespace namespace where the file will be uploaded
+     * @param serviceId id of the service uploading the file
      * @param name name of the uploaded file
      * @param fileUploadProcessor file processor
      * @param inputStream input stream to read the content from
      * @return an object representing the file upload
      * @throws FileStorageException
      */
-    public FileEntry addFile(String space, String namespace, String name, InputStream inputStream) throws FileStorageException {
+    public FileEntry addFile(String space, String serviceId, String name, InputStream inputStream) throws FileStorageException {
         // Stream the file to a temp location and get the size and MD5 digest
         // as an alternative we can pass the original stream to the database,
         // and decorate the blob stream to calculate digest and size, but this will still require
@@ -77,7 +77,7 @@ public class FileService {
         FileEntry fileEntry = null;
         try (InputStream autoClosedInputStream = inputStream) {
             fileInfo = FileUploader.uploadFile(inputStream);
-            fileEntry = addFile(space, namespace, name, fileInfo);
+            fileEntry = addFile(space, serviceId, name, fileInfo);
         } catch (IOException e) {
             logger.debug(e.getMessage(), e);
         } finally {
@@ -88,11 +88,11 @@ public class FileService {
         return fileEntry;
     }
 
-    public FileEntry addFile(String space, String namespace, String name, File existingFile) throws FileStorageException {
+    public FileEntry addFile(String space, String serviceId, String name, File existingFile) throws FileStorageException {
         try {
             FileInfo fileInfo = createFileInfo(existingFile);
 
-            return addFile(space, namespace, name, fileInfo);
+            return addFile(space, serviceId, name, fileInfo);
         } catch (NoSuchAlgorithmException e) {
             throw new SLException(Messages.ERROR_CALCULATING_FILE_DIGEST, existingFile.getName(), e);
         } catch (FileNotFoundException e) {
@@ -102,11 +102,11 @@ public class FileService {
         }
     }
 
-    public List<FileEntry> listFiles(String space, String namespace) throws FileStorageException {
+    public List<FileEntry> listFiles(String space, String serviceId) throws FileStorageException {
         try {
-            return getSqlQueryExecutor().execute(getSqlFileQueryProvider().getListFilesQuery(space, namespace));
+            return getSqlQueryExecutor().execute(getSqlFileQueryProvider().getListFilesQuery(space, serviceId));
         } catch (SQLException e) {
-            throw new FileStorageException(MessageFormat.format(Messages.ERROR_GETTING_FILES_WITH_SPACE_AND_NAMESPACE, space, namespace),
+            throw new FileStorageException(MessageFormat.format(Messages.ERROR_GETTING_FILES_WITH_SPACE_AND_SERVICE_ID, space, serviceId),
                                            e);
         }
     }
@@ -129,9 +129,9 @@ public class FileService {
         fileStorage.processFileContent(space, id, fileContentProcessor);
     }
 
-    public int deleteBySpaceAndNamespace(String space, String namespace) throws FileStorageException {
-        fileStorage.deleteFilesBySpaceAndNamespace(space, namespace);
-        return deleteFileAttributesBySpaceAndNamespace(space, namespace);
+    public int deleteBySpaceAndServiceId(String space, String serviceId) throws FileStorageException {
+        fileStorage.deleteFilesBySpaceAndServiceId(space, serviceId);
+        return deleteFileAttributesBySpaceAndServiceId(space, serviceId);
     }
 
     public int deleteBySpace(String space) throws FileStorageException {
@@ -180,9 +180,9 @@ public class FileService {
         }
     }
 
-    protected int deleteFileAttributesBySpaceAndNamespace(String space, String namespace) throws FileStorageException {
+    protected int deleteFileAttributesBySpaceAndServiceId(String space, String serviceId) throws FileStorageException {
         try {
-            return getSqlQueryExecutor().execute(getSqlFileQueryProvider().getDeleteBySpaceAndNamespaceQuery(space, namespace));
+            return getSqlQueryExecutor().execute(getSqlFileQueryProvider().getDeleteBySpaceAndServiceIdQuery(space, serviceId));
         } catch (SQLException e) {
             throw new FileStorageException(e.getMessage(), e);
         }
@@ -196,12 +196,12 @@ public class FileService {
         }
     }
 
-    protected FileEntry createFileEntry(String space, String namespace, String name, FileInfo localFile) {
+    protected FileEntry createFileEntry(String space, String serviceId, String name, FileInfo localFile) {
         return ImmutableFileEntry.builder()
                                  .id(generateRandomId())
                                  .space(space)
                                  .name(name)
-                                 .namespace(namespace)
+                                 .serviceId(serviceId)
                                  .size(localFile.getSize())
                                  .digest(localFile.getDigest())
                                  .digestAlgorithm(localFile.getDigestAlgorithm())
@@ -226,9 +226,9 @@ public class FileService {
                                 .build();
     }
 
-    private FileEntry addFile(String space, String namespace, String name, FileInfo fileInfo) throws FileStorageException {
+    private FileEntry addFile(String space, String serviceId, String name, FileInfo fileInfo) throws FileStorageException {
 
-        FileEntry fileEntry = createFileEntry(space, namespace, name, fileInfo);
+        FileEntry fileEntry = createFileEntry(space, serviceId, name, fileInfo);
         storeFile(fileEntry, fileInfo);
         logger.debug(MessageFormat.format(Messages.STORED_FILE_0, fileEntry));
         return fileEntry;

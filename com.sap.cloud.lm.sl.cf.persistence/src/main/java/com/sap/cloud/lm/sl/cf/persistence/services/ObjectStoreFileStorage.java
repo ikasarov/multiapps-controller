@@ -60,7 +60,7 @@ public class ObjectStoreFileStorage implements FileStorage {
             LOGGER.debug(MessageFormat.format(Messages.STORED_FILE_0_WITH_SIZE_1_SUCCESSFULLY_2, fileEntry.getId(), fileSize));
         } catch (ContainerNotFoundException e) {
             throw new FileStorageException(MessageFormat.format(Messages.FILE_UPLOAD_FAILED, fileEntry.getName(),
-                                                                fileEntry.getNamespace()));
+                                                                fileEntry.getServiceId()));
         }
     }
 
@@ -90,8 +90,8 @@ public class ObjectStoreFileStorage implements FileStorage {
     }
 
     @Override
-    public void deleteFilesBySpaceAndNamespace(String space, String namespace) {
-        removeBlobsByFilter(blob -> filterBySpaceAndNamespace(blob, space, namespace));
+    public void deleteFilesBySpaceAndServiceId(String space, String serviceId) {
+        removeBlobsByFilter(blob -> filterBySpaceAndServiceId(blob, space, serviceId));
     }
 
     @Override
@@ -170,8 +170,8 @@ public class ObjectStoreFileStorage implements FileStorage {
         metadata.put(Constants.FILE_ENTRY_NAME.toLowerCase(), fileEntry.getName());
         metadata.put(Constants.FILE_ENTRY_MODIFIED.toLowerCase(), Long.toString(fileEntry.getModified()
                                                                                          .getTime()));
-        if (fileEntry.getNamespace() != null) {
-            metadata.put(Constants.FILE_ENTRY_NAMESPACE.toLowerCase(), fileEntry.getNamespace());
+        if (fileEntry.getServiceId() != null) {
+            metadata.put(Constants.FILE_ENTRY_SERVICE_ID.toLowerCase(), fileEntry.getServiceId());
         }
         return metadata;
     }
@@ -219,14 +219,14 @@ public class ObjectStoreFileStorage implements FileStorage {
         return space.equals(spaceParameter);
     }
 
-    private boolean filterBySpaceAndNamespace(StorageMetadata blobMetadata, String space, String namespace) {
+    private boolean filterBySpaceAndServiceId(StorageMetadata blobMetadata, String space, String serviceId) {
         Map<String, String> userMetadata = blobMetadata.getUserMetadata();
         if (CollectionUtils.isEmpty(userMetadata)) {
             return false;
         }
         String spaceParameter = userMetadata.get(Constants.FILE_ENTRY_SPACE.toLowerCase());
-        String namespaceParameter = userMetadata.get(Constants.FILE_ENTRY_NAMESPACE.toLowerCase());
-        return space.equals(spaceParameter) && namespace.equals(namespaceParameter);
+        String serviceIdParameter = userMetadata.get(Constants.FILE_ENTRY_SERVICE_ID.toLowerCase());
+        return space.equals(spaceParameter) && serviceId.equals(serviceIdParameter);
     }
 
 }

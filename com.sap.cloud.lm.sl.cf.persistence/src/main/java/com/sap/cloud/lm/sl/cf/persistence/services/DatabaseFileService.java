@@ -35,8 +35,8 @@ public class DatabaseFileService extends FileService {
     }
 
     @Override
-    public int deleteBySpaceAndNamespace(String space, String namespace) throws FileStorageException {
-        return deleteFileAttributesBySpaceAndNamespace(space, namespace);
+    public int deleteBySpaceAndServiceId(String space, String serviceId) throws FileStorageException {
+        return deleteFileAttributesBySpaceAndServiceId(space, serviceId);
     }
 
     @Override

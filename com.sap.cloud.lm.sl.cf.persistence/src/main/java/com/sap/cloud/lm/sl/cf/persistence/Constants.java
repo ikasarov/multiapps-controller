@@ -15,7 +15,7 @@ public class Constants {
     public static final String FILE_ENTRY_MODIFIED = "MODIFIED";
     public static final String FILE_ENTRY_DIGEST_ALGORITHM = "DIGEST_ALGORITHM";
     public static final String FILE_ENTRY_SIZE = "FILE_SIZE";
-    public static final String FILE_ENTRY_NAMESPACE = "NAMESPACE";
+    public static final String FILE_ENTRY_SERVICE_ID = "SERVICE_ID";
     public static final String FILE_ENTRY_SPACE = "SPACE";
     public static final String FILE_ENTRY_NAME = "FILE_NAME";
     public static final String FILE_ENTRY_DIGEST = "DIGEST";

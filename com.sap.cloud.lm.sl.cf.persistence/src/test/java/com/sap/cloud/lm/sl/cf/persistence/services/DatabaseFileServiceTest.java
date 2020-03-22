@@ -106,24 +106,24 @@ public class DatabaseFileServiceTest {
     }
 
     @Test
-    public void deleteBySpaceAndNamespaceTest() throws Exception {
+    public void deleteBySpaceAndServiceIdTest() throws Exception {
         addTestFile(SPACE_1, NAMESPACE_1);
         addTestFile(SPACE_1, NAMESPACE_1);
-        int deleteByWrongSpace = fileService.deleteBySpaceAndNamespace(SPACE_2, NAMESPACE_1);
+        int deleteByWrongSpace = fileService.deleteBySpaceAndServiceId(SPACE_2, NAMESPACE_1);
         assertEquals(0, deleteByWrongSpace);
-        int deleteByWrongNamespace = fileService.deleteBySpaceAndNamespace(SPACE_2, NAMESPACE_2);
+        int deleteByWrongNamespace = fileService.deleteBySpaceAndServiceId(SPACE_2, NAMESPACE_2);
         assertEquals(0, deleteByWrongNamespace);
-        int correctDelete = fileService.deleteBySpaceAndNamespace(SPACE_1, NAMESPACE_1);
+        int correctDelete = fileService.deleteBySpaceAndServiceId(SPACE_1, NAMESPACE_1);
         assertEquals(2, correctDelete);
         List<FileEntry> listFiles = fileService.listFiles(SPACE_1, NAMESPACE_1);
         assertEquals(0, listFiles.size());
     }
 
     @Test
-    public void deleteBySpaceAndNamespaceWithTwoNamespacesTest() throws Exception {
+    public void deleteBySpaceAndServiceIdWithTwoServiceIdsTest() throws Exception {
         addTestFile(SPACE_1, NAMESPACE_1);
         addTestFile(SPACE_1, NAMESPACE_2);
-        int correctDelete = fileService.deleteBySpaceAndNamespace(SPACE_1, NAMESPACE_1);
+        int correctDelete = fileService.deleteBySpaceAndServiceId(SPACE_1, NAMESPACE_1);
         assertEquals(1, correctDelete);
         List<FileEntry> listFiles = fileService.listFiles(SPACE_1, NAMESPACE_1);
         assertEquals(0, listFiles.size());
