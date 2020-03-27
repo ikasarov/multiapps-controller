@@ -113,7 +113,7 @@ public class FilesApiServiceImplTest {
                .thenReturn(Mockito.mock(InputStream.class));
         Mockito.when(fileItemStream.getName())
                .thenReturn(fileName);
-        Mockito.when(fileService.addFile(Mockito.eq(SPACE_GUID), Mockito.eq(fileName), Mockito.any()))
+        Mockito.when(fileService.addFile(Mockito.eq(SPACE_GUID), null, Mockito.eq(fileName), Mockito.any()))
                .thenReturn(fileEntry);
 
         ResponseEntity<FileMetadata> response = testedClass.uploadFile(request, SPACE_GUID);

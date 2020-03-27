@@ -203,7 +203,7 @@ public class ValidateDeployParametersStep extends SyncFlowableStep {
 
     private FileEntry persistArchive(Path archivePath, DelegateExecution context) {
         try {
-            return fileService.addFile(StepsUtil.getSpaceId(context), StepsUtil.getServiceId(context), archivePath.getFileName()
+            return fileService.addFile(StepsUtil.getSpaceId(context), StepsUtil.getNamespace(context), archivePath.getFileName()
                                                                                                                   .toString(),
                                        archivePath.toFile());
         } catch (FileStorageException e) {

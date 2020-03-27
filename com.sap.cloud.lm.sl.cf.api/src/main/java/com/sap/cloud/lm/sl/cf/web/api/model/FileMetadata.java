@@ -64,6 +64,11 @@ public abstract class FileMetadata implements AuditableConfiguration {
         return getName();
     }
 
+    @Nullable
+    @ApiModelProperty
+    @JsonProperty("namespace")
+    public abstract String getNamespace();
+
     @Override
     @ApiModelProperty(hidden = true)
     public List<ConfigurationIdentifier> getConfigurationIdentifiers() {
@@ -73,6 +78,7 @@ public abstract class FileMetadata implements AuditableConfiguration {
         configurationIdentifiers.add(new ConfigurationIdentifier("digestAlgorithm", getDigestAlgorithm()));
         configurationIdentifiers.add(new ConfigurationIdentifier("space", getSpace()));
         configurationIdentifiers.add(new ConfigurationIdentifier("size", Objects.toString(getSize())));
+        configurationIdentifiers.add(new ConfigurationIdentifier("namespacce", Objects.toString(getNamespace())));
         return configurationIdentifiers;
     }
 }
