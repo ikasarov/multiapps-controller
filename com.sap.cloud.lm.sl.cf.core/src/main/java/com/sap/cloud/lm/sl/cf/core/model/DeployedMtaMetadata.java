@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sap.cloud.lm.sl.cf.core.Constants;
@@ -51,7 +53,7 @@ public class DeployedMtaMetadata {
     }
     
     public boolean hasNamespace(String namespace) {
-        if (namespace == null) {
+        if (StringUtils.isEmpty(namespace)) {
             return this.namespace == null;
         }
         

@@ -48,10 +48,11 @@ public class HelperFactory implements HelperFactoryConstructor {
     public ConfigurationReferencesResolver getConfigurationReferencesResolver(DeploymentDescriptor deploymentDescriptor,
                                                                               ConfigurationEntryService configurationEntryService,
                                                                               CloudTarget cloudTarget,
-                                                                              ApplicationConfiguration configuration) {
+                                                                              ApplicationConfiguration configuration, String namespace) {
         ParametersChainBuilder chainBuilder = new ParametersChainBuilder(deploymentDescriptor, null);
         com.sap.cloud.lm.sl.cf.core.helpers.v2.ConfigurationFilterParser filterParser = new com.sap.cloud.lm.sl.cf.core.helpers.v2.ConfigurationFilterParser(cloudTarget,
-                                                                                                                                                             chainBuilder);
+                                                                                                                                                             chainBuilder,
+                                                                                                                                                             namespace);
         return new ConfigurationReferencesResolver(configurationEntryService, filterParser, cloudTarget, configuration);
     }
 

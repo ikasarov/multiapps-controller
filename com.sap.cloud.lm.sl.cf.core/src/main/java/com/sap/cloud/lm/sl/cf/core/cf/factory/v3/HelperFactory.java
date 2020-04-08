@@ -24,9 +24,9 @@ public class HelperFactory extends com.sap.cloud.lm.sl.cf.core.cf.factory.v2.Hel
     public ConfigurationReferencesResolver getConfigurationReferencesResolver(DeploymentDescriptor deploymentDescriptor,
                                                                               ConfigurationEntryService configurationEntryService,
                                                                               CloudTarget cloudTarget,
-                                                                              ApplicationConfiguration configuration) {
+                                                                              ApplicationConfiguration configuration, String namespace) {
         ParametersChainBuilder v2ParameterChainBuilder = new ParametersChainBuilder(deploymentDescriptor, null);
-        ConfigurationFilterParser v2FilterParser = new ConfigurationFilterParser(cloudTarget, v2ParameterChainBuilder);
+        ConfigurationFilterParser v2FilterParser = new ConfigurationFilterParser(cloudTarget, v2ParameterChainBuilder, namespace);
         return new ConfigurationReferencesResolver(configurationEntryService, v2FilterParser, cloudTarget, configuration);
     }
 

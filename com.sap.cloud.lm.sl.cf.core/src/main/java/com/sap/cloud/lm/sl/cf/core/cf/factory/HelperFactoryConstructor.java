@@ -32,7 +32,8 @@ public interface HelperFactoryConstructor {
 
     ConfigurationReferencesResolver getConfigurationReferencesResolver(DeploymentDescriptor deploymentDescriptor,
                                                                        ConfigurationEntryService configurationEntryService,
-                                                                       CloudTarget cloudTarget, ApplicationConfiguration configuration);
+                                                                       CloudTarget cloudTarget, ApplicationConfiguration configuration,
+                                                                       String namespace);
 
     ConfigurationReferencesResolver getConfigurationReferencesResolver(ConfigurationEntryService configurationEntryService,
                                                                        ConfigurationFilterParser filterParser, CloudTarget cloudTarget,

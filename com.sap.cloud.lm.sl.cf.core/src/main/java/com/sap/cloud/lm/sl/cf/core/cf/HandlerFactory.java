@@ -59,9 +59,9 @@ public class HandlerFactory extends com.sap.cloud.lm.sl.mta.handlers.HandlerFact
     public ConfigurationReferencesResolver getConfigurationReferencesResolver(DeploymentDescriptor deploymentDescriptor,
                                                                               ConfigurationEntryService configurationEntryService,
                                                                               CloudTarget cloudTarget,
-                                                                              ApplicationConfiguration configuration) {
+                                                                              ApplicationConfiguration configuration, String namespace) {
         return getHelperDelegate().getConfigurationReferencesResolver(deploymentDescriptor, configurationEntryService, cloudTarget,
-                                                                      configuration);
+                                                                      configuration, namespace);
     }
 
     @Override
