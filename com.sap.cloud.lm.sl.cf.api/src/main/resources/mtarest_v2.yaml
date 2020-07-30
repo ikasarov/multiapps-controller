@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "This is the API of the Cloud Foundry MultiApps Controller"
-  version: "1.0.0"
+  version: "1.1.0"
   title: "MTA REST API"
   contact: {}
   license:

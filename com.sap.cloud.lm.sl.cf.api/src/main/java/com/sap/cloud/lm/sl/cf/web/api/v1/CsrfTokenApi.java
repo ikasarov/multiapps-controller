@@ -1,4 +1,4 @@
-package com.sap.cloud.lm.sl.cf.web.api;
+package com.sap.cloud.lm.sl.cf.web.api.v1;
 
 import javax.inject.Inject;
 
@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sap.cloud.lm.sl.cf.web.api.CsrfTokenApiService;
 import com.sap.cloud.lm.sl.cf.web.api.Constants.Resources;
 
 import io.swagger.annotations.Api;

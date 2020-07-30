@@ -73,7 +73,7 @@
 									<name>Apache 2.0</name>
 									<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
 								</license>
-								<version>1.0.0</version>
+								<version>1.1.0</version>
 							</info>
 							<outputFormats>yaml</outputFormats>
 							<swaggerDirectory>${project.basedir}/src/main/resources</swaggerDirectory>
@@ -95,7 +95,7 @@
 												<configuration>
 							<apiSources>
 								<apiSource>
-									<locations>com.sap.cloud.lm.sl.cf.web.api</locations>
+									<locations>com.sap.cloud.lm.sl.cf.web.api.v1</locations>
 									<swaggerFileName>mtarest</swaggerFileName>
 									<basePath>/api/v1/spaces/{space_guid}</basePath>
 								</apiSource>

@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "This is the API of the Cloud Foundry MultiApps Controller"
-  version: "1.0.0"
+  version: "1.1.0"
   title: "MTA REST API"
   contact: {}
   license:
@@ -342,39 +342,6 @@ paths:
           description: "OK"
           schema:
             type: "string"
-      security:
-      - oauth2: []
-  /api/v2/spaces/{spaceGuid}/mtas:
-    get:
-      summary: ""
-      description: "Retrieves all Multi-Target Applications in a space "
-      operationId: "getMtas"
-      produces:
-      - "application/json"
-      - "application/json;charset=UTF-8"
-      parameters:
-      - name: "spaceGuid"
-        in: "path"
-        description: "GUID of space with mtas"
-        required: true
-        type: "string"
-      - name: "namespace"
-        in: "query"
-        description: "Filter mtas by namespace"
-        required: false
-        type: "string"
-      - name: "name"
-        in: "query"
-        description: "Filter mtas by name"
-        required: false
-        type: "string"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Mta"
       security:
       - oauth2: []
 securityDefinitions:
