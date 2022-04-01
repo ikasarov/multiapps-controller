@@ -15,13 +15,16 @@ import org.cloudfoundry.multiapps.controller.core.cf.metadata.processor.MtaMetad
 import org.cloudfoundry.multiapps.controller.core.model.DeployedMta;
 import org.cloudfoundry.multiapps.controller.core.model.DeployedMtaApplication;
 import org.cloudfoundry.multiapps.controller.core.model.DeployedMtaService;
+import org.cloudfoundry.multiapps.controller.core.model.DeployedMtaServiceKey;
 import org.cloudfoundry.multiapps.controller.core.model.ImmutableDeployedMta;
 import org.cloudfoundry.multiapps.controller.core.model.ImmutableDeployedMtaService;
+import org.cloudfoundry.multiapps.controller.core.model.ImmutableDeployedMtaServiceKey;
 import org.cloudfoundry.multiapps.mta.model.Version;
 
 import com.sap.cloudfoundry.client.facade.domain.CloudApplication;
 import com.sap.cloudfoundry.client.facade.domain.CloudEntity;
 import com.sap.cloudfoundry.client.facade.domain.CloudServiceInstance;
+import com.sap.cloudfoundry.client.facade.domain.CloudServiceKey;
 
 @Named
 public class MtaMetadataEntityAggregator {

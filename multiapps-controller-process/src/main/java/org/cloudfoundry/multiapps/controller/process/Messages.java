@@ -120,6 +120,7 @@ public class Messages {
     public static final String ERROR_DELETING_IDLE_ROUTES = "Error deleting idle routes";
     public static final String ERROR_CREATING_SERVICE_BROKERS = "Error creating service brokers";
     public static final String ERROR_DELETING_SERVICE_BROKERS = "Error deleting service brokers";
+    public static final String ERROR_DELETING_SERVICE_KEYS = "Error deleting old content deploy service keys";
     public static final String ERROR_DETACHING_SERVICES_FROM_MTA = "Error detaching services from MTA";
     public static final String ERROR_UPDATING_SUBSCRIBERS = "Error updating subscribers";
     public static final String ERROR_RESTARTING_SUBSCRIBERS = "Error restarting subscribers";
@@ -328,6 +329,8 @@ public class Messages {
     public static final String DOMAINS_ADDED = "Domains added";
     public static final String DELETING_DISCONTINUED_SERVICE_0 = "Deleting discontinued service \"{0}\"...";
     public static final String DELETING_SERVICES = "Deleting discontinued services...";
+    public static final String DELETING_OLD_SERVICE_KEYS = "Deleting old service keys for content deploy...";
+    public static final String DELETING_OLD_SERVICE_KEYS_FOR_SERVICE = "Deleting old service keys for content deploy for service \"{0}\"...";
     public static final String MISSING_SERVICES_TO_DELETE = "Missing services to delete.";
     public static final String SERVICES_ARE_ALREADY_DELETED = "Services \"{0}\" are already deleted";
     public static final String SERVICES_DELETED = "Discontinued services deleted";
@@ -394,6 +397,7 @@ public class Messages {
     public static final String SUBSCRIPTIONS_TO_DELETE = "Subscriptions to delete: {0}";
     public static final String SERVICES_TO_DELETE = "Cloud services to delete: {0}";
     public static final String DEPLOYED_MTA = "Deployed MTA: {0}";
+    public static final String DEPLOYED_MTA_SERVICE_KEYS = "Deployed MTA service keys: {0}";
     public static final String DEPLOYED_MODULES = "Deployed modules: {0}";
     public static final String MTA_ARCHIVE_MODULES = "MTA archive modules: {0}";
     public static final String CUSTOM_DOMAINS = "Custom domains: {0}";

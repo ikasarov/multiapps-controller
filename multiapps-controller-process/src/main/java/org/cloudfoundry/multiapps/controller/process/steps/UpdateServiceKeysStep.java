@@ -26,7 +26,7 @@ import com.sap.cloudfoundry.client.facade.domain.ServiceOperation;
 @Named("updateServiceKeysStep")
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class UpdateServiceKeysStep extends ServiceStep {
-
+    
     @Override
     protected OperationExecutionState executeOperation(ProcessContext context, CloudControllerClient client,
                                                        CloudServiceInstanceExtended service) {

@@ -23,18 +23,18 @@ public abstract class CustomControllerClient {
         this.webClient = new WebClientFactory().getWebClient(client);
     }
 
-    protected List<Map<String, Object>> getAllResources(String path, Object... urlVariables) {
+    protected List<Map<String, Object>> getAllResources(String uri, Object... urlVariables) {
         List<Map<String, Object>> allResources = new ArrayList<>();
-        String nextUrl = path;
+        String nextUrl = uri;
         while (!StringUtils.isEmpty(nextUrl)) {
             nextUrl = addPageOfResources(nextUrl, allResources, urlVariables);
         }
         return allResources;
     }
 
-    private String addPageOfResources(String path, List<Map<String, Object>> allResources, Object... urlVariables) {
+    private String addPageOfResources(String uri, List<Map<String, Object>> allResources, Object... urlVariables) {
         String response = webClient.get()
-                                   .uri(path, urlVariables)
+                                   .uri(uri, urlVariables)
                                    .retrieve()
                                    .bodyToMono(String.class)
                                    .block();

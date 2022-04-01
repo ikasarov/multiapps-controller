@@ -23,6 +23,8 @@ import org.cloudfoundry.multiapps.mta.mergers.PlatformMerger;
 import org.cloudfoundry.multiapps.mta.model.DeploymentDescriptor;
 import org.cloudfoundry.multiapps.mta.model.Platform;
 
+import com.sap.cloudfoundry.client.facade.domain.CloudServiceKey;
+
 public class CloudHandlerFactoryV3 extends HandlerFactoryV3 implements CloudHandlerFactory {
 
     @Override

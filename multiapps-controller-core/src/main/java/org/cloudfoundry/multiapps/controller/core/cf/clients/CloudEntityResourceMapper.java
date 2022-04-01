@@ -11,15 +11,22 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.cloudfoundry.client.v3.Metadata;
+import org.cloudfoundry.multiapps.controller.core.cf.metadata.MtaMetadataAnnotations;
+import org.cloudfoundry.multiapps.controller.core.model.DeployedMtaService;
+import org.cloudfoundry.multiapps.controller.core.model.DeployedMtaServiceKey;
+import org.cloudfoundry.multiapps.controller.core.model.ImmutableDeployedMtaServiceKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sap.cloudfoundry.client.facade.domain.CloudDomain;
 import com.sap.cloudfoundry.client.facade.domain.CloudMetadata;
 import com.sap.cloudfoundry.client.facade.domain.CloudRoute;
+import com.sap.cloudfoundry.client.facade.domain.CloudServiceInstance;
 import com.sap.cloudfoundry.client.facade.domain.ImmutableCloudDomain;
 import com.sap.cloudfoundry.client.facade.domain.ImmutableCloudMetadata;
 import com.sap.cloudfoundry.client.facade.domain.ImmutableCloudRoute;
+import com.sap.cloudfoundry.client.facade.domain.ImmutableCloudServiceInstance;
 
 public class CloudEntityResourceMapper {
 
@@ -33,7 +40,7 @@ public class CloudEntityResourceMapper {
         boolean hasBoundService = getResourceAttribute(resource, "service_instance_guid", String.class) != null;
         CloudDomain domain = mapDomainResource(getEmbeddedResource(resource, "domain"));
         return ImmutableCloudRoute.builder()
-                                  .metadata(getMetadata(resource))
+                                  .metadata(getCloudMetadata(resource))
                                   .host(host)
                                   .domain(domain)
                                   .path(path)
@@ -42,15 +49,45 @@ public class CloudEntityResourceMapper {
                                   .build();
     }
 
+    public CloudServiceInstance mapService(Map<String, Object> resource) {
+        return ImmutableCloudServiceInstance.builder()
+                                            .metadata(getCloudMetadataV3(resource))
+                                            .v3Metadata(getMetadataV3(resource))
+                                            .name(getValue(resource, "name", String.class))
+                                            .plan(getValue(resource, "plan", String.class))
+                                            .build();
+    }
+
+    public DeployedMtaServiceKey mapServiceKeyResource(Map<String, Object> resource, Map<String, CloudServiceInstance> mtaServices) {
+
+        String serviceInstanceGuid = getRelationshipAttributeV3(resource, "service_instance", "guid", String.class);
+
+        return ImmutableDeployedMtaServiceKey.builder()
+                                             .metadata(getCloudMetadataV3(resource))
+                                             .v3Metadata(getMetadataV3(resource))
+                                             .name(getValue(resource, "name", String.class))
+                                             .serviceInstance(mtaServices.get(serviceInstanceGuid))
+                                             .resourceName(getResourceNameForCloudService(mtaServices.get(serviceInstanceGuid)))
+                                             .build();
+    }
+
+    private String getResourceNameForCloudService(CloudServiceInstance service) {
+        if (service instanceof DeployedMtaService) {
+            return ((DeployedMtaService) service).getResourceName();
+        }
+
+        return null;
+    }
+
     private CloudDomain mapDomainResource(Map<String, Object> resource) {
         return ImmutableCloudDomain.builder()
-                                   .metadata(getMetadata(resource))
+                                   .metadata(getCloudMetadata(resource))
                                    .name(getResourceAttribute(resource, "name", String.class))
                                    .build();
     }
 
     @SuppressWarnings("unchecked")
-    public static CloudMetadata getMetadata(Map<String, Object> resource) {
+    public static CloudMetadata getCloudMetadata(Map<String, Object> resource) {
         Map<String, Object> metadata = (Map<String, Object>) resource.getOrDefault("metadata", Collections.emptyMap());
         UUID guid = getValue(metadata, "guid", UUID.class);
         if (guid == null) {
@@ -62,6 +99,28 @@ public class CloudEntityResourceMapper {
                                      .updatedAt(getValue(metadata, "updated_at", LocalDateTime.class))
                                      .url(getValue(metadata, "url", String.class))
                                      .build();
+    }
+
+    public static CloudMetadata getCloudMetadataV3(Map<String, Object> resource) {
+        UUID guid = getValue(resource, "guid", UUID.class);
+        if (guid == null) {
+            return null;
+        }
+        return ImmutableCloudMetadata.builder()
+                                     .guid(guid)
+                                     .createdAt(getValue(resource, "created_at", LocalDateTime.class))
+                                     .updatedAt(getValue(resource, "updated_at", LocalDateTime.class))
+                                     .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Metadata getMetadataV3(Map<String, Object> resource) {
+        Map<String, Object> metadata = (Map<String, Object>) resource.getOrDefault("metadata", Collections.emptyMap());
+
+        return Metadata.builder()
+                       .labels((Map<String, String>) metadata.getOrDefault("labels", Collections.emptyMap()))
+                       .annotations((Map<String, String>) metadata.getOrDefault("annotations", Collections.emptyMap()))
+                       .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -77,6 +136,22 @@ public class CloudEntityResourceMapper {
         }
         Map<String, Object> entity = (Map<String, Object>) resource.get("entity");
         return getValue(entity, attributeName, targetClass);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getRelationshipAttributeV3(Map<String, Object> resource, String relationshipName, String attributeName,
+                                                   Class<T> targetClass) {
+        if (resource == null) {
+            return null;
+        }
+
+        Map<String, Object> relationships = (Map<String, Object>) resource.getOrDefault("relationships", Collections.emptyMap());
+        Map<String, Object> targetedRelationship = (Map<String, Object>) relationships.getOrDefault(relationshipName,
+                                                                                                    Collections.emptyMap());
+        Map<String, Object> targetedRelationshipData = (Map<String, Object>) targetedRelationship.getOrDefault("data",
+                                                                                                               Collections.emptyMap());
+
+        return getValue(targetedRelationshipData, attributeName, targetClass);
     }
 
     @SuppressWarnings("unchecked")
