@@ -32,7 +32,7 @@ public class MtaMetadataParser extends BaseMtaMetadataParser {
     public MtaMetadataParser(MtaMetadataValidator mtaMetadataValidator) {
         this.mtaMetadataValidator = mtaMetadataValidator;
     }
-    
+
     public String parseQualifiedMtaId(CloudEntity entity) {
         mtaMetadataValidator.validateHasCommonMetadata(entity);
         Metadata metadata = entity.getV3Metadata();
@@ -40,11 +40,11 @@ public class MtaMetadataParser extends BaseMtaMetadataParser {
                                .get(MtaMetadataAnnotations.MTA_ID);
         String mtaNamespace = metadata.getAnnotations()
                                       .get(MtaMetadataAnnotations.MTA_NAMESPACE);
-        
+
         if (StringUtils.isEmpty(mtaNamespace)) {
             return mtaId;
         }
-        
+
         return mtaNamespace + Constants.NAMESPACE_SEPARATOR + mtaId;
     }
 
@@ -86,9 +86,11 @@ public class MtaMetadataParser extends BaseMtaMetadataParser {
         String resourceName = parseNameAttribute(serviceInstance.getV3Metadata()
                                                                 .getAnnotations(),
                                                  MtaMetadataAnnotations.MTA_RESOURCE);
+        List<String> serviceKeys = parseList(serviceInstance.getV3Metadata().getAnnotations(), MtaMetadataAnnotations.MTA_SERVICE_KEYS);
         return ImmutableDeployedMtaService.builder()
                                           .from(serviceInstance)
                                           .resourceName(resourceName)
+                                          .mtaServiceKeys(serviceKeys)
                                           .build();
     }
 

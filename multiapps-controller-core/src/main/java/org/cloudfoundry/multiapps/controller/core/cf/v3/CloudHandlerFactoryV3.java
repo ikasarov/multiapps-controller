@@ -23,6 +23,8 @@ import org.cloudfoundry.multiapps.mta.mergers.PlatformMerger;
 import org.cloudfoundry.multiapps.mta.model.DeploymentDescriptor;
 import org.cloudfoundry.multiapps.mta.model.Platform;
 
+import com.sap.cloudfoundry.client.facade.domain.CloudServiceKey;
+
 public class CloudHandlerFactoryV3 extends HandlerFactoryV3 implements CloudHandlerFactory {
 
     @Override
@@ -89,8 +91,8 @@ public class CloudHandlerFactoryV3 extends HandlerFactoryV3 implements CloudHand
     }
 
     @Override
-    public ServicesCloudModelBuilder getServicesCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, String namespace) {
-        return new ServicesCloudModelBuilder(deploymentDescriptor, namespace);
+    public ServicesCloudModelBuilder getServicesCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, String namespace, Map<String, List<CloudServiceKey>> serviceKeysByResource) {
+        return new ServicesCloudModelBuilder(deploymentDescriptor, namespace, serviceKeysByResource);
     }
 
     @Override

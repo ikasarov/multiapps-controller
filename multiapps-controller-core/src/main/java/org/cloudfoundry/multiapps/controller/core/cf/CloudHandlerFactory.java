@@ -29,6 +29,8 @@ import org.cloudfoundry.multiapps.mta.mergers.PlatformMerger;
 import org.cloudfoundry.multiapps.mta.model.DeploymentDescriptor;
 import org.cloudfoundry.multiapps.mta.model.Platform;
 
+import com.sap.cloudfoundry.client.facade.domain.CloudServiceKey;
+
 public interface CloudHandlerFactory extends HandlerFactory {
 
     static CloudHandlerFactory forSchemaVersion(int majorSchemaVersion) {
@@ -70,7 +72,7 @@ public interface CloudHandlerFactory extends HandlerFactory {
                                                                  DeployedMta deployedMta, String deployId, String namespace,
                                                                  UserMessageLogger stepLogger, AppSuffixDeterminer appSuffixDeterminer);
 
-    ServicesCloudModelBuilder getServicesCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, String namespace);
+    ServicesCloudModelBuilder getServicesCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, String namespace, Map<String, List<CloudServiceKey>> serviceKeysByResource);
 
     ServiceKeysCloudModelBuilder getServiceKeysCloudModelBuilder(DeploymentDescriptor deploymentDescriptor);
 

@@ -404,6 +404,16 @@ public interface Variables {
                                                                                                      .type(new TypeReference<>() {
                                                                                                      })
                                                                                                      .build();
+    Variable<Map<String, List<String>>> SERVICE_KEYS_TO_DELETE = ImmutableJsonBinaryVariable.<Map<String, List<String>>> builder()
+                                                                                            .name("serviceKeysToDelete")
+                                                                                            .type(new TypeReference<>() {
+                                                                                            })
+                                                                                            .build();
+    Variable<List<CloudServiceKey>> SERVICE_KEYS_FOR_CONTENT_DEPLOY = ImmutableJsonBinaryVariable.<List<CloudServiceKey>> builder()
+                                                                                                 .name("serviceKeysForContentDeploy")
+                                                                                                 .type(new TypeReference<>() {
+                                                                                                 })
+                                                                                                 .build();
     Variable<String> SERVICE_TO_DELETE = ImmutableSimpleVariable.<String> builder()
                                                                 .name("serviceToDelete")
                                                                 .build();

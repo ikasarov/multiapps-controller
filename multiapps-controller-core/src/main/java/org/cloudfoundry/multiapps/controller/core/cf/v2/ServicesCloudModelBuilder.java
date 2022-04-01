@@ -21,6 +21,7 @@ import org.cloudfoundry.multiapps.mta.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sap.cloudfoundry.client.facade.domain.CloudServiceKey;
 import com.sap.cloudfoundry.client.facade.domain.ServiceInstanceType;
 
 public class ServicesCloudModelBuilder {
@@ -29,10 +30,13 @@ public class ServicesCloudModelBuilder {
 
     protected final DeploymentDescriptor deploymentDescriptor;
     protected final String namespace;
+    protected final Map<String, List<CloudServiceKey>> serviceKeysByResources;
 
-    public ServicesCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, String namespace) {
+    public ServicesCloudModelBuilder(DeploymentDescriptor deploymentDescriptor, String namespace,
+                                     Map<String, List<CloudServiceKey>> serviceKeysByResources) {
         this.deploymentDescriptor = deploymentDescriptor;
         this.namespace = namespace;
+        this.serviceKeysByResources = serviceKeysByResources;
     }
 
     public List<CloudServiceInstanceExtended> build(List<Resource> resourcesToProcess) {
@@ -67,6 +71,7 @@ public class ServicesCloudModelBuilder {
         String serviceName = commonServiceParameters.getServiceName();
         Map<String, Object> parameters = resource.getParameters();
         SpecialResourceTypesRequiredParametersUtil.checkRequiredParameters(serviceName, ResourceType.MANAGED_SERVICE, parameters);
+        List<CloudServiceKey> serviceKeysForResource = serviceKeysByResources.get(resource.getName());
 
         return ImmutableCloudServiceInstanceExtended.builder()
                                                     .name(serviceName)
@@ -86,7 +91,8 @@ public class ServicesCloudModelBuilder {
                                                     .shouldSkipTagsUpdate(commonServiceParameters.shouldSkipTagsUpdate())
                                                     .shouldSkipPlanUpdate(commonServiceParameters.shouldSkipPlanUpdate())
                                                     .shouldSkipSyslogUrlUpdate(commonServiceParameters.shouldSkipSyslogUrlUpdate())
-                                                    .v3Metadata(ServiceMetadataBuilder.build(deploymentDescriptor, namespace, resource))
+                                                    .v3Metadata(ServiceMetadataBuilder.build(deploymentDescriptor, namespace, resource,
+                                                                                             serviceKeysForResource))
                                                     .build();
     }
 

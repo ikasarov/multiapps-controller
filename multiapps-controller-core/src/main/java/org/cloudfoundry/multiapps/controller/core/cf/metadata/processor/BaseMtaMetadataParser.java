@@ -9,6 +9,7 @@ import org.cloudfoundry.multiapps.common.ParsingException;
 import org.cloudfoundry.multiapps.common.util.JsonUtil;
 import org.cloudfoundry.multiapps.controller.core.Constants;
 import org.cloudfoundry.multiapps.controller.core.Messages;
+import org.cloudfoundry.multiapps.controller.core.cf.metadata.MtaMetadataAnnotations;
 import org.cloudfoundry.multiapps.mta.model.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,11 @@ public class BaseMtaMetadataParser {
         return (String) JsonUtil.convertJsonToMap(mtaModule)
                                 .get(Constants.ATTR_NAME);
     }
+    
+    protected List<String> parseServiceKeys(Map<String, String> metadataAnnotations) {
+        String serviceKeysJson = metadataAnnotations.get(MtaMetadataAnnotations.MTA_SERVICE_KEYS);
+        return JsonUtil.convertJsonToList(serviceKeysJson, new TypeReference<List<String>>() {});
+    }
 
     protected List<String> parseModuleProvidedDependencies(String appName, Map<String, String> source, String key) {
         String moduleProvidedDependencies = source.get(key);
@@ -46,9 +52,9 @@ public class BaseMtaMetadataParser {
         }
     }
 
-    protected List<String> parseList(Map<String, String> source, String key) {
-        String moduleBoundMtaServices = source.get(key);
-        return JsonUtil.convertJsonToList(moduleBoundMtaServices, new TypeReference<List<String>>() {
+    protected List<String> parseList(Map<String, String> metadataSourceMap, String key) {
+        String metadataList = metadataSourceMap.get(key);
+        return JsonUtil.convertJsonToList(metadataList, new TypeReference<List<String>>() {
         });
     }
 }

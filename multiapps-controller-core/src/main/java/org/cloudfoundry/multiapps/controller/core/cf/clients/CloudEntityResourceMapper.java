@@ -17,9 +17,11 @@ import org.slf4j.LoggerFactory;
 import com.sap.cloudfoundry.client.facade.domain.CloudDomain;
 import com.sap.cloudfoundry.client.facade.domain.CloudMetadata;
 import com.sap.cloudfoundry.client.facade.domain.CloudRoute;
+import com.sap.cloudfoundry.client.facade.domain.CloudServiceKey;
 import com.sap.cloudfoundry.client.facade.domain.ImmutableCloudDomain;
 import com.sap.cloudfoundry.client.facade.domain.ImmutableCloudMetadata;
 import com.sap.cloudfoundry.client.facade.domain.ImmutableCloudRoute;
+import com.sap.cloudfoundry.client.facade.domain.ImmutableCloudServiceKey;
 
 public class CloudEntityResourceMapper {
 
@@ -40,6 +42,10 @@ public class CloudEntityResourceMapper {
                                   .appsUsingRoute(CollectionUtils.size(apps))
                                   .hasServiceUsingRoute(hasBoundService)
                                   .build();
+    }
+    
+    public CloudServiceKey mapServiceKeyResource(Map<String, Object> resource) {
+        return ImmutableCloudServiceKey.builder().build();
     }
 
     private CloudDomain mapDomainResource(Map<String, Object> resource) {

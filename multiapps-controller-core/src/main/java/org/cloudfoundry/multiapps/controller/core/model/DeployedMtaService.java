@@ -1,5 +1,7 @@
 package org.cloudfoundry.multiapps.controller.core.model;
 
+import java.util.List;
+
 import org.cloudfoundry.multiapps.common.Nullable;
 import org.immutables.value.Value;
 
@@ -14,5 +16,8 @@ public abstract class DeployedMtaService extends CloudServiceInstance {
 
     @Nullable
     public abstract String getResourceName();
+    
+    @Nullable
+    public abstract List<String> getMtaServiceKeys();
 
 }

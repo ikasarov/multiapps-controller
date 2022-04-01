@@ -10,6 +10,7 @@ public class MtaMetadataAnnotations {
     public static final String MTA_MODULE_BOUND_SERVICES = "mta_bound_services";
 
     public static final String MTA_RESOURCE = "mta_resource";
+    public static final String MTA_SERVICE_KEYS = "mta_service_keys";
 
     private MtaMetadataAnnotations() {
     }
