@@ -15,6 +15,7 @@ import org.cloudfoundry.multiapps.controller.process.util.ProcessTypeParser;
 import org.cloudfoundry.multiapps.controller.process.util.ServiceAction;
 import org.cloudfoundry.multiapps.controller.process.util.ServiceDeletionActions;
 import org.cloudfoundry.multiapps.controller.process.variables.Variables;
+import static org.cloudfoundry.multiapps.controller.process.steps.StepsUtil.canDeleteServiceKeys;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 
@@ -96,7 +97,7 @@ public class DetermineServiceDeleteActionsToExecuteStep extends SyncFlowableStep
     }
 
     private boolean shouldDeleteServiceKeys(ProcessContext context, List<CloudServiceKey> serviceKeys) {
-        return serviceKeys.isEmpty() || context.getVariable(Variables.DELETE_SERVICE_KEYS);
+        return serviceKeys.isEmpty() || canDeleteServiceKeys(context);
     }
 
     private void logServiceBindingsAndKeys(ProcessContext context, List<CloudServiceBinding> serviceBindings,

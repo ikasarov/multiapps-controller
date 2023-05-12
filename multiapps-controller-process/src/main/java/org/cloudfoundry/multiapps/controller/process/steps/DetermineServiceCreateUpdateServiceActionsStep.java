@@ -32,6 +32,7 @@ import org.cloudfoundry.multiapps.mta.util.PropertiesUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
+import static org.cloudfoundry.multiapps.controller.process.steps.StepsUtil.canDeleteServiceKeys;
 
 import com.sap.cloudfoundry.client.facade.CloudControllerClient;
 import com.sap.cloudfoundry.client.facade.CloudOperationException;
@@ -238,7 +239,7 @@ public class DetermineServiceCreateUpdateServiceActionsStep extends SyncFlowable
         if (existingService == null) {
             return false;
         }
-        return context.getVariable(Variables.DELETE_SERVICE_KEYS);
+        return canDeleteServiceKeys(context);
     }
 
     private boolean shouldUpdatePlan(CloudServiceInstanceExtended service, CloudServiceInstance existingService) {
