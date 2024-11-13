@@ -33,7 +33,7 @@ public class CleanUpJob {
 
     @Scheduled(cron = "#{@applicationConfiguration.getCronExpressionForOldData()}")
     public void execute() {
-        if (configuration.getApplicationInstanceIndex() != SELECTED_INSTANCE_FOR_CLEAN_UP) {
+        if (configuration.getApplicationInstanceIndex() != SELECTED_INSTANCE_FOR_CLEAN_UP || !("deploy-service".equals(configuration.getAppName()))) {
             return;
         }
         Instant cleanUpJobStartTime = Instant.now();

@@ -19,6 +19,8 @@ import org.flowable.job.service.impl.asyncexecutor.DefaultAsyncJobExecutor;
 import org.flowable.job.service.impl.asyncexecutor.FailedJobCommandFactory;
 import org.flowable.spring.ProcessEngineFactoryBean;
 import org.flowable.spring.SpringProcessEngineConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +30,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import static java.text.MessageFormat.format;
+
 @Configuration
 public class FlowableConfiguration {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlowableConfiguration.class);
 
     private static final String DATABASE_SCHEMA_UPDATE = "true";
 
@@ -59,16 +65,26 @@ public class FlowableConfiguration {
     @DependsOn("liquibaseChangelog")
     public SpringProcessEngineConfiguration processEngineConfiguration(DataSource dataSource, PlatformTransactionManager transactionManager,
                                                                        AsyncExecutor jobExecutor,
-                                                                       @Lazy FailedJobCommandFactory abortFailedProcessCommandFactory) {
+                                                                       @Lazy FailedJobCommandFactory abortFailedProcessCommandFactory,
+                                                                       ApplicationConfiguration configuration) {
         SpringProcessEngineConfiguration processEngineConfiguration = new SpringProcessEngineConfiguration();
         processEngineConfiguration.setDatabaseSchemaUpdate(DATABASE_SCHEMA_UPDATE);
         processEngineConfiguration.setDataSource(dataSource);
         processEngineConfiguration.setTransactionManager(transactionManager);
         processEngineConfiguration.setDeploymentResources(flowableResources);
         processEngineConfiguration.setFailedJobCommandFactory(abortFailedProcessCommandFactory);
-        processEngineConfiguration.setAsyncExecutor(jobExecutor);
-        // By default Flowable will retry failed jobs and we don't want that.
-        processEngineConfiguration.setAsyncExecutorNumberOfRetries(0);
+        if (configuration.getAsyncExecutorEnabled()) {
+            LOGGER.info("Setting up async executor in processEngineConfiguration method");
+            processEngineConfiguration.setAsyncExecutor(jobExecutor);
+            // By default Flowable will retry failed jobs and we don't want that.
+            processEngineConfiguration.setAsyncExecutorNumberOfRetries(0);
+        } else {
+            LOGGER.info("Disabling async executor in processEngineConfiguration method");
+            processEngineConfiguration.setAsyncExecutor(jobExecutor);
+//            processEngineConfiguration.setAsyncExecutorMaxPoolSize(0);
+//            processEngineConfiguration.setAsyncExecutorCorePoolSize(0);
+            processEngineConfiguration.setAsyncExecutorActivate(false);
+        }
         processEngineConfiguration.setIdGenerator(new StrongUuidGenerator());
         // Before introduction of Global lock mechanism, multi instance executions always lock parent execution. Now by default it's not
         // locked and this leads to concurrency issues with execution of parallel jobs and lead to failed mta operations.

@@ -94,6 +94,7 @@ public class ApplicationConfiguration {
     static final String CFG_ENABLE_ON_START_FILES_WITHOUT_CONTENT_CLEANER = "ENABLE_ON_START_FILES_WITHOUT_CONTENT_CLEANER";
     static final String CFG_THREADS_FOR_FILE_UPLOAD_TO_CONTROLLER = "THREADS_FOR_FILE_UPLOAD_TO_CONTROLLER";
     static final String CFG_THREADS_FOR_FILE_STORAGE_UPLOAD = "THREADS_FOR_FILE_STORAGE_UPLOAD";
+    static final String CFG_ASYNC_EXECUTOR_ENABLED = "ASYNC_EXECUTOR_ENABLED";
 
     private static final List<String> VCAP_APPLICATION_URIS_KEYS = List.of("full_application_uris", "application_uris", "uris");
 
@@ -167,6 +168,7 @@ public class ApplicationConfiguration {
     private Boolean useXSAuditLogging;
     private String spaceGuid;
     private String orgName;
+    private String appName;
     private Boolean basicAuthEnabled;
     private String globalAuditorUser;
     private String globalAuditorPassword;
@@ -210,6 +212,7 @@ public class ApplicationConfiguration {
     private Boolean isOnStartFilesWithoutContentCleanerEnabledThroughEnvironment;
     private Integer threadsForFileUploadToController;
     private Integer threadsForFileStorageUpload;
+    private Boolean asyncExecutorEnabled;
 
     public ApplicationConfiguration() {
         this(new Environment());
@@ -253,6 +256,8 @@ public class ApplicationConfiguration {
         getServiceHandlingMaxParallelThreads();
         getAbortedOperationsTtlInSeconds();
         getFilesAsyncUploadExecutorMaxThreads();
+        getAsyncExecutorEnabled();
+        getAppName();
     }
 
     public Map<String, String> getNotSensitiveVariables() {
@@ -301,6 +306,20 @@ public class ApplicationConfiguration {
             maxMtaDescriptorSize = getMaxMtaDescriptorSizeFromEnvironment();
         }
         return maxMtaDescriptorSize;
+    }
+
+    public Boolean getAsyncExecutorEnabled() {
+        if (asyncExecutorEnabled == null) {
+            asyncExecutorEnabled = getAsyncExecutorEnabledFromEnvironment();
+        }
+        return asyncExecutorEnabled;
+    }
+
+    public String getAppName() {
+        if (appName == null) {
+            appName = getAppNameFromEnvironment();
+        }
+        return appName;
     }
 
     public Long getMaxManifestSize() {
@@ -688,6 +707,12 @@ public class ApplicationConfiguration {
         return value;
     }
 
+    private Boolean getAsyncExecutorEnabledFromEnvironment() {
+        Boolean value = environment.getBoolean(CFG_ASYNC_EXECUTOR_ENABLED, true);
+        LOGGER.info(format("Async executor enabled: {0}", value));
+        return value;
+    }
+
     private Platform getPlatformFromEnvironment() {
         String platformJson = environment.getString(CFG_PLATFORM);
         if (platformJson == null) {
@@ -753,6 +778,17 @@ public class ApplicationConfiguration {
             return orgNameValue.toString();
         }
         LOGGER.debug(Messages.ORG_NAME_NOT_SPECIFIED);
+        return null;
+    }
+
+    private String getAppNameFromEnvironment() {
+        Map<String, Object> vcapApplicationMap = getVcapApplication();
+        Object appName = vcapApplicationMap.get("application_name");
+        if (appName != null) {
+            LOGGER.info(format("App name: {0}", appName));
+            return appName.toString();
+        }
+        LOGGER.debug("App name missing in environment?");
         return null;
     }
 
