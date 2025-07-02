@@ -2,16 +2,14 @@ package org.cloudfoundry.multiapps.controller.process.steps;
 
 import java.text.MessageFormat;
 
+import com.sap.cloudfoundry.client.facade.CloudControllerClient;
+import com.sap.cloudfoundry.client.facade.domain.CloudApplication;
+import jakarta.inject.Named;
 import org.cloudfoundry.multiapps.controller.client.lib.domain.CloudApplicationExtended;
 import org.cloudfoundry.multiapps.controller.process.Messages;
 import org.cloudfoundry.multiapps.controller.process.variables.Variables;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
-
-import com.sap.cloudfoundry.client.facade.CloudControllerClient;
-import com.sap.cloudfoundry.client.facade.domain.CloudApplication;
-
-import jakarta.inject.Named;
 
 @Named("scaleAppStep")
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -27,7 +25,7 @@ public class ScaleAppStep extends SyncFlowableStep {
         int desiredInstances = app.getInstances();
         int currentInstances = 1; // default instances when creating an app
         if (existingApp != null) {
-            currentInstances = client.getApplicationProcess(client.getApplicationGuid(existingApp.getName()))
+            currentInstances = client.getApplicationProcess(client.getApplicationGuid(app.getName()))
                                      .getInstances();
         }
 
