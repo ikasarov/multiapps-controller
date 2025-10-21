@@ -84,6 +84,14 @@ public class BuildCloudDeployModelStep extends SyncFlowableStep {
         Map<String, List<CloudServiceKey>> serviceKeys = getServiceKeysCloudModelBuilder(context).build();
         getStepLogger().debug(Messages.SERVICE_KEYS_TO_CREATE, SecureSerialization.toJson(serviceKeys));
 
+        // TEST
+        String testCrashStep = deploymentDescriptor.getParameters()
+                                                   .containsKey("testCrashAtSpecificStep") ? deploymentDescriptor.getParameters()
+                                                                                                                 .get(
+                                                                                                                     "testCrashAtSpecificStep")
+                                                                                                                 .toString() : "";
+        context.setVariable(Variables.TEST_CRASH_AT_SPECIFIC_STEP, testCrashStep);
+
         context.setVariable(Variables.SERVICE_KEYS_TO_CREATE, serviceKeys);
 
         // Build a list of applications for deployment and save them in the context:
