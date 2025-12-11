@@ -40,7 +40,11 @@ public class DetermineDesiredStateAchievingActionsStep extends SyncFlowableStep 
         var appInstances = client.getApplicationInstances(app);
         var appEnv = client.getApplicationEnvironment(app.getGuid());
 
-        if (context.getVariable(Variables.TEST_CRASH_AT_SPECIFIC_STEP) == "determineDesiredStateAchievingActionsStep") {
+        String testCrashStep = context.getVariable(Variables.TEST_CRASH_AT_SPECIFIC_STEP);
+        Integer testCrashesCount = context.getVariable(Variables.TEST_CRASHES_COUNT);
+        boolean isAfterResumePhase = context.getVariable(Variables.PHASE) == Phase.AFTER_RESUME;
+        if (isAfterResumePhase && "determineDesiredStateAchievingActionsStep".equals(testCrashStep) && testCrashesCount != 0) {
+            context.setVariable(Variables.TEST_CRASHES_COUNT, testCrashesCount - 1);
             throw new RuntimeException("Simulated crash at DetermineDesiredStateAchievingActionsStep");
         }
 

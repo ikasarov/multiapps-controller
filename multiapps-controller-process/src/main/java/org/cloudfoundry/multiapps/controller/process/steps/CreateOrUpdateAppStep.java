@@ -30,6 +30,7 @@ import org.cloudfoundry.multiapps.controller.core.cf.clients.AppBoundServiceInst
 import org.cloudfoundry.multiapps.controller.core.cf.clients.WebClientFactory;
 import org.cloudfoundry.multiapps.controller.core.helpers.ApplicationFileDigestDetector;
 import org.cloudfoundry.multiapps.controller.core.model.BlueGreenApplicationNameSuffix;
+import org.cloudfoundry.multiapps.controller.core.model.Phase;
 import org.cloudfoundry.multiapps.controller.core.security.token.TokenService;
 import org.cloudfoundry.multiapps.controller.core.util.ApplicationConfiguration;
 import org.cloudfoundry.multiapps.controller.persistence.model.ConfigurationSubscription;
@@ -82,6 +83,14 @@ public class CreateOrUpdateAppStep extends SyncFlowableStep {
         flowHandler.handleApplicationAttributes();
         flowHandler.handleApplicationServices();
         flowHandler.printStepEndMessage();
+
+        String testCrashStep = context.getVariable(Variables.TEST_CRASH_AT_SPECIFIC_STEP);
+        Integer testCrashesCount = context.getVariable(Variables.TEST_CRASHES_COUNT);
+        boolean isAfterResumePhase = context.getVariable(Variables.PHASE) == Phase.AFTER_RESUME;
+        if (isAfterResumePhase && "createOrUpdateAppStep".equals(testCrashStep) && testCrashesCount != 0) {
+            context.setVariable(Variables.TEST_CRASHES_COUNT, testCrashesCount - 1);
+            throw new RuntimeException("Simulated crash at createOrUpdateAppStep");
+        }
 
         return StepPhase.DONE;
     }

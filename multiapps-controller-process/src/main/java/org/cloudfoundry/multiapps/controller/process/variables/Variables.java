@@ -879,6 +879,9 @@ public interface Variables {
     Variable<String> TEST_CRASH_AT_SPECIFIC_STEP = ImmutableSimpleVariable.<String> builder()
                                                                           .name("testCrashAtSpecificStep")
                                                                           .build();
+    Variable<Integer> TEST_CRASHES_COUNT = ImmutableSimpleVariable.<Integer> builder()
+                                                                  .name("testCrashesCount")
+                                                                  .build();
     Variable<Boolean> SHOULD_UPDATE_APPLICATION_DIGEST = ImmutableSimpleVariable.<Boolean> builder()
                                                                                 .name("shouldUpdateApplicationDigest")
                                                                                 .defaultValue(false)

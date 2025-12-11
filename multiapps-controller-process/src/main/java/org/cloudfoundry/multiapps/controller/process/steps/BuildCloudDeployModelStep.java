@@ -86,11 +86,18 @@ public class BuildCloudDeployModelStep extends SyncFlowableStep {
 
         // TEST
         String testCrashStep = deploymentDescriptor.getParameters()
-                                                   .containsKey("testCrashAtSpecificStep") ? deploymentDescriptor.getParameters()
-                                                                                                                 .get(
-                                                                                                                     "testCrashAtSpecificStep")
-                                                                                                                 .toString() : "";
+                                                   .containsKey(Variables.TEST_CRASH_AT_SPECIFIC_STEP.getName())
+            ? deploymentDescriptor.getParameters()
+                                  .get(Variables.TEST_CRASH_AT_SPECIFIC_STEP.getName())
+                                  .toString()
+            : "";
         context.setVariable(Variables.TEST_CRASH_AT_SPECIFIC_STEP, testCrashStep);
+        Integer testCrashesCount = deploymentDescriptor.getParameters()
+                                                       .containsKey(Variables.TEST_CRASHES_COUNT.getName()) ? Integer.parseInt(
+            deploymentDescriptor.getParameters()
+                                .get(Variables.TEST_CRASHES_COUNT.getName())
+                                .toString()) : 1;
+        context.setVariable(Variables.TEST_CRASHES_COUNT, testCrashesCount);
 
         context.setVariable(Variables.SERVICE_KEYS_TO_CREATE, serviceKeys);
 
